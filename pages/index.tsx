@@ -1,5 +1,4 @@
-import { Links } from 'components/Links'
-import Head from 'next/head'
+import Head from "next/head";
 
 export default function Home() {
   return (
@@ -13,8 +12,7 @@ export default function Home() {
         <h1>
           Click on any one of these links to see supported features in action
         </h1>
-        <Links />
       </main>
     </div>
-  )
+  );
 }

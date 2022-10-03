@@ -1,6 +1,6 @@
-import { Links } from 'components/Links'
-import Head from 'next/head'
-import styles from '../styles/ScssModules.module.scss'
+import { Links } from "components/Links";
+import Head from "next/head";
+import styles from "../styles/ScssModules.module.scss";
 
 export default function ScssModules() {
   return (
@@ -14,5 +14,5 @@ export default function ScssModules() {
         <span>This is styled using SCSS Modules</span>
       </main>
     </div>
-  )
+  );
 }
