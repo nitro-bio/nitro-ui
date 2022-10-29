@@ -7,9 +7,9 @@ export interface CardProps
   extends VariantProps<typeof cardStyles>,
     React.HTMLAttributes<HTMLDivElement> {}
 
-export const Card = ({ children, ...props }: CardProps) => {
+export const Card = ({ className, children, ...props }: CardProps) => {
   return (
-    <section className={cardStyles()} {...props}>
+    <section className={cardStyles({ class: className })} {...props}>
       {children}
     </section>
   );
