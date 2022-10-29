@@ -27,14 +27,3 @@ jobs:
         run: yarn run lint
       - name: Build project
         run: yarn run build
-  deploy_prod:
-    runs-on: ubuntu-latest
-    steps:      
-      - uses: actions/checkout@v2
-      - name: Vercel Action
-        uses: amondnet/vercel-action@v25.1.0
-        with:
-          alias-domains: staging.nishantjha.org
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
