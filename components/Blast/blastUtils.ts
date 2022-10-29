@@ -1,21 +1,5 @@
 import { getRndInteger } from "@utils/mathUtils";
-export interface BlastResponseDatum {
-  id: string;
-  query_range: [number, number];
-  target_range: [number, number];
-  score: number;
-  identities: number;
-  positives: number;
-  gaps: number;
-  frame: number;
-  sequence_id: string;
-  title: string;
-  subtitle: string;
-  target: string;
-  query: string;
-  midline: string;
-}
-
+import { BlastResponseDatum } from "./types";
 export const generateResults = (args: { sequence: string }) => {
   const { sequence } = args;
   return [

@@ -1,4 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { generateResults } from "../blastUtils";
 import { ResultCard } from "./ResultCard";
 
 export default {
@@ -14,9 +15,13 @@ const Template: ComponentStory<any> = (args: {
   sequence: string;
   sequenceName: string;
 }) => {
+  const results = generateResults({
+    sequence: args.sequence,
+  });
+
   return (
     <div className="max-w-xl">
-      <ResultCard />
+      <ResultCard result={results[0]} sequenceType={"DNA"} />
     </div>
   );
 };

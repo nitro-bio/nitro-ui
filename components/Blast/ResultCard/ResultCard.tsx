@@ -1,11 +1,12 @@
-import { StarIcon } from "@heroicons/react/solid";
+import { StarIcon } from "@heroicons/react/20/solid";
+import Card from "@ui/Card";
 import { classNames } from "@utils/stringUtils";
 import TextAlignmentViz from "../TextAlignmentViz";
+import { BlastResponseDatum, SequenceBase } from "../types";
 
 export function ResultCard(props: {
   result: BlastResponseDatum;
-  sequenceType: SequenceType;
-  topologyType: TopologyType;
+  sequenceType: SequenceBase;
 }) {
   const {
     result: {
@@ -23,14 +24,14 @@ export function ResultCard(props: {
     },
     sequenceType,
   } = props;
-  const unit = (sequenceType: SequenceType) => {
+  const unit = (sequenceType: SequenceBase) => {
     switch (sequenceType) {
       case "DNA":
         return "bp";
       case "Protein":
         return "aa";
       default:
-        throw new Error(`Unexpected Topology type: ${sequenceType}`);
+        throw new Error(`Unexpected Sequence type: ${sequenceType}`);
     }
   };
   const divider = (
@@ -41,10 +42,10 @@ export function ResultCard(props: {
     </div>
   );
   return (
-    <article
+    <Card
       id={`card-${id}`}
       aria-labelledby={"result-title-" + id}
-      className="group flex flex-col bg-zinc-700/30 px-4 py-6 opacity-60 shadow-xl transition duration-300 ease-in-out hover:scale-105 hover:opacity-100 hover:shadow-zinc-900 sm:rounded-lg"
+      className="group flex flex-col opacity-90 hover:scale-105 hover:opacity-100"
     >
       <div className="mb-2">
         <div className="flex space-x-3">
@@ -65,10 +66,10 @@ export function ResultCard(props: {
             </svg>
           </div>
           <div className="min-w-0 flex-1">
-            <div className="font-sm truncate text-sm text-blue-200">
+            <div className="font-sm truncate text-sm dark:text-brand-200 text-brand-700">
               <p className="hover:underline">{title}</p>
             </div>
-            <p className="text-sm text-zinc-300">
+            <p className="text-sm dark:text-zinc-300 text-zinc-500">
               {subtitle}
               {" | "}
               {query_range[1] - query_range[0]} {unit(sequenceType)} match
@@ -77,7 +78,7 @@ export function ResultCard(props: {
         </div>
       </div>
       {divider}
-      <div className="mt-2 grow">
+      <div className="my-2">
         <TextAlignmentViz
           query={query}
           midline={midline}
@@ -88,14 +89,14 @@ export function ResultCard(props: {
       </div>
       {divider}
       <IconBar score={score} gaps={gaps} frame={frame} />
-    </article>
+    </Card>
   );
 }
 
 function IconBar(props: { score: number; gaps: number; frame: number }) {
   const { score, gaps, frame } = props;
   return (
-    <div className="flex-0 mt-6 flex justify-between space-x-8">
+    <div className="flex-0 mt-4 flex justify-between space-x-8">
       <div className="flex space-x-6">
         <span className="inline-flex items-center text-sm">
           <button
@@ -109,7 +110,11 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
               )}
               aria-hidden="true"
             />
-            <span className={classNames("font-sm text-blue-200 ")}>
+            <span
+              className={classNames(
+                "font-sm dark:text-brand-200 text-brand-700 "
+              )}
+            >
               Score: {score}
             </span>
           </button>
@@ -132,7 +137,9 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
               />
             </svg>
 
-            <span className="font-sm -mx-4 text-blue-200">{gaps} gaps</span>
+            <span className="font-sm -mx-4 dark:text-brand-200 text-brand-700">
+              {gaps} gaps
+            </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -163,26 +170,12 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
               <path d="M0 0h24v24H0z" fill="none" />
               <path d="M3 5v4h2V5h4V3H5c-1.1 0-2 .9-2 2zm2 10H3v4c0 1.1.9 2 2 2h4v-2H5v-4zm14 4h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zm0-16h-4v2h4v4h2V5c0-1.1-.9-2-2-2z" />
             </svg>
-            <span className="font-sm text-blue-200">Frame: {frame}</span>
+            <span className="font-sm dark:text-brand-200 text-brand-700">
+              Frame: {frame}
+            </span>
           </button>
         </span>
       </div>
     </div>
   );
 }
-import Card from "@ui/Card";
-
-export interface Props {
-  sequenceName: string;
-  sequence: string;
-}
-export const SequenceCard = ({ sequenceName, sequence }: Props) => {
-  return (
-    <Card className="text-brand-600 dark:text-brand-300">
-      <div className="border-b border-zinc-500 pb-2">
-        <h3 className="text-lg font-medium leading-6 ">{sequenceName}</h3>
-      </div>
-      <div className="break-all py-2">{sequence}</div>
-    </Card>
-  );
-};
