@@ -1,8 +1,28 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
+const defaultTheme = require("tailwindcss/defaultTheme");
+const brandColor = colors.indigo;
+
 module.exports = {
-  content: ["./components/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+  darkMode: "class",
+
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        gray: colors.gray,
+        brand: brandColor,
+      },
+    },
+    ringColor: {
+      brand: brandColor[500],
+    },
+    fontFamily: {
+      sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+    },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

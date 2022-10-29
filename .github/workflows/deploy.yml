@@ -20,13 +20,13 @@ jobs:
         with:
           node-version: 16.x
       - name: Install deps
-        run: npm install
+        run: yarn
       - name: Run Prettier
-        run: npm run format:check
+        run: yarn run format:check
       - name: Run ESLint
-        run: npm run lint
+        run: yarn run lint
       - name: Build project
-        run: npm run build
+        run: yarn run build
   deploy_prod:
     runs-on: ubuntu-latest
     steps:      

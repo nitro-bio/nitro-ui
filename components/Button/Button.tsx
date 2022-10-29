@@ -1,15 +1,37 @@
-import "./Button.scss";
+import { cva, VariantProps } from "class-variance-authority";
 
-interface ButtonProps {
-  children: React.ReactNode;
-  onClick: () => void;
-}
-export const Button = ({ children, onClick }: ButtonProps) => {
+const buttonStyles = cva(
+  "inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium",
+  {
+    variants: {
+      intent: {
+        primary: "bg-indigo-600 text-white hover:bg-indigo-700",
+        secondary: "text-indigo-00 bg-zinc-400 hover:bg-gray-300",
+      },
+      fullWidth: {
+        true: "w-full",
+      },
+    },
+    defaultVariants: {
+      intent: "primary",
+    },
+  }
+);
+export interface ButtonProps
+  extends VariantProps<typeof buttonStyles>,
+    React.HTMLAttributes<HTMLButtonElement> {}
+
+export const Button = ({
+  intent,
+  fullWidth,
+  children,
+  ...props
+}: ButtonProps) => {
   return (
     <button
       type="button"
-      className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      onClick={onClick}
+      className={buttonStyles({ intent, fullWidth })}
+      {...props}
     >
       {children}
     </button>
