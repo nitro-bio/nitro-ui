@@ -1,4 +1,4 @@
-import { getRndInteger } from "utils";
+import { getRndInteger } from "@utils/mathUtils";
 export interface BlastResponseDatum {
   id: string;
   query_range: [number, number];

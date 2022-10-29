@@ -10,6 +10,8 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.3",
+    "@heroicons/react": "^2.0.12",
     "class-variance-authority": "^0.2.4",
     "next": "latest",
     "react": "^17.0.2",

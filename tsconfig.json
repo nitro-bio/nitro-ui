@@ -16,7 +16,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["./components/ui/*"]
+      "@ui/*": ["./components/ui/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "exclude": ["node_modules", ".next", "out", "storybook-static"],
