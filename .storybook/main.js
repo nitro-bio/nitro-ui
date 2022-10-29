@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   stories: ["../components/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
@@ -9,5 +11,9 @@ module.exports = {
   framework: "@storybook/react",
   core: {
     builder: "webpack5",
+  },
+  webpackFinal: async (config) => {
+    config.resolve.alias["@ui"] = path.resolve(__dirname, "../components/ui");
+    return config;
   },
 };

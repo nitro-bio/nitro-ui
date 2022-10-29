@@ -1,4 +1,4 @@
-import { Card } from "components/Card/Card";
+import Card from "@ui/Card";
 
 interface BlastResponseDatum {
   id: string;
