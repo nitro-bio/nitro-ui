@@ -1,11 +1,7 @@
-name: CICD for Storybook
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+name: CI for Storybook
+
+# on all branches
+on: [push]
 
 env:
   NEXT_TELEMETRY_DISABLED: 1

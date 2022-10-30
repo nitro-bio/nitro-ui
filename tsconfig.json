@@ -14,7 +14,11 @@
     "noEmit": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["./components/ui/*"],
+      "@utils/*": ["./utils/*"]
+    }
   },
   "exclude": ["node_modules", ".next", "out", "storybook-static"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]

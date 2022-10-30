@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { generateResults } from "../utils";
+import { generateResults } from "../blastUtils";
 import { GlobalAlignmentViz } from "./GlobalAlignmentViz";
 
 export default {
@@ -18,11 +18,13 @@ const Template: ComponentStory<any> = (args: {
   const length = args.sequence.length;
   const results = generateResults({ sequence: args.sequence });
   return (
-    <GlobalAlignmentViz
-      sequenceLength={length}
-      sequenceName={args.sequenceName}
-      results={results}
-    />
+    <div className="max-w-xl">
+      <GlobalAlignmentViz
+        sequenceLength={length}
+        sequenceName={args.sequenceName}
+        results={results}
+      />
+    </div>
   );
 };
 
