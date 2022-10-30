@@ -59,7 +59,7 @@ export const GlobalAlignmentViz = ({
   return (
     <Card>
       <header className="border-b border-gray-200 px-4 py-4 sm:px-6">
-        <h3 className="space-between flex flex-row text-lg font-medium leading-6 dark:text-brand-300 text-brand-600">
+        <h3 className="space-between flex flex-row text-lg font-medium leading-6 text-brand-600 dark:text-brand-300">
           <span className="flex-1">Alignment Viewer</span>
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-zinc-400">

@@ -66,10 +66,10 @@ export function ResultCard(props: {
             </svg>
           </div>
           <div className="min-w-0 flex-1">
-            <div className="font-sm truncate text-sm dark:text-brand-200 text-brand-700">
+            <div className="font-sm truncate text-sm text-brand-700 dark:text-brand-200">
               <p className="hover:underline">{title}</p>
             </div>
-            <p className="text-sm dark:text-zinc-300 text-zinc-500">
+            <p className="text-sm text-zinc-500 dark:text-zinc-300">
               {subtitle}
               {" | "}
               {query_range[1] - query_range[0]} {unit(sequenceType)} match
@@ -112,7 +112,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
             />
             <span
               className={classNames(
-                "font-sm dark:text-brand-200 text-brand-700 "
+                "font-sm text-brand-700 dark:text-brand-200 "
               )}
             >
               Score: {score}
@@ -137,7 +137,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
               />
             </svg>
 
-            <span className="font-sm -mx-4 dark:text-brand-200 text-brand-700">
+            <span className="font-sm -mx-4 text-brand-700 dark:text-brand-200">
               {gaps} gaps
             </span>
             <svg
@@ -170,7 +170,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
               <path d="M0 0h24v24H0z" fill="none" />
               <path d="M3 5v4h2V5h4V3H5c-1.1 0-2 .9-2 2zm2 10H3v4c0 1.1.9 2 2 2h4v-2H5v-4zm14 4h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zm0-16h-4v2h4v4h2V5c0-1.1-.9-2-2-2z" />
             </svg>
-            <span className="font-sm dark:text-brand-200 text-brand-700">
+            <span className="font-sm text-brand-700 dark:text-brand-200">
               Frame: {frame}
             </span>
           </button>
