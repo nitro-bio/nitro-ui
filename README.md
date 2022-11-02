@@ -1,47 +1,24 @@
-# Example app with Storybook
+# Component Library for Nitro
 
-This example shows a default set up of Storybook using [storybook-addon-next](https://github.com/RyanClementsHax/storybook-addon-next). Included in this example are stories that demonstrate the ability to use Next.js features in Storybook.
-
-### TypeScript
-
-As of v6.0, Storybook has built-in TypeScript support, so no configuration is needed. If you want to customize the default configuration, refer to the [TypeScript docs](https://storybook.js.org/docs/react/configure/typescript).
-
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-storybook)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-storybook&project-name=with-storybook&repository-name=with-storybook)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+### Quick Start
 
 ```bash
-npx create-next-app --example with-storybook with-storybook-app
-```
-
-```bash
-yarn create next-app --example with-storybook with-storybook-app
-```
-
-```bash
-pnpm create next-app --example with-storybook with-storybook-app
-```
-
-### Run Storybook
-
-```bash
-npm run storybook
-# or
+pre-commit install
+yarn
 yarn storybook
 ```
 
-### Build Static Storybook
+### Project Description
 
-```bash
-npm run build-storybook
-# or
-yarn build-storybook
-```
+This is a component library for Nitro. It is built using [Next.js](https://nextjs.org/) and [Storybook](https://storybook.js.org/). It uses [Tailwind CSS](https://tailwindcss.com/) for styling and [CVA](https://github.com/joe-bell/cva) for managing those styles.
 
-You can use [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) to deploy Storybook. Specify `storybook-static` as the output directory.
+We use [pre-commit](https://pre-commit.com/) to run linting and formatting on our code. You can install it with `brew install pre-commit`.
+
+### Seperation of Concerns
+
+The components in this library aim for two seemingly opposing goals:
+
+1. All relevant code to understand the style and functionality of a component is in one place.
+2. The style and functionality of a component are cleanly seperated, and it's easy to understand how to use a component.
+
+We reconcile these goals by using CVA, Tailwind, and Typescript. Typescript is used to define the levers used to change the behavior of a component, Tailwind is used to define the style of a component, and CVA is used to tie the two together.
