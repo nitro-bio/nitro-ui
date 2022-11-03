@@ -11,7 +11,7 @@ const dropDownStyles = cva("", {
         "absolute right-0 mt-2 w-56 origin-top-right divide-y divide-green-100 rounded-md bg-green-300 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
     },
     items: {
-      primary: `bg-blue-600`,
+      primary: `bg-blue-200`,
       secondary: "bg-green-200",
     },
   },
