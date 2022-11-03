@@ -10,5 +10,5 @@ const Template: ComponentStory<typeof Toggle> = (args) => <Toggle {...args} />;
 
 export const ToggleStory = Template.bind({});
 ToggleStory.args = {
-  intent: "enabled",
+  intent: "lightEnabled",
 };

@@ -10,8 +10,7 @@ const Template: ComponentStory<typeof DropDown> = (args) => (
   <DropDown {...args} />
 );
 
-export const ToggleStory = Template.bind({});
-ToggleStory.args = {
+export const DropDownStory = Template.bind({});
+DropDownStory.args = {
   items: "primary",
-  menus: "primary",
 };
