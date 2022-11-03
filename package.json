@@ -31,6 +31,8 @@
     "@types/react": "18.0.21",
     "autoprefixer": "^10.4.12",
     "babel-loader": "^8.2.3",
+    "eslint": "8.26.0",
+    "eslint-config-next": "13.0.1",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
