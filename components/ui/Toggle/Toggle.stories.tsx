@@ -8,8 +8,8 @@ export default {
 } as ComponentMeta<typeof Toggle>;
 
 const Template: ComponentStory<typeof Toggle> = (args) => {
-  const [enabled, setEnabled] = useState(true);
-  return <Toggle enabled={enabled} onClick={() => setEnabled(!enabled)} />;
+  const [checked, setChecked] = useState(false);
+  return <Toggle checked={checked} onClick={() => setChecked(!checked)} />;
 };
 
 export const ToggleStory = Template.bind({});

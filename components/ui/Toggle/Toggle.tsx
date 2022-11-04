@@ -5,28 +5,28 @@ const outerToggleStyles = cva(
   "relative inline-flex h-9 w-20 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75",
   {
     variants: {
-      enabled: {
+      checked: {
         true: "bg-brand-600 dark:bg-zinc-600",
         false: "bg-brand-400 dark:bg-zinc-400",
       },
     },
     defaultVariants: {
-      enabled: true,
+      checked: true,
     },
   }
 );
 
 const innerToggleStyles = cva(
-  "rpointer-events-none inline-block h-8 w-8 transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out",
+  "pointer-events-none inline-block h-8 w-8 transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out",
   {
     variants: {
-      enabled: {
+      checked: {
         true: "translate-x-11 bg-brand-400 dark:bg-zinc-400",
         false: "translate-x-0 bg-brand-200 dark:bg-zinc-200",
       },
     },
     defaultVariants: {
-      enabled: true,
+      checked: true,
     },
   }
 );
@@ -40,15 +40,15 @@ export interface ToggleProps
     VariantProps<typeof innerToggleStyles>,
     Props {}
 
-export const Toggle = ({ enabled, ...props }: ToggleProps) => {
+export const Toggle = ({ checked, ...props }: ToggleProps) => {
   return (
     <Switch
-      checked={!!enabled}
-      className={outerToggleStyles({ enabled })}
+      checked={!!checked}
+      className={outerToggleStyles({ checked })}
       {...props}
     >
       <span className="sr-only">Use setting</span>
-      <span aria-hidden="true" className={innerToggleStyles({ enabled })} />
+      <span aria-hidden="true" className={innerToggleStyles({ checked })} />
     </Switch>
   );
 };

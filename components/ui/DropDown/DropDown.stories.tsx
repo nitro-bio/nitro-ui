@@ -14,5 +14,5 @@ const Template: ComponentStory<typeof DropDown> = (args) => (
 
 export const DropDownStory = Template.bind({});
 DropDownStory.args = {
-  items: "primary",
+  intent: "primary",
 };
