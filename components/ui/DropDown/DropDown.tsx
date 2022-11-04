@@ -69,9 +69,8 @@ export const DropDown = ({ items, ...props }: DropDownProps) => {
         >
           <Menu.Items className="ring-black absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1 ">
-              {MenuItems.map((name) => {
-                console.log(items);
-                return <MenuItem name={name} items={items} />;
+              {MenuItems.map((name, index) => {
+                return <MenuItem key={index} name={name} items={items} />;
               })}
             </div>
           </Menu.Items>
