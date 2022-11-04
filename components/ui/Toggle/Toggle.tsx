@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Switch } from "@headlessui/react";
 
 const outerToggleStyles = cva(
-  "relative inline-flex h-[2.375rem] w-[4.625rem] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75",
+  "relative inline-flex h-9 w-20 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75",
   {
     variants: {
       enabled: {
@@ -17,11 +17,11 @@ const outerToggleStyles = cva(
 );
 
 const innerToggleStyles = cva(
-  "rpointer-events-none inline-block h-[2.125rem] w-[2.125rem] transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out",
+  "rpointer-events-none inline-block h-8 w-8 transform rounded-full shadow-lg ring-0 transition duration-200 ease-in-out",
   {
     variants: {
       enabled: {
-        true: "translate-x-9 bg-brand-400 dark:bg-zinc-400",
+        true: "translate-x-11 bg-brand-400 dark:bg-zinc-400",
         false: "translate-x-0 bg-brand-200 dark:bg-zinc-200",
       },
     },
@@ -43,7 +43,7 @@ export interface ToggleProps
 export const Toggle = ({ enabled, ...props }: ToggleProps) => {
   return (
     <Switch
-      checked={enabled}
+      checked={!!enabled}
       className={outerToggleStyles({ enabled })}
       {...props}
     >
