@@ -18,7 +18,7 @@ export interface DropDownProps extends VariantProps<typeof dropDownStyles> {}
 
 export const DropDown = ({ items, ...props }: DropDownProps) => {
   return (
-    <div className="fixed top-16 w-56 text-right">
+    <div>
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="focus-visible:ring-white inline-flex w-full justify-center rounded-md bg-blue-400 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75">

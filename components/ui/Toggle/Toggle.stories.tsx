@@ -1,4 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { useState } from "react";
 import { Toggle } from "./Toggle";
 
 export default {
@@ -6,9 +7,9 @@ export default {
   component: Toggle,
 } as ComponentMeta<typeof Toggle>;
 
-const Template: ComponentStory<typeof Toggle> = (args) => <Toggle {...args} />;
+const Template: ComponentStory<typeof Toggle> = () => {
+  const [active, setActive] = useState(false);
+  return <Toggle active={active} onClick={() => setActive(!active)} />;
+};
 
 export const ToggleStory = Template.bind({});
-ToggleStory.args = {
-  intent: "lightEnabled",
-};
