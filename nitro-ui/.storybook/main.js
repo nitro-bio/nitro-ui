@@ -6,25 +6,15 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    "storybook-tailwind-dark-mode",
   ],
-  // addons: [
-  //   "@storybook/addon-links",
-  //   "@storybook/addon-essentials",
-  //   "storybook-addon-next",
-  //   "storybook-tailwind-dark-mode",
-  // ],
   framework: "@storybook/react",
   core: {
     builder: "@storybook/builder-vite",
   },
   viteFinal: async (config) => {
-    console.log("HELLO", __dirname);
     return {
       ...config,
-      define: {
-        ...config.define,
-        global: "window",
-      },
       resolve: {
         alias: [
           {

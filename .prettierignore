@@ -1,2 +1,3 @@
 # Ignore artifacts: 
 nitro-ui/dist
+nitro-ui/storybook-static

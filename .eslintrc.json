@@ -3,7 +3,7 @@
   "parserOptions": {
     "project": "./nitro-ui/tsconfig.json"
   },
-  "ignorePatterns": ["*/dist/*"],
+  "ignorePatterns": ["*/dist/*", "*/storybook-static/*"],
   "rules": {
     "global-require": "off",
     "import/extensions": "off",
