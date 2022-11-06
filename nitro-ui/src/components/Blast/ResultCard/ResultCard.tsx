@@ -12,14 +12,14 @@ export function ResultCard(props: {
     result: {
       title,
       subtitle,
-      query_range,
+      queryRange,
       gaps,
       frame,
       id,
       query,
       midline,
       target,
-      target_range,
+      targetRange,
       score,
     },
     sequenceType,
@@ -44,7 +44,7 @@ export function ResultCard(props: {
   return (
     <Card
       id={`card-${id}`}
-      aria-labelledby={"result-title-" + id}
+      aria-labelledby={`result-title-${id}`}
       className="group flex flex-col opacity-90 hover:scale-105 hover:opacity-100"
     >
       <div className="mb-2">
@@ -72,7 +72,7 @@ export function ResultCard(props: {
             <p className="text-sm text-zinc-500 dark:text-zinc-300">
               {subtitle}
               {" | "}
-              {query_range[1] - query_range[0]} {unit(sequenceType)} match
+              {queryRange[1] - queryRange[0]} {unit(sequenceType)} match
             </p>
           </div>
         </div>
@@ -83,8 +83,8 @@ export function ResultCard(props: {
           query={query}
           midline={midline}
           target={target}
-          query_range={query_range}
-          target_range={target_range}
+          queryRange={queryRange}
+          targetRange={targetRange}
         />
       </div>
       {divider}
@@ -106,13 +106,13 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
             <StarIcon
               className={classNames(
                 "h-5 w-5",
-                score > 75 ? "animate-bounce text-yellow-600 delay-300" : ""
+                score > 75 ? "animate-bounce text-yellow-600 delay-300" : "",
               )}
               aria-hidden="true"
             />
             <span
               className={classNames(
-                "font-sm text-brand-700 dark:text-brand-200 "
+                "font-sm text-brand-700 dark:text-brand-200 ",
               )}
             >
               Score: {score}

@@ -13,13 +13,11 @@ export default {
 const Template: ComponentStory<any> = (args: {
   sequence: string;
   sequenceName: string;
-}) => {
-  return (
+}) => (
     <div className="max-w-xl">
       <SequenceCard sequenceName={args.sequenceName} sequence={args.sequence} />
     </div>
-  );
-};
+);
 
 export const SequenceCardStory = Template.bind({});
 SequenceCardStory.args = { sequence: "ATGCTG", sequenceName: "test" };

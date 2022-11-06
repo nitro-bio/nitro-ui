@@ -2,13 +2,13 @@
   # Typescript
   - repo: local
     hooks:
-      # - id: eslint
-      #   stages: [commit]
-      #   name: eslint
-      #   entry: bash -c "npm run lint"
-      #   language: node
+      - id: eslint
+        stages: [commit]
+        name: eslint
+        entry: bash -c "yarn lint"
+        language: node
       - id: prettier
         stages: [commit]
         name: prettier
-        entry: bash -c "npm run format"
+        entry: bash -c "yarn format"
         language: node

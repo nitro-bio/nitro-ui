@@ -1,4 +1,2 @@
 # Ignore artifacts: 
-build
-.next
-storybook-static
+nitro-ui/dist

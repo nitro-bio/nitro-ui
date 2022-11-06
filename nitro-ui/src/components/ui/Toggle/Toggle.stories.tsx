@@ -7,7 +7,7 @@ export default {
   component: Toggle,
 } as ComponentMeta<typeof Toggle>;
 
-const Template: ComponentStory<typeof Toggle> = (args) => {
+const Template: ComponentStory<typeof Toggle> = () => {
   const [checked, setChecked] = useState(false);
   return (
     <div className="h-screen p-24 dark:bg-zinc-800">

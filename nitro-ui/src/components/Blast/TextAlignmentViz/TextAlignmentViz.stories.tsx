@@ -16,15 +16,17 @@ const Template: ComponentStory<any> = (args: { query: string }) => {
     sequence: args.query,
   });
 
-  const { query_range, query, midline, target, target_range } = results[0];
+  const {
+    queryRange, query, midline, target, targetRange,
+  } = results[0];
   return (
     <Card className="max-w-xl">
       <TextAlignmentViz
         query={query}
-        query_range={query_range}
+        queryRange={queryRange}
         midline={midline}
         target={target}
-        target_range={target_range}
+        targetRange={targetRange}
       />
     </Card>
   );

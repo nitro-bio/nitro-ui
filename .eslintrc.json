@@ -1,3 +1,18 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["airbnb-base", "airbnb-typescript/base"],
+  "parserOptions": {
+    "project": "./nitro-ui/tsconfig.json"
+  },
+  "ignorePatterns": ["*/dist/*"],
+  "rules": {
+    "global-require": "off",
+    "import/extensions": "off",
+    "import/export": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-alert": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/quotes": ["error", "double", { "avoidEscape": true }]
+  }
 }

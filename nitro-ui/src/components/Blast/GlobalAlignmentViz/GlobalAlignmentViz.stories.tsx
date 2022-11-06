@@ -15,7 +15,7 @@ const Template: ComponentStory<any> = (args: {
   sequence: string;
   sequenceName: string;
 }) => {
-  const length = args.sequence.length;
+  const { length } = args.sequence;
   const results = generateResults({ sequence: args.sequence });
   return (
     <div className="max-w-xl">

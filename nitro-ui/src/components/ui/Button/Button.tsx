@@ -15,19 +15,18 @@ const buttonStyles = cva(
     defaultVariants: {
       intent: "primary",
     },
-  }
+  },
 );
 export interface ButtonProps
   extends VariantProps<typeof buttonStyles>,
-    React.HTMLAttributes<HTMLButtonElement> {}
+  React.HTMLAttributes<HTMLButtonElement> {}
 
 export const Button = ({
   intent,
   fullWidth,
   children,
   ...props
-}: ButtonProps) => {
-  return (
+}: ButtonProps) => (
     <button
       type="button"
       className={buttonStyles({ intent, fullWidth })}
@@ -35,5 +34,4 @@ export const Button = ({
     >
       {children}
     </button>
-  );
-};
+);

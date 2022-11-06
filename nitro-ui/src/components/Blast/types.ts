@@ -1,13 +1,13 @@
 export interface BlastResponseDatum {
   id: string;
-  query_range: [number, number];
-  target_range: [number, number];
+  queryRange: [number, number];
+  targetRange: [number, number];
   score: number;
   identities: number;
   positives: number;
   gaps: number;
   frame: number;
-  sequence_id: string;
+  sequenceId: string;
   title: string;
   subtitle: string;
   target: string;

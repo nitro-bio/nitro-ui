@@ -1,2 +1,2 @@
-export * from "../components/ui";
-export * from "../components/Blast";
+export * from "./ui";
+export * from "./Blast";

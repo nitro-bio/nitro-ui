@@ -16,5 +16,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <ResultCard result={result} sequenceType={"DNA"} />
       ))}
     </div>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

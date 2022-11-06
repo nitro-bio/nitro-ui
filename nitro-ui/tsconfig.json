@@ -21,7 +21,13 @@
       "@Blast/*": ["./src/components/Blast/*"]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src/",
+    "index.ts",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "vite.config.ts"
+  ],
   "composite": true,
   "references": [{ "path": "./tsconfig.node.json" }]
 }
