@@ -18,21 +18,26 @@ module.exports = {
     builder: "@storybook/builder-vite",
   },
   viteFinal: async (config) => {
+    console.log("HELLO", __dirname);
     return {
       ...config,
+      define: {
+        ...config.define,
+        global: "window",
+      },
       resolve: {
         alias: [
           {
             find: "@ui",
-            replacement: path.resolve(__dirname, "./src/components/ui"),
+            replacement: path.resolve(__dirname, "../src/components/ui"),
           },
           {
             find: "@utils",
-            replacement: path.resolve(__dirname, "./src/utils"),
+            replacement: path.resolve(__dirname, "../src/utils"),
           },
           {
             find: "@blast",
-            replacement: path.resolve(__dirname, "./src/components/Blast"),
+            replacement: path.resolve(__dirname, "../src/components/Blast"),
           },
         ],
       },
