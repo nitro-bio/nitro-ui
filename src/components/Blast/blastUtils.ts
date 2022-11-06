@@ -69,25 +69,26 @@ export const generateResults = (args: { sequence: string }) => {
       const targetStart = getRndInteger(0, 10000);
       const targetRange = [targetStart, targetStart + target.length] as [
         number,
-        number,
+        number
       ];
 
-      const generateMidline = (query: string, target: string) => query
-        .split("")
-        .map((queryChar: string, i: number) => {
-          const targetChar = target[i];
-          if (targetChar === queryChar) {
-            return "|";
-          }
-          return "X";
-        })
-        .join("");
+      const generateMidline = (query: string, target: string) =>
+        query
+          .split("")
+          .map((queryChar: string, i: number) => {
+            const targetChar = target[i];
+            if (targetChar === queryChar) {
+              return "|";
+            }
+            return "X";
+          })
+          .join("");
       const midline = generateMidline(trimmedQuery, target);
 
       const score = getRndInteger(0, 100);
 
       return {
-        id: `${i}`,
+        id: `result-${i}`,
         queryRange: [start, end] as [number, number],
         identities: getRndInteger(0, 100),
         positives: getRndInteger(0, 100),

@@ -92,7 +92,7 @@ interface IntermediateCharProps {
 
 interface CharProps
   extends VariantProps<typeof charStyles>,
-  IntermediateCharProps {}
+    IntermediateCharProps {}
 
 const CharComponent = ({ char, type }: CharProps) => (
   <div className={charStyles({ type: type || "query" })}>{char}</div>

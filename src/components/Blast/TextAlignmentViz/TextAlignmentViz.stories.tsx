@@ -11,14 +11,13 @@ export default {
   },
 } as ComponentMeta<typeof TextAlignmentViz>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = (args: { query: string }) => {
   const results = generateResults({
     sequence: args.query,
   });
 
-  const {
-    queryRange, query, midline, target, targetRange,
-  } = results[0];
+  const { queryRange, query, midline, target, targetRange } = results[0];
   return (
     <Card className="max-w-xl">
       <TextAlignmentViz

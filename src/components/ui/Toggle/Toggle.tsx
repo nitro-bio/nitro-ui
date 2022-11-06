@@ -13,7 +13,7 @@ const outerToggleStyles = cva(
     defaultVariants: {
       checked: true,
     },
-  },
+  }
 );
 
 const innerToggleStyles = cva(
@@ -28,7 +28,7 @@ const innerToggleStyles = cva(
     defaultVariants: {
       checked: true,
     },
-  },
+  }
 );
 
 export interface Props {
@@ -37,16 +37,16 @@ export interface Props {
 
 export interface ToggleProps
   extends VariantProps<typeof outerToggleStyles>,
-  VariantProps<typeof innerToggleStyles>,
-  Props {}
+    VariantProps<typeof innerToggleStyles>,
+    Props {}
 
 export const Toggle = ({ checked, ...props }: ToggleProps) => (
-    <Switch
-      checked={!!checked}
-      className={outerToggleStyles({ checked })}
-      {...props}
-    >
-      <span className="sr-only">Use setting</span>
-      <span aria-hidden="true" className={innerToggleStyles({ checked })} />
-    </Switch>
+  <Switch
+    checked={!!checked}
+    className={outerToggleStyles({ checked })}
+    {...props}
+  >
+    <span className="sr-only">Use setting</span>
+    <span aria-hidden="true" className={innerToggleStyles({ checked })} />
+  </Switch>
 );

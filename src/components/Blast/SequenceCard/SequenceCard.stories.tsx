@@ -10,13 +10,14 @@ export default {
   },
 } as ComponentMeta<typeof SequenceCard>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = (args: {
   sequence: string;
   sequenceName: string;
 }) => (
-    <div className="max-w-xl">
-      <SequenceCard sequenceName={args.sequenceName} sequence={args.sequence} />
-    </div>
+  <div className="max-w-xl">
+    <SequenceCard sequenceName={args.sequenceName} sequence={args.sequence} />
+  </div>
 );
 
 export const SequenceCardStory = Template.bind({});

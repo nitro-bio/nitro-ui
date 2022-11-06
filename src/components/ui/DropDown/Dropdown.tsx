@@ -13,7 +13,7 @@ const menuDropdownButtonStyles = cva(
       },
     },
     defaultVariants: { intent: "primary" },
-  },
+  }
 );
 
 const menuItemsContainerStyles = cva(
@@ -28,7 +28,7 @@ const menuItemsContainerStyles = cva(
     defaultVariants: {
       intent: "primary",
     },
-  },
+  }
 );
 
 const menuItemStyles = cva(
@@ -47,7 +47,7 @@ const menuItemStyles = cva(
     defaultVariants: {
       active: false,
     },
-  },
+  }
 );
 
 interface Props {
@@ -55,7 +55,7 @@ interface Props {
 }
 export interface MenuItemProps
   extends VariantProps<typeof menuItemStyles>,
-  Props {}
+    Props {}
 
 export const MenuItem = ({ ...props }: MenuItemProps) => (
   <Menu.Item>
@@ -71,8 +71,7 @@ export const MenuItem = ({ ...props }: MenuItemProps) => (
 
 const MenuItems = ["option 1", "option 2", "option 3"];
 
-export interface MenuContainerProps
-  extends VariantProps<typeof menuItemsContainerStyles> {}
+export type MenuContainerProps = VariantProps<typeof menuItemsContainerStyles>;
 
 export const Dropdown = ({ intent }: MenuContainerProps) => (
   <Menu as="div" className="relative inline-block text-left text-right">

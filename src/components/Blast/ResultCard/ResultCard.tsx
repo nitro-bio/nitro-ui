@@ -106,13 +106,13 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
             <StarIcon
               className={classNames(
                 "h-5 w-5",
-                score > 75 ? "animate-bounce text-yellow-600 delay-300" : "",
+                score > 75 ? "animate-bounce text-yellow-600 delay-300" : ""
               )}
               aria-hidden="true"
             />
             <span
               className={classNames(
-                "font-sm text-brand-700 dark:text-brand-200 ",
+                "font-sm text-brand-700 dark:text-brand-200 "
               )}
             >
               Score: {score}

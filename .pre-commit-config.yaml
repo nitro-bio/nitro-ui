@@ -10,5 +10,5 @@
       - id: prettier
         stages: [commit]
         name: prettier
-        entry: bash -c "yarn format"
+        entry: bash -c "yarn format:fix"
         language: node

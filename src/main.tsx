@@ -13,8 +13,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <div className="h-screen dark max-w-7xl flex flex-col gap-4 justify-center">
       {results.map((result) => (
-        <ResultCard result={result} sequenceType={"DNA"} />
+        <ResultCard key={result.id} result={result} sequenceType={"DNA"} />
       ))}
     </div>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

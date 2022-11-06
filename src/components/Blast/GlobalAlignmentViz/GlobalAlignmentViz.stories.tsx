@@ -11,6 +11,7 @@ export default {
   },
 } as ComponentMeta<typeof GlobalAlignmentViz>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = (args: {
   sequence: string;
   sequenceName: string;

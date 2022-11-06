@@ -22,8 +22,8 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run Prettier
-        run: yarn run format:check
+        run: yarn run format
       - name: Run ESLint
         run: yarn run lint
       - name: Build project
-        run: yarn run build
+        run: yarn run build-storybook
