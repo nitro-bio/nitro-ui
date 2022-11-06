@@ -11,13 +11,14 @@
     "jsx": "preserve",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@ui/*": ["./components/ui/*"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@Blast/*": ["./components/Blast/*"]
     }
   },
   "exclude": ["node_modules", ".next", "out", "storybook-static"],

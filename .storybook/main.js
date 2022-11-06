@@ -15,6 +15,10 @@ module.exports = {
   webpackFinal: async (config) => {
     config.resolve.alias["@ui"] = path.resolve(__dirname, "../components/ui");
     config.resolve.alias["@utils"] = path.resolve(__dirname, "../utils/");
+    config.resolve.alias["@Blast"] = path.resolve(
+      __dirname,
+      "../components/Blast"
+    );
     return config;
   },
 };

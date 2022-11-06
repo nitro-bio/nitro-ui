@@ -76,7 +76,7 @@ const MenuItems = ["option 1", "option 2", "option 3"];
 export interface MenuContainerProps
   extends VariantProps<typeof menuItemsContainerStyles> {}
 
-export const DropDown = ({ intent, ...props }: MenuContainerProps) => {
+export const Dropdown = ({ intent, ...props }: MenuContainerProps) => {
   return (
     <Menu as="div" className="relative inline-block text-left text-right">
       <div>

@@ -1,18 +1,18 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { DropDown } from "./DropDown";
+import { Dropdown } from "./Dropdown";
 
 export default {
   title: "UI/Dropdown",
-  component: DropDown,
-} as ComponentMeta<typeof DropDown>;
+  component: Dropdown,
+} as ComponentMeta<typeof Dropdown>;
 
-const Template: ComponentStory<typeof DropDown> = (args) => (
+const Template: ComponentStory<typeof Dropdown> = (args) => (
   <div className="h-screen py-32 px-64 dark:bg-zinc-800">
-    <DropDown {...args} />
+    <Dropdown {...args} />
   </div>
 );
 
-export const DropDownStory = Template.bind({});
-DropDownStory.args = {
+export const DropdownStory = Template.bind({});
+DropdownStory.args = {
   intent: "primary",
 };
