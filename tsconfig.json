@@ -1,25 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "esModuleInterop": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
     "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "resolveJsonModule": true,
-    "jsx": "preserve",
-    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "incremental": true,
-    "baseUrl": ".",
+    "jsx": "react-jsx",
     "paths": {
-      "@ui/*": ["./components/ui/*"],
-      "@utils/*": ["./utils/*"]
+      "@ui/*": ["./src/components/ui/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@Blast/*": ["./src/components/Blast/*"]
     }
   },
-  "exclude": ["node_modules", ".next", "out", "storybook-static"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "src/",
+    "index.ts",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "vite.config.ts"
+  ],
+  "composite": true,
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

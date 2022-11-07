@@ -1,4 +1,3 @@
 # Ignore artifacts: 
-build
-.next
+dist
 storybook-static
