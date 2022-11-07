@@ -5,12 +5,12 @@
 ```bash
 pre-commit install
 yarn
-yarn storybook
+yarn dev
 ```
 
 ### Project Description
 
-This is a component library for Nitro. It is built using [Next.js](https://nextjs.org/) and [Storybook](https://storybook.js.org/). It uses [Tailwind CSS](https://tailwindcss.com/) for styling and [CVA](https://github.com/joe-bell/cva) for managing those styles.
+This is a component library for Nitro. It is built using [Vite](https://vitejs.dev/) and [Storybook](https://storybook.js.org/). It uses [Tailwind CSS](https://tailwindcss.com/) for styling and [CVA](https://github.com/joe-bell/cva) for managing those styles.
 
 We use [pre-commit](https://pre-commit.com/) to run linting and formatting on our code. You can install it with `brew install pre-commit`.
 

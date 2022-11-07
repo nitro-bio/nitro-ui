@@ -1,20 +1,36 @@
 const path = require("path");
 
 module.exports = {
-  stories: ["../components/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: ["../src/components/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "storybook-addon-next",
+    "@storybook/addon-interactions",
     "storybook-tailwind-dark-mode",
   ],
   framework: "@storybook/react",
   core: {
-    builder: "webpack5",
+    builder: "@storybook/builder-vite",
   },
-  webpackFinal: async (config) => {
-    config.resolve.alias["@ui"] = path.resolve(__dirname, "../components/ui");
-    config.resolve.alias["@utils"] = path.resolve(__dirname, "../utils/");
-    return config;
+  viteFinal: async (config) => {
+    return {
+      ...config,
+      resolve: {
+        alias: [
+          {
+            find: "@ui",
+            replacement: path.resolve(__dirname, "../src/components/ui"),
+          },
+          {
+            find: "@utils",
+            replacement: path.resolve(__dirname, "../src/utils"),
+          },
+          {
+            find: "@blast",
+            replacement: path.resolve(__dirname, "../src/components/Blast"),
+          },
+        ],
+      },
+    };
   },
 };

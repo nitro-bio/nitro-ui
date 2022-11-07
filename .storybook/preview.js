@@ -1,10 +1,10 @@
-import "../styles/globals.css";
-
+import "../src/index.css";
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: { expanded: true },
-};
-
-export const globalTypes = {
-  darkMode: true,
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
 };
