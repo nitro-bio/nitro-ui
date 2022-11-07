@@ -25,3 +25,4 @@ dist-ssr
 .vercel
 storybook-static
 storybook-static
+/*.tgz
