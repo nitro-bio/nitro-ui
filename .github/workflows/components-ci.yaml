@@ -6,10 +6,6 @@ on: [push]
 env:
   NEXT_TELEMETRY_DISABLED: 1
 
-defaults:
-  run:
-    working-directory: nitro-ui
-  
 jobs:
   frontend_compile:
     runs-on: ubuntu-latest

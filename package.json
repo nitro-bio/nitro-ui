@@ -4,7 +4,8 @@
   "version": "0.0.3",
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "start-storybook -p 6006",
+    "dev": "yarn storybook",
+    "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:fix": "prettier --check --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
