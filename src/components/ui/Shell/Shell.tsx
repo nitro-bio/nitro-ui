@@ -9,6 +9,8 @@ const shellStylesOuter = cva(
       intent: {
         primary:
           "border-solid border-2 border-zinc-200 bg-white dark:bg-zinc-900",
+        secondary:
+          "border-solid border-2 border-brand-100 bg-brand-200 dark:bg-zinc-900",
       },
     },
     defaultVariants: {
@@ -23,6 +25,7 @@ const shellStylesInner = cva(
     variants: {
       intent: {
         primary: "border-x-2 border-zinc-200 bg-white dark:bg-zinc-900",
+        secondary: "border-x-2 border-brand-100 bg-brand-200 dark:bg-zinc-900",
       },
     },
     defaultVariants: {
@@ -35,6 +38,43 @@ const textStyles = cva("", {
   variants: {
     intent: {
       primary: "text-zinc-500 dark:text-zinc-100",
+      secondary: "text-zinc-100 dark:text-zinc-100",
+    },
+  },
+  defaultVariants: {
+    intent: "primary",
+  },
+});
+
+const textCardStyles = cva("", {
+  variants: {
+    intent: {
+      primary: "text-zinc-400 dark:text-zinc-400",
+      secondary: "text-zinc-100 dark:text-zinc-100",
+    },
+  },
+  defaultVariants: {
+    intent: "primary",
+  },
+});
+
+const hrefStyles = cva("", {
+  variants: {
+    intent: {
+      primary: "text-blue-300 dark:text-blue-300",
+      secondary: "text-brand-400 dark:text-blue-300",
+    },
+  },
+  defaultVariants: {
+    intent: "primary",
+  },
+});
+
+const subHeaderStyles = cva("", {
+  variants: {
+    intent: {
+      primary: "text-zinc-400 dark:text-zinc-400",
+      secondary: "text-brand-400 dark:text-zinc-100",
     },
   },
   defaultVariants: {
@@ -45,7 +85,8 @@ const textStyles = cva("", {
 export interface ShellProps
   extends VariantProps<typeof shellStylesOuter>,
     VariantProps<typeof shellStylesInner>,
-    VariantProps<typeof textStyles> {}
+    VariantProps<typeof textStyles>,
+    VariantProps<typeof subHeaderStyles> {}
 
 interface Card {
   title: string;
@@ -74,6 +115,8 @@ export interface UIMockupCardProps
   extends VariantProps<typeof shellStylesOuter>,
     VariantProps<typeof shellStylesInner>,
     VariantProps<typeof textStyles>,
+    VariantProps<typeof hrefStyles>,
+    VariantProps<typeof textCardStyles>,
     UICard {}
 
 const sampleText =
@@ -86,7 +129,7 @@ const UISection = ({ name, intent, cards, ...props }: UISectionProps) => {
         <h2
           className={`text-sm font-semibold ${textStyles({
             intent,
-          })} dark:text-zinc-100`}
+          })}`}
         >
           {name}
         </h2>
@@ -99,6 +142,7 @@ const UISection = ({ name, intent, cards, ...props }: UISectionProps) => {
                   title={item.title}
                   description={item.description}
                   href={item.href}
+                  intent={intent}
                 />
               );
             })}
@@ -124,7 +168,11 @@ const UIMockupCard = ({ intent, ...props }: UIMockupCardProps) => {
             <span className="absolute -inset-y-6 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
             <span className="relative z-10">{title}</span>
           </h2>
-          <div className="relative z-10 mt-2 text-sm text-zinc-400 ">
+          <div
+            className={`relative z-10 mt-2 text-sm ${textCardStyles({
+              intent,
+            })}`}
+          >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {description}
             </ReactMarkdown>
@@ -132,7 +180,9 @@ const UIMockupCard = ({ intent, ...props }: UIMockupCardProps) => {
 
           <div
             aria-hidden="true"
-            className="relative z-10 mt-4 flex items-center text-sm font-medium text-blue-300"
+            className={`relative z-10 mt-4 flex items-center text-sm font-medium ${hrefStyles(
+              { intent }
+            )}`}
           >
             Check it out
             <svg
@@ -170,7 +220,7 @@ export const Shell = ({ intent, ...props }: ShellProps) => {
               >
                 About Me
               </h1>
-              <div className="mt-6 text-base text-zinc-400">
+              <div className={`mt-6 text-base ${subHeaderStyles({ intent })}`}>
                 {"Some things about me."}
               </div>
             </header>
