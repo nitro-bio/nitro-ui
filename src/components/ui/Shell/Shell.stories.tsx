@@ -6,11 +6,26 @@ export default {
   component: Shell,
 } as ComponentMeta<typeof Shell>;
 
-const Template: ComponentStory<typeof Shell> = (args) => {
-  return <Shell {...args} />;
+const sampleText =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam";
+
+const sections = [
+  {
+    name: "Development",
+    cards: [{ title: "test", description: sampleText, href: "/" }],
+  },
+  {
+    name: "Projects",
+    cards: [{ title: "test", description: sampleText, href: "/" }],
+  },
+  {
+    name: "Hobbies",
+    cards: [{ title: "test", description: sampleText, href: "/" }],
+  },
+];
+
+const Template: ComponentStory<typeof Shell> = () => {
+  return <Shell sections={sections} aboutMe={"Some things about me."} />;
 };
 
 export const ShellStory = Template.bind({});
-ShellStory.args = {
-  intent: "primary",
-};
