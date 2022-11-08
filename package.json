@@ -13,6 +13,8 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "react-markdown": "^8.0.3",
+    "remark-gfm": "^3.0.1",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
     "class-variance-authority": "^0.2.4"
