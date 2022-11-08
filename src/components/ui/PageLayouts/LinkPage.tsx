@@ -1,51 +1,18 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-interface PageSectionProps {
-  name: string;
-  entries: Array<EntryCardProps>;
-}
-
-interface EntryCardProps {
+interface LinkCardProps {
   title: string;
   description: string;
   href: string;
 }
-
-const PageSection = ({ ...props }: PageSectionProps) => {
-  const { name, entries } = props;
-  return (
-    <section className="mt-16 md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
-      <div className="grid max-w-3xl grid-cols-1 items-baseline gap-y-8 md:grid-cols-4">
-        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-          {name}
-        </h2>
-        <div className="md:col-span-3">
-          <ul role="list" className="space-y-16">
-            {entries.map((item) => {
-              return (
-                <ListCard
-                  key={item.title}
-                  title={item.title}
-                  description={item.description}
-                  href={item.href}
-                />
-              );
-            })}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-interface ListCardProps {
+interface LinkPageProps {
+  cards: Array<LinkCardProps>;
   title: string;
-  description: string;
-  href: string;
+  subtitle: string;
 }
 
-const ListCard = ({ ...props }: ListCardProps) => {
+const ListCard = ({ ...props }: LinkCardProps) => {
   const { title, description, href } = props;
   return (
     <article className="flex flex-row md:items-baseline md:gap-8">
@@ -88,13 +55,7 @@ const ListCard = ({ ...props }: ListCardProps) => {
   );
 };
 
-interface ListPageProps {
-  sections: Array<PageSectionProps>;
-  title: string;
-  subtitle: string;
-}
-
-export const ListPage = ({ sections, title, subtitle }: ListPageProps) => {
+export const LinkPage = ({ cards, title, subtitle }: LinkPageProps) => {
   return (
     <>
       <div className="fixed inset-0 mx-auto mx-auto flex w-full h-full max-w-4xl border-solid border-2 border-zinc-200 bg-white dark:bg-zinc-900 justify-center rounded-lg px-4 px-4 sm:px-6 sm:px-6 md:px-8 md:px-8" />
@@ -109,15 +70,21 @@ export const ListPage = ({ sections, title, subtitle }: ListPageProps) => {
                 {subtitle}
               </div>
             </header>
-            {sections.map((item) => {
-              return (
-                <PageSection
-                  key={item.name}
-                  name={item.name}
-                  entries={item.entries}
-                />
-              );
-            })}
+            <div className="mt-16 md:border-l md:border-zinc-100 md:pl-6 md:dark:border-brand-300">
+              {cards.map((item) => {
+                return (
+                  <div key={item.title}>
+                    <br></br>
+                    <ListCard
+                      key={item.title}
+                      title={item.title}
+                      description={item.description}
+                      href={item.href}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </main>
       </div>
