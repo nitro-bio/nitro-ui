@@ -73,8 +73,7 @@ export const LinkPage = ({ cards, title, subtitle }: LinkPageProps) => {
             <div className="mt-16 md:border-l md:border-zinc-100 md:pl-6 md:dark:border-brand-300">
               {cards.map((item) => {
                 return (
-                  <div key={item.title}>
-                    <br></br>
+                  <div className="mt-10" key={item.title}>
                     <ListCard
                       key={item.title}
                       title={item.title}
