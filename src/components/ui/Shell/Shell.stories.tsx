@@ -25,7 +25,13 @@ const sections = [
 ];
 
 const Template: ComponentStory<typeof Shell> = () => {
-  return <Shell sections={sections} aboutMe={"Some things about me."} />;
+  return (
+    <Shell
+      sections={sections}
+      title={"About Me"}
+      subtitle={"Some things about me."}
+    />
+  );
 };
 
 export const ShellStory = Template.bind({});
