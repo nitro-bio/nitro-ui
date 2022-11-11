@@ -7,13 +7,12 @@ interface LinkCardProps {
   href: string;
 }
 interface LinkPageProps {
-  cards: Array<LinkCardProps>;
+  entries: Array<LinkCardProps>;
   title: string;
   subtitle: string;
 }
 
-const ListCard = ({ ...props }: LinkCardProps) => {
-  const { title, description, href } = props;
+const ListCard = ({ title, description, href }: LinkCardProps) => {
   return (
     <article className="flex flex-row md:items-baseline md:gap-8">
       <div className="max-w-xl" />
@@ -55,7 +54,7 @@ const ListCard = ({ ...props }: LinkCardProps) => {
   );
 };
 
-export const LinkPage = ({ cards, title, subtitle }: LinkPageProps) => {
+export const LinkPage = ({ entries, title, subtitle }: LinkPageProps) => {
   return (
     <>
       <div className="fixed inset-0 mx-auto mx-auto flex w-full h-full max-w-4xl border-solid border-2 border-zinc-200 bg-white dark:bg-zinc-900 justify-center rounded-lg px-4 px-4 sm:px-6 sm:px-6 md:px-8 md:px-8" />
@@ -71,7 +70,7 @@ export const LinkPage = ({ cards, title, subtitle }: LinkPageProps) => {
               </div>
             </header>
             <div className="mt-16 md:border-l md:border-zinc-100 md:pl-6 md:dark:border-brand-300">
-              {cards.map((item) => {
+              {entries.map((item) => {
                 return (
                   <div className="mt-10" key={item.title}>
                     <ListCard

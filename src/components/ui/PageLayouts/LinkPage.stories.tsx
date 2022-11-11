@@ -9,7 +9,7 @@ export default {
 const sampleText =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam";
 
-const cards = [
+const entries = [
   { title: "Link a", description: sampleText, href: "#" },
   { title: "Link b", description: sampleText, href: "#" },
   { title: "Link c", description: sampleText, href: "#" },
@@ -18,7 +18,7 @@ const cards = [
 const Template: ComponentStory<typeof LinkPage> = () => {
   return (
     <LinkPage
-      cards={cards}
+      entries={entries}
       title={"About Me"}
       subtitle={"Some things about me."}
     />
