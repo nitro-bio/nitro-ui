@@ -30,7 +30,7 @@ export const TextAlignmentViz = ({
   ];
 
   return (
-    <div className="leading-0 items-right font-mono flex flex-wrap pt-4 text-center text-sm tracking-widest dark:bg-zinc-800 md:mx-4">
+    <div className="leading-0 items-right font-mono flex flex-wrap pt-4 text-center text-sm tracking-widest dark:bg-noir-800 md:mx-4">
       <div className="flex flex-row flex-wrap">
         <div className={"mr-2 text-right font-thin tracking-tighter"}>
           <CharComponent type="query" char={`${queryRange[0]}`} />{" "}
@@ -76,7 +76,7 @@ const charStyles = cva("whitespace-pre-wrap", {
   variants: {
     type: {
       query: "dark:text-brand-100 text-brand-400",
-      midline_bar: "text-zinc-400",
+      midline_bar: "text-noir-400",
       midline_x: "text-red-400",
       target: "dark:text-brand-300 text-brand-600",
     },

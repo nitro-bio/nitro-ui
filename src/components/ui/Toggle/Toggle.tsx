@@ -7,7 +7,7 @@ const outerToggleStyles = cva(
     variants: {
       checked: {
         true: "bg-brand-400",
-        false: "bg-zinc-400",
+        false: "bg-noir-400",
       },
     },
     defaultVariants: {
@@ -22,7 +22,7 @@ const innerToggleStyles = cva(
     variants: {
       checked: {
         true: "translate-x-11 bg-brand-300",
-        false: "translate-x-0 bg-zinc-600",
+        false: "translate-x-0 bg-noir-600",
       },
     },
     defaultVariants: {
