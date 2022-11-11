@@ -11,7 +11,7 @@ const results = generateResults({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <div className="h-screen dark max-w-7xl flex flex-col gap-4 justify-center">
+    <div className="dark flex h-screen max-w-7xl flex-col justify-center gap-4">
       {results.map((result) => (
         <ResultCard key={result.id} result={result} sequenceType={"DNA"} />
       ))}

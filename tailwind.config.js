@@ -3,6 +3,7 @@ const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const brandColor = colors.indigo;
+const noirColor = colors.zinc;
 
 module.exports = {
   darkMode: "class",
@@ -11,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray: colors.gray,
+        ...colors,
+        noir: noirColor,
         brand: brandColor,
       },
     },

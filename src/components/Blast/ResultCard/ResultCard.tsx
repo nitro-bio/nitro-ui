@@ -69,7 +69,7 @@ export function ResultCard(props: {
             <div className="font-sm truncate text-sm text-brand-700 dark:text-brand-200">
               <p className="hover:underline">{title}</p>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-300">
+            <p className="text-sm text-noir-500 dark:text-noir-300">
               {subtitle}
               {" | "}
               {queryRange[1] - queryRange[0]} {unit(sequenceType)} match
@@ -101,7 +101,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
         <span className="inline-flex items-center text-sm">
           <button
             type="button"
-            className="inline-flex space-x-2 text-gray-400 hover:text-zinc-300"
+            className="inline-flex space-x-2 text-gray-400 hover:text-noir-300"
           >
             <StarIcon
               className={classNames(
@@ -122,7 +122,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
         <span className="inline-flex items-center text-sm">
           <button
             type="button"
-            className="inline-flex space-x-1 text-gray-400 hover:text-zinc-300"
+            className="inline-flex space-x-1 text-gray-400 hover:text-noir-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ function IconBar(props: { score: number; gaps: number; frame: number }) {
         <span className="inline-flex items-center text-sm">
           <button
             type="button"
-            className="inline-flex space-x-2 text-gray-400 hover:text-zinc-300"
+            className="inline-flex space-x-2 text-gray-400 hover:text-noir-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -9,7 +9,7 @@ const menuDropdownButtonStyles = cva(
     variants: {
       intent: {
         primary: "bg-brand-600 dark:bg-brand-400",
-        secondary: "bg-zinc-500 dark:bg-zinc-600",
+        secondary: "bg-noir-500 dark:bg-noir-600",
       },
     },
     defaultVariants: { intent: "primary" },
@@ -22,7 +22,7 @@ const menuItemsContainerStyles = cva(
     variants: {
       intent: {
         primary: "bg-brand-600 dark:bg-brand-400 text-white",
-        secondary: "bg-zinc-500 dark:bg-zinc-600 dark:text-white text-white",
+        secondary: "bg-noir-500 dark:bg-noir-600 dark:text-white text-white",
       },
     },
     defaultVariants: {
@@ -37,7 +37,7 @@ const menuItemStyles = cva(
     variants: {
       intent: {
         primary: "bg-brand-600 dark:bg-brand-400 text-white",
-        secondary: "bg-zinc-500 dark:bg-zinc-600 dark:text-white",
+        secondary: "bg-noir-500 dark:bg-noir-600 dark:text-white",
       },
       active: {
         true: "opacity-50 bg-opacity-50 bg-inherit",
