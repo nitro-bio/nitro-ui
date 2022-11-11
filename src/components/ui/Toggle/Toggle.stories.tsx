@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Toggle } from "./Toggle";
 
 export default {
-  title: "UI/Toggle",
+  title: "UIElements/Toggle",
   component: Toggle,
 } as ComponentMeta<typeof Toggle>;
 

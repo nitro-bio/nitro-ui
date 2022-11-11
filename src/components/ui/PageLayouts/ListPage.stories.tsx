@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { ListPage } from "./ListPage";
 
 export default {
-  title: "UI/ListPage",
+  title: "UILayout/ListPage",
   component: ListPage,
 } as ComponentMeta<typeof ListPage>;
 
