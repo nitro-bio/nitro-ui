@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Dropdown } from "./Dropdown";
 
 export default {
-  title: "UI/Dropdown",
+  title: "UIElements/Dropdown",
   component: Dropdown,
 } as ComponentMeta<typeof Dropdown>;
 
