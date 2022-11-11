@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { LinkPage } from "./LinkPage";
 
 export default {
-  title: "UILayout/LinkPage",
+  title: "nishantjha.org/LinkPage",
   component: LinkPage,
 } as ComponentMeta<typeof LinkPage>;
 
