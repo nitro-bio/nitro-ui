@@ -7,7 +7,7 @@ export default {
 } as ComponentMeta<typeof Dropdown>;
 
 const Template: ComponentStory<typeof Dropdown> = (args) => (
-  <div className="h-screen py-32 px-64 dark:bg-zinc-800">
+  <div className="h-screen py-32 px-64 dark:bg-noir-800">
     <Dropdown {...args} />
   </div>
 );

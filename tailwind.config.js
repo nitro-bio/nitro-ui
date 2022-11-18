@@ -11,12 +11,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray: colors.gray,
+        noir: colors.zinc,
         brand: brandColor,
       },
     },
     ringColor: {
       brand: brandColor[500],
+      noir: colors.zinc[500],
     },
     fontFamily: {
       sans: ["Inter var", ...defaultTheme.fontFamily.sans],

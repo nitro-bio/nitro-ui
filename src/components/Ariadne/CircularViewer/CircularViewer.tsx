@@ -11,79 +11,105 @@ export const CircularViewer = ({ sequence }: Props) => {
   };
 
   return (
-    <div className="p-6 text-brand-400">
+    <div className="font-mono p-6 font-thin text-brand-400 ">
       <svg
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
         fontFamily="inherit"
         fontSize="inherit"
         fontWeight="inherit"
+        className="stroke-current"
       >
-        <Circle
+        <circle
+          cx={cx}
+          cy={cy}
+          r={radius}
+          fill="none"
+          strokeWidth={strokeWidth}
+        />
+        <CircularSequenceIndex
+          sequence={sequence}
           cx={cx}
           cy={cy}
           radius={radius}
-          strokeWidth={strokeWidth}
-          color={"currentColor"}
-          id="circleId"
-        >
-          <text dy={"-5%"}>
-            <textPath
-              startOffset="2%"
-              fontFamily="inherit"
-              fontSize="10px"
-              fontSizeAdjust="0.58"
-              fontWeight="lighter"
-              fill="currentColor"
-              stroke="currentColor"
-              href="#circleId"
-              lengthAdjust="spacing"
-              method="spacing"
-              textLength={2 * Math.PI * radius}
-            >
-              {sequence}
-            </textPath>
-          </text>
-        </Circle>
+        />
       </svg>
     </div>
   );
 };
 
-const Circle = ({
-  id,
+const CircularSequenceIndex = ({
+  sequence,
   cx,
   cy,
   radius,
-  strokeWidth,
-  color,
-  children,
 }: {
-  id: string;
+  sequence: string;
   cx: number;
   cy: number;
   radius: number;
-  strokeWidth: number;
-  color: string;
-  children?: React.ReactNode;
 }) => {
-  const path = convertCircleToPath(cx, cy, radius);
   return (
-    <>
-      <path
-        d={path}
-        stroke={color}
-        strokeWidth={strokeWidth}
-        fill="none"
-        id={id}
-      />
-      {children}
-    </>
+    <g>
+      {sequence.split("").map((letter, index) => {
+        const { x, y } = getCircularCoordinateByIndex({
+          totalBases: sequence.length,
+          index,
+          cx: cx - 1,
+          cy,
+          radius: radius * 0.75,
+        });
+        console.log({ x, y });
+        return (
+          <g key={`base-${index}`} transform={`translate(${x},${y})`}>
+            <text
+              textAnchor="middle"
+              transform={`rotate(${getCircularRotationByIndex({
+                totalBases: sequence.length,
+                index,
+              })})`}
+              dominantBaseline="middle"
+              color="currentColor"
+              fill="currentColor"
+              fontSize="1rem"
+              fontWeight="thin"
+              fontFamily="inherit"
+            >
+              {letter}
+            </text>
+          </g>
+        );
+      })}
+    </g>
   );
 };
 
-const convertCircleToPath = (cx: number, cy: number, radius: number) => {
-  return `M ${cx} ${cy} m -${radius}, 0 a ${radius},${radius} 0 1,0 ${
-    radius * 2
-  },0 a ${radius},${radius} 0 1,0 -${radius * 2},0`;
+const getCircularRotationByIndex = ({
+  totalBases,
+  index,
+}: {
+  totalBases: number;
+  index: number;
+}) => {
+  const angle = (360 / totalBases) * index;
+  return angle + 90;
+};
+
+const getCircularCoordinateByIndex = ({
+  index,
+  totalBases,
+  cx,
+  cy,
+  radius,
+}: {
+  index: number;
+  totalBases: number;
+  cx: number;
+  cy: number;
+  radius: number;
+}) => {
+  const angle = (index / totalBases) * 2 * Math.PI;
+  const x = cx + radius * Math.cos(angle);
+  const y = cy + radius * Math.sin(angle);
+  return { x, y };
 };

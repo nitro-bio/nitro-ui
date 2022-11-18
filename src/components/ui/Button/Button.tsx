@@ -6,7 +6,7 @@ const buttonStyles = cva(
     variants: {
       intent: {
         primary: "bg-brand-600 text-white hover:bg-brand-700",
-        secondary: "text-brand-00 bg-zinc-400 hover:bg-gray-300",
+        secondary: "text-brand-00 bg-noir-400 hover:bg-gray-300",
       },
       fullWidth: {
         true: "w-full",
