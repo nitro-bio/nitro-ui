@@ -1,8 +1,19 @@
+import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
+
 export interface Props {
   sequence: string;
 }
+const sequenceAtom = atom("");
+export const CircularViewer = (props: Props) => {
+  const [, setSequence] = useAtom(sequenceAtom);
 
-export const CircularViewer = ({ sequence }: Props) => {
+  useEffect(
+    function syncSequenceAtomWithProps() {
+      setSequence(props.sequence);
+    },
+    [props.sequence]
+  );
   const { cx, cy, radius, strokeWidth } = {
     cx: 50,
     cy: 50,
@@ -36,14 +47,8 @@ export const CircularViewer = ({ sequence }: Props) => {
           fill="none"
           strokeWidth={strokeWidth}
         />
-        <CircularSequenceIndex
-          sequence={sequence}
-          cx={cx}
-          cy={cy}
-          radius={radius}
-        />
+        <CircularSequenceIndex cx={cx} cy={cy} radius={radius} />
         <CircularAnnotationGutter
-          sequence={sequence}
           annotations={annotations}
           cx={cx}
           cy={cy}
@@ -61,20 +66,19 @@ interface Annotation {
   text: string;
   onClick: () => void;
 }
-const CircularAnnotationGutter = ({
-  sequence,
-  annotations,
-  cx,
-  cy,
+const CircularAnnotation = ({
+  gutterRadius,
+
   radius,
+  center,
 }: {
-  sequence: string;
-  annotations: Annotation[];
-  cx: number;
-  cy: number;
+  gutterRadius: number;
+
   radius: number;
+  center: Coor;
 }) => {
-  const gutterRadius = radius * 0.4;
+  const [sequence] = useAtom(sequenceAtom);
+  const { x: cx, y: cy } = center;
   /* draw an svg path for an arc of quadrant 1 of a circl */
   const arcPath = genArc({
     arrowFWD: true,
@@ -90,10 +94,34 @@ const CircularAnnotationGutter = ({
     offset: 0,
     center: { x: cx, y: cy },
   });
+
+  return (
+    <path d={arcPath} fill="currentColor">
+      <text>Annotation</text>
+    </path>
+  );
+};
+
+const CircularAnnotationGutter = ({
+  annotations,
+  cx,
+  cy,
+  radius,
+}: {
+  annotations: Annotation[];
+  cx: number;
+  cy: number;
+  radius: number;
+}) => {
+  const gutterRadius = radius * 0.4;
   return (
     <g className="text-brand-800">
-      <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={2} />
-      <path d={arcPath} />;
+      <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={1} />;
+      <CircularAnnotation
+        radius={radius}
+        center={{ x: cx, y: cy }}
+        gutterRadius={gutterRadius}
+      />
     </g>
   );
 };
@@ -136,28 +164,28 @@ const genArc = (args: {
   let leftBottom = findCoor({
     index: offset,
     radius: innerRadius,
-    rotate: true,
+
     center,
     seqLength,
   });
   let leftTop = findCoor({
     index: offset,
     radius: outerRadius,
-    rotate: true,
+
     center,
     seqLength,
   });
   let rightBottom = findCoor({
     index: length + offset,
     radius: innerRadius,
-    rotate: true,
+
     center,
     seqLength,
   });
   let rightTop = findCoor({
     index: length + offset,
     radius: outerRadius,
-    rotate: true,
+
     center,
     seqLength,
   });
@@ -185,7 +213,7 @@ const genArc = (args: {
       const lArrowC = findCoor({
         index: 0,
         radius: (innerRadius + outerRadius) / 2,
-        rotate: true,
+
         center,
         seqLength,
       });
@@ -204,7 +232,7 @@ const genArc = (args: {
       const rArrowC = findCoor({
         index: length,
         radius: (innerRadius + outerRadius) / 2,
-        rotate: true,
+
         center,
         seqLength,
       });
@@ -233,8 +261,6 @@ interface Coor {
 /**
  * Given a coordinate, and the degrees to rotate it, find the new coordinate
  * (assuming that the rotation is around the center)
- *
- * in general this is for text and arcs
  */
 const rotateCoor = ({
   coor,
@@ -267,39 +293,36 @@ const rotateCoor = ({
 };
 
 const CircularSequenceIndex = ({
-  sequence,
   cx,
   cy,
   radius,
 }: {
-  sequence: string;
   cx: number;
   cy: number;
   radius: number;
 }) => {
+  const [sequence] = useAtom(sequenceAtom);
   return (
     <g className="text-noir-800">
       {sequence.split("").map((letter, index) => {
-        const { x, y } = getCircularCoordinateByIndex({
-          totalBases: sequence.length,
+        const { x, y } = findCoor({
           index,
-          cx: cx - 1,
-          cy,
-          radius: radius * 0.75,
+          radius: radius * 0.7,
+          center: { x: cx, y: cy },
+          seqLength: sequence.length,
         });
-        console.log({ x, y });
+        const rotateDegrees = (index / sequence.length) * 360;
         return (
-          <g key={`base-${index}`} transform={`translate(${x},${y})`}>
+          <g key={`base-${index}`}>
             <text
+              x={x}
+              y={y}
+              transform={`rotate(${rotateDegrees} ${x} ${y})`}
               textAnchor="middle"
-              transform={`rotate(${getCircularRotationByIndex({
-                totalBases: sequence.length,
-                index,
-              })})`}
               dominantBaseline="middle"
               color="currentColor"
               fill="currentColor"
-              fontSize="1rem"
+              fontSize="0.5rem"
               fontWeight="thin"
               fontFamily="inherit"
             >
@@ -312,27 +335,21 @@ const CircularSequenceIndex = ({
   );
 };
 /**
- * Given an index along the plasmid and its radius, find the coordinate
- * will be used in many of the child components
- *
- * In general, this is for lines and labels
+ * Given an index along the plasmid and its radius, find svg coordinate
  */
 const findCoor = ({
   index,
   radius,
-  rotate,
   center,
   seqLength,
 }: {
   index: number;
   radius: number;
-  rotate: boolean;
+
   center: Coor;
   seqLength: number;
 }): Coor => {
-  const context = { circular: 1 };
-  const rotatedIndex = rotate ? index - context.circular : index;
-  const lengthPerc = rotatedIndex / seqLength;
+  const lengthPerc = index / seqLength;
   const lengthPercCentered = lengthPerc - 0.25;
   const radians = lengthPercCentered * Math.PI * 2;
   const xAdjust = Math.cos(radians) * radius;
@@ -342,33 +359,4 @@ const findCoor = ({
     x: center.x + xAdjust,
     y: center.y + yAdjust,
   };
-};
-const getCircularRotationByIndex = ({
-  totalBases,
-  index,
-}: {
-  totalBases: number;
-  index: number;
-}) => {
-  const angle = (360 / totalBases) * index;
-  return angle + 90;
-};
-
-const getCircularCoordinateByIndex = ({
-  index,
-  totalBases,
-  cx,
-  cy,
-  radius,
-}: {
-  index: number;
-  totalBases: number;
-  cx: number;
-  cy: number;
-  radius: number;
-}) => {
-  const angle = (index / totalBases) * 2 * Math.PI;
-  const x = cx + radius * Math.cos(angle);
-  const y = cy + radius * Math.sin(angle);
-  return { x, y };
 };
