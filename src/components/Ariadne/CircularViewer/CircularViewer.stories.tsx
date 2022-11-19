@@ -15,7 +15,7 @@ export default {
 const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
   return (
     <Card className="max-w-xl">
-      <CircularViewer sequence={sequence} />
+      <CircularViewer sequence={sequence} size={400} />
     </Card>
   );
 };

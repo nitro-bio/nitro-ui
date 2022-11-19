@@ -1,26 +1,52 @@
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { RefObject, useEffect } from "react";
+import { useTextSelection } from "../hooks/useTextSelection";
+import { stackElements } from "./circularUtils";
 
 export interface Props {
   sequence: string;
+  size: number;
 }
 const sequenceAtom = atom("");
-export const CircularViewer = (props: Props) => {
-  const [, setSequence] = useAtom(sequenceAtom);
 
+type SelectionRange = [null, null] | [number, number] | [number, null];
+const selectionRangeAtom = atom<SelectionRange>([null, null]);
+export const CircularViewer = (props: Props) => {
+  const [sequence, setSequence] = useAtom(sequenceAtom);
+  const { cx, cy, sizeX, sizeY, radius, strokeWidth } = {
+    cx: props.size / 2,
+    cy: props.size / 2,
+    sizeX: props.size,
+    sizeY: props.size,
+    radius: (props.size - 10) / 2,
+    strokeWidth: 2,
+  };
   useEffect(
     function syncSequenceAtomWithProps() {
       setSequence(props.sequence);
     },
     [props.sequence]
   );
-  const { cx, cy, radius, strokeWidth } = {
-    cx: 50,
-    cy: 50,
-    radius: 40,
-    strokeWidth: 1,
-  };
 
+  const { range, ref: selectionRef } = useTextSelection();
+  const [selectionRange, setSelectionRange] = useAtom(selectionRangeAtom);
+
+  useEffect(
+    function syncSelectionRangeAtomWithSelection() {
+      const [rawStart, rawEnd] = [
+        range?.startContainer?.parentElement?.getAttribute("data-seq-index"),
+        range?.endContainer?.parentElement?.getAttribute("data-seq-index"),
+      ];
+      const [start, end] = [
+        rawStart ? parseFloat(rawStart) : null,
+        rawEnd ? parseFloat(rawEnd) : null,
+      ];
+      setSelectionRange([start, end] as SelectionRange);
+    },
+    [range]
+  );
+
+  console.table(selectionRange);
   const annotations: Annotation[] = [
     {
       start: 0,
@@ -29,11 +55,43 @@ export const CircularViewer = (props: Props) => {
       text: "test",
       onClick: () => console.log("clicked"),
     },
+    {
+      start: 3,
+      end: 16,
+      color: "green",
+      text: "test",
+      onClick: () => console.log("clicked"),
+    },
+    {
+      start: 20,
+      end: 24,
+      color: "blue",
+      text: "test",
+      onClick: () => console.log("clicked"),
+    },
   ];
+
   return (
-    <div className="font-mono p-6 font-thin text-brand-400 ">
+    <div
+      className="font-mono p-6 font-thin text-brand-400"
+      ref={selectionRef as React.RefObject<HTMLDivElement>}
+    >
+      <div className="flex flex-row gap-2 text-brand-500 h-24">
+        {selectionRange[0] !== null && (
+          <div className="flex flex-col gap-1">
+            <div>Start</div>
+            <div>{selectionRange[0]}</div>
+          </div>
+        )}
+        {selectionRange[1] !== null && (
+          <div className="flex flex-col gap-1">
+            <div>End</div>
+            <div>{selectionRange[1]}</div>
+          </div>
+        )}
+      </div>
       <svg
-        viewBox="0 0 100 100"
+        viewBox={`0 0 ${sizeX} ${sizeY}`}
         xmlns="http://www.w3.org/2000/svg"
         fontFamily="inherit"
         fontSize="inherit"
@@ -67,13 +125,13 @@ interface Annotation {
   onClick: () => void;
 }
 const CircularAnnotation = ({
+  annotation,
   gutterRadius,
-
   radius,
   center,
 }: {
   gutterRadius: number;
-
+  annotation: Annotation;
   radius: number;
   center: Coor;
 }) => {
@@ -86,17 +144,17 @@ const CircularAnnotation = ({
     innerRadius: gutterRadius,
     outerRadius: gutterRadius + 5,
     largeArc: false,
-    length: 3,
+    length: annotation.end - annotation.start,
     sweepFWD: true,
     lineHeight: 10,
     seqLength: sequence.length,
     radius,
-    offset: 0,
+    offset: annotation.start,
     center: { x: cx, y: cy },
   });
 
   return (
-    <path d={arcPath} fill="currentColor">
+    <path d={arcPath} fill={annotation.color} stroke={annotation.color}>
       <text>Annotation</text>
     </path>
   );
@@ -117,11 +175,15 @@ const CircularAnnotationGutter = ({
   return (
     <g className="text-brand-800">
       <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={1} />;
-      <CircularAnnotation
-        radius={radius}
-        center={{ x: cx, y: cy }}
-        gutterRadius={gutterRadius}
-      />
+      {annotations.map((annotation, i) => (
+        <CircularAnnotation
+          key={i}
+          annotation={annotation}
+          radius={radius}
+          center={{ x: cx, y: cy }}
+          gutterRadius={gutterRadius}
+        />
+      ))}
     </g>
   );
 };
@@ -132,7 +194,16 @@ const CircularAnnotationGutter = ({
  * are needed for selection arcs (where the direction of the arc isn't known beforehand)
  * and arrowFWD and arrowREV are needed for annotations, where there may be directionality
  */
-const genArc = (args: {
+const genArc = ({
+  innerRadius,
+  largeArc,
+  length,
+  offset,
+  seqLength,
+  center,
+  outerRadius,
+  sweepFWD,
+}: {
   arrowFWD: boolean;
   arrowREV: boolean;
   innerRadius: number;
@@ -146,99 +217,35 @@ const genArc = (args: {
   offset: number;
   center: Coor;
 }): string => {
-  const {
-    arrowFWD,
-    arrowREV,
-    innerRadius,
-    largeArc,
-    length,
-    lineHeight,
-    radius,
-    seqLength,
-    center,
-    outerRadius,
-    sweepFWD,
-  } = args;
-  const offset = args.offset === undefined ? 0 : args.offset;
   // build up the six default coordinates
-  let leftBottom = findCoor({
+  const leftBottom = findCoor({
     index: offset,
     radius: innerRadius,
 
     center,
     seqLength,
   });
-  let leftTop = findCoor({
+  const leftTop = findCoor({
     index: offset,
     radius: outerRadius,
 
     center,
     seqLength,
   });
-  let rightBottom = findCoor({
+  const rightBottom = findCoor({
     index: length + offset,
     radius: innerRadius,
 
     center,
     seqLength,
   });
-  let rightTop = findCoor({
+  const rightTop = findCoor({
     index: length + offset,
     radius: outerRadius,
 
     center,
     seqLength,
   });
-  let leftArrow = "";
-  let rightArrow = "";
-
-  // create arrows by making a midpoint along edge and shifting corners inwards
-  if (arrowREV || arrowFWD) {
-    // one quarter of lineHeight in px is the shift inward for arrows
-    const inwardShift = lineHeight / 4;
-    // given the arc length (inwardShift) and the radius (from SeqViewer),
-    // we can find the degrees to rotate the corners
-    const centralAngle = inwardShift / radius;
-    // Math.min here is to make sure the arrow it's larger than the element
-    const centralAnglePerc = Math.min(centralAngle / 2, length / seqLength);
-    const centralAngleDeg = centralAnglePerc * 360;
-
-    if (arrowREV) {
-      leftBottom = rotateCoor({
-        coor: leftBottom,
-        degrees: centralAngleDeg,
-        center,
-      });
-      leftTop = rotateCoor({ coor: leftTop, degrees: centralAngleDeg, center });
-      const lArrowC = findCoor({
-        index: 0,
-        radius: (innerRadius + outerRadius) / 2,
-
-        center,
-        seqLength,
-      });
-      leftArrow = `L ${lArrowC.x} ${lArrowC.y}`;
-    } else {
-      rightBottom = rotateCoor({
-        coor: rightBottom,
-        degrees: -centralAngleDeg,
-        center,
-      });
-      rightTop = rotateCoor({
-        coor: rightTop,
-        degrees: -centralAngleDeg,
-        center,
-      });
-      const rArrowC = findCoor({
-        index: length,
-        radius: (innerRadius + outerRadius) / 2,
-
-        center,
-        seqLength,
-      });
-      rightArrow = `L ${rArrowC.x} ${rArrowC.y}`;
-    }
-  }
 
   const lArc = largeArc ? 1 : 0;
   const sFlagF = sweepFWD ? 1 : 0;
@@ -247,10 +254,8 @@ const genArc = (args: {
   return `M ${rightBottom.x} ${rightBottom.y}
       A ${innerRadius} ${innerRadius}, 0, ${lArc}, ${sFlagR}, ${leftBottom.x} ${leftBottom.y}
       L ${leftBottom.x} ${leftBottom.y}
-      ${leftArrow}
       L ${leftTop.x} ${leftTop.y}
       A ${outerRadius} ${outerRadius}, 0, ${lArc}, ${sFlagF}, ${rightTop.x} ${rightTop.y}
-      ${rightArrow}
       Z`;
 };
 
@@ -303,7 +308,7 @@ const CircularSequenceIndex = ({
 }) => {
   const [sequence] = useAtom(sequenceAtom);
   return (
-    <g className="text-noir-800">
+    <text className="text-noir-800">
       {sequence.split("").map((letter, index) => {
         const { x, y } = findCoor({
           index,
@@ -313,25 +318,25 @@ const CircularSequenceIndex = ({
         });
         const rotateDegrees = (index / sequence.length) * 360;
         return (
-          <g key={`base-${index}`}>
-            <text
-              x={x}
-              y={y}
-              transform={`rotate(${rotateDegrees} ${x} ${y})`}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              color="currentColor"
-              fill="currentColor"
-              fontSize="0.5rem"
-              fontWeight="thin"
-              fontFamily="inherit"
-            >
-              {letter}
-            </text>
-          </g>
+          <tspan
+            key={`base-${index}`}
+            x={x}
+            y={y}
+            transform={`rotate(${rotateDegrees} ${x} ${y})`}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            color="currentColor"
+            fill="currentColor"
+            fontSize="0.5rem"
+            fontWeight="thin"
+            fontFamily="inherit"
+            data-seq-index={index}
+          >
+            {letter}
+          </tspan>
         );
       })}
-    </g>
+    </text>
   );
 };
 /**
