@@ -26,8 +26,12 @@ module.exports = {
             replacement: path.resolve(__dirname, "../src/utils"),
           },
           {
-            find: "@blast",
+            find: "@Blast",
             replacement: path.resolve(__dirname, "../src/components/Blast"),
+          },
+          {
+            find: "@Ariadne",
+            replacement: path.resolve(__dirname, "../src/components/Ariadne"),
           },
         ],
       },

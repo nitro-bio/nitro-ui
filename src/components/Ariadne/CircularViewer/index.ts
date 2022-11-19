@@ -1,3 +1,3 @@
-import { TextAlignmentViz } from "@Blast/TextAlignmentViz/TextAlignmentViz";
+import { CircularViewer } from "./CircularViewer";
 
-export default TextAlignmentViz;
+export default CircularViewer;

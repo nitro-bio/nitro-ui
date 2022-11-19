@@ -18,7 +18,8 @@
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],
-      "@Blast/*": ["./src/components/Blast/*"]
+      "@Blast/*": ["./src/components/Blast/*"],
+      "@Ariadne/*": ["./src/components/Ariadne/*"]
     }
   },
   "include": [
