@@ -3,13 +3,13 @@ interface Stackable {
   end: number;
 }
 
-export const stackElements = (...elements: Stackable[]) => {
+export const stackElements = <T extends Stackable>(elements: T[]) => {
   // utility funcs for stackElements
-  const last = (arr: Stackable[]): Stackable => arr[arr.length - 1];
-  const first = (arr: Stackable[]): Stackable => arr[0];
+  const last = (arr: T[]): T => arr[arr.length - 1];
+  const first = (arr: T[]): T => arr[0];
   const maxIndex = elements.map((e) => e.end).reduce((a, b) => Math.max(a, b));
 
-  const stack: Stackable[][] = [];
+  const stack: T[][] = [];
   elements.forEach((a) => {
     const insertIndex = stack.findIndex((elems) => {
       if (a.end === a.start) {

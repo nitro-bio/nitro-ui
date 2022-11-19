@@ -172,17 +172,23 @@ const CircularAnnotationGutter = ({
   radius: number;
 }) => {
   const gutterRadius = radius * 0.4;
+  const stackedAnnotations = stackElements(annotations);
+  console.log(stackedAnnotations);
   return (
     <g className="text-brand-800">
       <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={1} />;
-      {annotations.map((annotation, i) => (
-        <CircularAnnotation
-          key={i}
-          annotation={annotation}
-          radius={radius}
-          center={{ x: cx, y: cy }}
-          gutterRadius={gutterRadius}
-        />
+      {stackedAnnotations.map((annotations, stackIdx) => (
+        <>
+          {annotations.map((annotation) => (
+            <CircularAnnotation
+              key={`${annotation.start}-${annotation.end}-${annotation.text}`}
+              annotation={annotation}
+              radius={radius}
+              center={{ x: cx, y: cy }}
+              gutterRadius={gutterRadius + stackIdx * 10}
+            />
+          ))}
+        </>
       ))}
     </g>
   );
