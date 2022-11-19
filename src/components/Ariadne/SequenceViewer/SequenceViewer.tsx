@@ -1,14 +1,9 @@
 import { classNames } from "@utils/stringUtils";
 import { cva, VariantProps } from "class-variance-authority";
+import { Fragment } from "react";
 
-import {
-  AA,
-  AnnotatedSequence,
-  Annotation,
-  Nucl,
-  ValidatedSequence,
-} from "../types";
-import { getComplement } from "../utils";
+import { AnnotatedSequence, Annotation } from "../types";
+import { stackElements } from "../utils";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -39,14 +34,16 @@ export const SequenceViewer = ({ sequence }: Props) => {
 const SequenceAnnotation = ({ annotations }: { annotations: Annotation[] }) => {
   return (
     <>
-      {annotations.map((annotation) => {
-        return (
-          <div
-            key={`${annotation.start}-${annotation.end}-${annotation.color}`}
-            className={classNames("h-4", `bg-${annotation.color}-300`)}
-          />
-        );
-      })}
+      <Fragment>
+        {annotations.map((annotation) => {
+          return (
+            <div
+              key={`${annotation.start}-${annotation.end}-${annotation.color}`}
+              className={classNames("h-4", `bg-${annotation.color}`)}
+            />
+          );
+        })}
+      </Fragment>
     </>
   );
 };

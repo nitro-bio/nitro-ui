@@ -1,8 +1,9 @@
+import { getAnnotatedSequence } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 
 import SequenceViewer from ".";
-import type { Annotation, ValidatedSequence } from "../types";
+import type { Annotation } from "../types";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -20,13 +21,13 @@ const Template: ComponentStory<any> = ({
   sequence: string;
   annotations: Annotation[];
 }) => {
+  const annotatedSequence = getAnnotatedSequence(
+    sequence.split(""),
+    annotations
+  );
   return (
     <Card className="max-w-xl h-[300px]">
-      <SequenceViewer
-        sequence={sequence.split("") as ValidatedSequence}
-        size={{ width: 500, height: 500 }}
-        annotations={annotations}
-      />
+      <SequenceViewer sequence={annotatedSequence} />
     </Card>
   );
 };
@@ -39,21 +40,21 @@ SequenceViewerStory.args = {
     {
       start: 0,
       end: 4,
-      color: "bg-red-300",
+      color: "red-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 3,
       end: 16,
-      color: "bg-green-300",
+      color: "green-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 20,
       end: 24,
-      color: "bg-blue-300",
+      color: "blue-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },

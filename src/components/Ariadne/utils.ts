@@ -88,5 +88,5 @@ export const stackElements = <T extends Stackable>(elements: T[]) => {
       stack.push([a]);
     }
   });
-  return stack;
+  return stack.map((row) => row.sort((a, b) => a.start - b.start));
 };

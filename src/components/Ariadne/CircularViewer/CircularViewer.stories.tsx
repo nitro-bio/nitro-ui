@@ -1,3 +1,5 @@
+import { Annotation } from "@Ariadne/types";
+import { getAnnotatedSequence } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 
@@ -13,11 +15,21 @@ export default {
 } as ComponentMeta<typeof CircularViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({ sequence, annotations }: Props) => {
+const Template: ComponentStory<any> = ({
+  sequence,
+  annotations,
+}: {
+  sequence: string;
+  annotations: Annotation[];
+}) => {
+  const annotatedSequence = getAnnotatedSequence(
+    sequence.split(""),
+    annotations
+  );
   return (
     <Card className="max-w-xl">
       <CircularViewer
-        sequence={sequence}
+        sequence={annotatedSequence}
         size={400}
         annotations={annotations}
       />
@@ -32,21 +44,21 @@ CircularViewerStory.args = {
     {
       start: 0,
       end: 4,
-      color: "red",
+      color: "red-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 3,
       end: 16,
-      color: "green",
+      color: "green-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 20,
       end: 24,
-      color: "blue",
+      color: "blue-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },

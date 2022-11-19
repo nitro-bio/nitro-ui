@@ -8,6 +8,15 @@ module.exports = {
   darkMode: "class",
 
   content: ["./src/components/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    /* For user-defined ariadne colors */
+    {
+      pattern: /bg-.+/,
+    },
+    {
+      pattern: /text-.+/,
+    },
+  ],
   theme: {
     extend: {
       colors: {

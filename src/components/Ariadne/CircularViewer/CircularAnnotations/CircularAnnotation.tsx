@@ -22,14 +22,15 @@ export const CircularAnnotation = ({
     length: annotation.end - annotation.start,
     sweepFWD: true,
     seqLength: sequence.length,
-
     offset: annotation.start,
     center: { x: cx, y: cy },
   });
 
   return (
-    <path d={arcPath} fill={annotation.color} stroke={annotation.color}>
-      <text>Annotation</text>
-    </path>
+    <svg className={`text-${annotation.color} fill-current`}>
+      <path d={arcPath} fill="currentColor" stroke="currentColor">
+        <text>Annotation</text>
+      </path>
+    </svg>
   );
 };

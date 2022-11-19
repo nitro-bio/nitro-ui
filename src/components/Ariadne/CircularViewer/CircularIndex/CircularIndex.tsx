@@ -11,8 +11,22 @@ export const CircularIndex = ({
   cy: number;
   radius: number;
 }) => {
+  if (sequence.length > 80) {
+    return (
+      <svg className={`text-brand-800 fill-current`}>
+        <circle
+          cx={cx}
+          cy={cy}
+          r={radius * 0.75}
+          fill="none"
+          stroke="inherit"
+          strokeWidth={2}
+        />
+      </svg>
+    );
+  }
   return (
-    <text className="text-noir-800">
+    <text className="text-brand-800">
       {sequence.split("").map((letter, index) => {
         const { x, y } = findCoor({
           index,

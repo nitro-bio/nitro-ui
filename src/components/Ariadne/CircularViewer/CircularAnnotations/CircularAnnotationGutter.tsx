@@ -17,12 +17,12 @@ export const CircularAnnotationGutter = ({
   radius: number;
   sequence: string;
 }) => {
-  const gutterRadius = radius * 0.4;
+  const gutterRadius = radius * 0.5;
   const stackedAnnotations = stackElements(annotations);
 
   return (
     <g className="text-brand-800">
-      <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={1} />;
+      <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={0.8} />;
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (

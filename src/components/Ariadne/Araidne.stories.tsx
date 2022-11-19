@@ -30,7 +30,7 @@ const Template: ComponentStory<any> = ({
     annotations
   );
   return (
-    <Card className="grid grid-cols-1 grid-row-auto lg:grid-cols-2 lg:grid-rows-2 lg:h-screen content-center">
+    <Card className="grid grid-cols-1 my-10 grid-row-auto lg:grid-cols-2 lg:grid-rows-2 lg:h-screen content-center">
       <div className="row-span-2 shrink-0 grid content-center bg-red-50">
         <SequenceViewer sequence={annotatedSequence} />
       </div>
@@ -55,26 +55,26 @@ const Template: ComponentStory<any> = ({
 export const KitchenSink = Template.bind({});
 KitchenSink.args = {
   sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   annotations: [
     {
       start: 0,
       end: 4,
-      color: "red",
+      color: "red-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 3,
       end: 16,
-      color: "green",
+      color: "green-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
     {
       start: 20,
       end: 24,
-      color: "blue",
+      color: "blue-300",
       text: "test",
       onClick: () => console.log("clicked"),
     },
