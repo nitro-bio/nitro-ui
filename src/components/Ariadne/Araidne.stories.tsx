@@ -27,19 +27,19 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
     annotations
   );
   return (
-    <Card className="grid-row-auto my-10 grid grid-cols-1 content-center lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
-      <div className="row-span-2 grid shrink-0 content-center ">
+    <Card className="grid-row-auto grid grid-cols-1 content-center lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
+      <div className="row-span-2 grid shrink-0 content-center  py-12">
+        <SequenceViewer sequence={annotatedSequence} />
+      </div>
+      <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
           sequence={annotatedSequence}
           size={400}
           annotations={annotations}
         />
       </div>
-      <div className="row-span-1 grid shrink-0 content-center">
+      <div className="row-span-1 grid shrink-0 content-center ">
         <LinearViewer sequence={annotatedSequence} annotations={annotations} />
-      </div>
-      <div className="row-span-1 grid shrink-0 content-center">
-        <SequenceViewer sequence={annotatedSequence} />
       </div>
     </Card>
   );

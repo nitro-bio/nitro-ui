@@ -19,7 +19,7 @@ export const CircularAnnotationGutter = ({
 }) => {
   const gutterRadius = radius * 0.3;
   const stackedAnnotations = stackElements(annotations);
-
+  console.log(sequence);
   return (
     <g>
       <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={0.8} />;

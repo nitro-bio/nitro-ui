@@ -22,10 +22,11 @@ export const generateRandomAnnotations = (
 
   for (let i = 0; i < sequence.length; i++) {
     const start = getRndInteger(0, sequence.length);
-    const end = getRndInteger(
-      start + min_annotation_length,
-      start + max_annotation_length
-    );
+    const end =
+      getRndInteger(
+        start + min_annotation_length,
+        start + max_annotation_length
+      ) % sequence.length;
     const randomColor = colors[getRndInteger(0, colors.length)];
     const annotation = {
       start,

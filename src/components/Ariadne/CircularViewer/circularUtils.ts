@@ -30,28 +30,24 @@ export const genArc = ({
   const leftBottom = findCoor({
     index: offset,
     radius: innerRadius,
-
     center,
     seqLength,
   });
   const leftTop = findCoor({
     index: offset,
     radius: outerRadius,
-
     center,
     seqLength,
   });
   const rightBottom = findCoor({
     index: length + offset,
     radius: innerRadius,
-
     center,
     seqLength,
   });
   const rightTop = findCoor({
     index: length + offset,
     radius: outerRadius,
-
     center,
     seqLength,
   });

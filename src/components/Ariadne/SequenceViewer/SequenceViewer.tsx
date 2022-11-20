@@ -9,11 +9,11 @@ export interface Props {
 export const SequenceViewer = ({ sequence }: Props) => {
   return (
     <>
-      <div className="font-mono content-stretch grid h-full overflow-y-scroll pt-4 text-center text-2xl tracking-widest dark:bg-noir-800 md:mx-4">
+      <div className="font-mono content-stretch text-md grid h-full overflow-y-scroll pt-4 text-center tracking-widest dark:bg-noir-800 md:mx-4">
         <div className="flex flex-row flex-wrap space-x-1">
           {sequence.map(({ base, complement, annotations, index }) => {
             return (
-              <div key={`sequence-viewer-base-${index}`}>
+              <div key={`sequence-viewer-base-${index}`} contentEditable>
                 <CharComponent type="sequence" char={base} />{" "}
                 <CharComponent type="complement" char={complement} />{" "}
                 <SequenceAnnotation

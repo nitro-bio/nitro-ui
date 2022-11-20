@@ -15,7 +15,7 @@ export const LinearViewer = (props: Props) => {
 
   const numberOfTicks = 5;
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
-
+  console.table(annotations);
   return (
     <div className="font-mono p-6 font-thin text-brand-400">
       <svg
@@ -42,9 +42,9 @@ export const LinearViewer = (props: Props) => {
           totalBases={sequence.length}
         />
         <LinearAnnotationGutter annotations={annotations} sequence={sequence} />
-        <text
+        {/* <text
           x={"50%"}
-          y={"80%"}
+          dy={-10}
           textAnchor="middle"
           fill="currentColor"
           stroke="currentColor"
@@ -52,7 +52,7 @@ export const LinearViewer = (props: Props) => {
           fontSize={"1.8rem"}
         >
           {sequence.length} bases
-        </text>
+        </text> */}
       </svg>
     </div>
   );
@@ -72,22 +72,58 @@ const LinearAnnotationGutter = ({
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (
-            <g
-              key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
-              className={classNames(annotation.color)}
-            >
-              <line
-                x1={`${(annotation.start / sequence.length) * 100}%`}
-                y1={`${50 + 3 * (stackIdx + 1)}%`}
-                x2={`${(annotation.end / sequence.length) * 100}%`}
-                y2={`${50 + 3 * (stackIdx + 1)}%`}
-                stroke="currentColor"
-                strokeWidth={10}
-              />
-            </g>
+            <LinearAnnotation
+              key={`annotation-${annotation.id}`}
+              annotation={annotation}
+              sequence={sequence}
+              stackIdx={stackIdx}
+            />
           ))}
         </Fragment>
       ))}
+    </g>
+  );
+};
+const LinearAnnotation = ({
+  annotation,
+  sequence,
+  stackIdx,
+}: {
+  annotation: Annotation;
+  sequence: AnnotatedSequence;
+  stackIdx: number;
+}) => {
+  /* if the annotation spans the seam, we draw two lines from the beginning to end, and from start to end */
+  const annotationSpansSeam = annotation.end < annotation.start;
+  if (annotationSpansSeam) {
+    return (
+      <Fragment>
+        <LinearAnnotation
+          annotation={{ ...annotation, end: sequence.length }}
+          sequence={sequence}
+          stackIdx={stackIdx}
+        />
+        <LinearAnnotation
+          annotation={{ ...annotation, start: 0 }}
+          sequence={sequence}
+          stackIdx={stackIdx}
+        />
+      </Fragment>
+    );
+  }
+  return (
+    <g
+      key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
+      className={classNames(annotation.color)}
+    >
+      <line
+        x1={`${(annotation.start / sequence.length) * 100}%`}
+        y1={`${50 + 3 * (stackIdx + 1)}%`}
+        x2={`${(annotation.end / sequence.length) * 100}%`}
+        y2={`${50 + 3 * (stackIdx + 1)}%`}
+        stroke="currentColor"
+        strokeWidth={10}
+      />
     </g>
   );
 };

@@ -15,6 +15,13 @@ export const CircularAnnotation = ({
 }) => {
   const { x: cx, y: cy } = center;
   /* draw an svg path for an arc of quadrant 1 of a circl */
+  console.table({ ...annotation, length: annotation.end - annotation.start });
+
+  /* if the annotation spans the seam, we start the arc beginning at the end (negative offset) and then draw from there */
+  const annotationSpansSeam = annotation.end < annotation.start;
+  const offset = annotationSpansSeam
+    ? annotation.start
+    : sequence.length - annotation.end;
   const arcPath = genArc({
     innerRadius: radius,
     outerRadius: radius + 5,
@@ -22,7 +29,7 @@ export const CircularAnnotation = ({
     length: annotation.end - annotation.start,
     sweepFWD: true,
     seqLength: sequence.length,
-    offset: annotation.start,
+    offset,
     center: { x: cx, y: cy },
   });
 
