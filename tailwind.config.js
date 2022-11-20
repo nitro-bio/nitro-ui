@@ -9,16 +9,26 @@ module.exports = {
   darkMode: "class",
 
   content: ["./src/components/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    /* For user-defined ariadne colors */
+    {
+      pattern: /bg-.+/,
+    },
+    {
+      pattern: /text-.+/,
+    },
+    "bg-teal-300",
+  ],
   theme: {
     extend: {
       colors: {
-        ...colors,
-        noir: noirColor,
+        noir: colors.zinc,
         brand: brandColor,
       },
     },
     ringColor: {
       brand: brandColor[500],
+      noir: colors.zinc[500],
     },
     fontFamily: {
       sans: ["Inter var", ...defaultTheme.fontFamily.sans],
