@@ -110,7 +110,7 @@ const Ticks = ({
         };
         const { y1, y2 } = { y1: "50%", y2: "45%" };
         return (
-          <g key={`tick-${i}`} className="text-brand-400/50 fill-current">
+          <g key={`tick-${i}`} className="fill-current text-brand-400/50">
             <line
               id={`tick-${i}`}
               x1={x1}

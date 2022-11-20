@@ -17,7 +17,7 @@ export const CircularIndex = ({
 
   if (sequence.length > 80) {
     return (
-      <svg className={`text-brand-800 bg-brand-800 fill-current`}>
+      <svg className={`bg-brand-800 fill-current text-brand-800`}>
         <circle
           cx={cx}
           cy={cy}

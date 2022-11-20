@@ -9,17 +9,16 @@ export interface Props {
 }
 
 export const CircularViewer = ({ sequence, size, annotations }: Props) => {
-  const { cx, cy, sizeX, sizeY, radius, strokeWidth } = {
+  const { cx, cy, sizeX, sizeY, radius } = {
     cx: size / 2,
     cy: size / 2,
     sizeX: size,
     sizeY: size,
     radius: (size - 10) / 2,
-    strokeWidth: 2,
   };
 
   return (
-    <div className="font-mono font-thin text-brand-400 flex items-center justify-center">
+    <div className="font-mono flex items-center justify-center font-thin text-brand-400">
       <svg
         viewBox={`0 0 ${sizeX} ${sizeY}`}
         xmlns="http://www.w3.org/2000/svg"

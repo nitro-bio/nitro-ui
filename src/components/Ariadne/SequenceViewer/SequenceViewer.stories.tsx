@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 
 import SequenceViewer from ".";
-import type { AA, Annotation, Nucl } from "../types";
+import type { AA, Nucl } from "../types";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -27,7 +27,7 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
   );
 
   return (
-    <Card className="max-w-xl h-[400px]">
+    <Card className="h-[400px] max-w-xl">
       <SequenceViewer sequence={annotatedSequence} />
     </Card>
   );

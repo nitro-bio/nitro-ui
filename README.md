@@ -8,6 +8,13 @@ yarn
 yarn dev
 ```
 
+### Publish to npm
+
+```bash
+yarn build
+yarn publish --access public
+```
+
 ### Project Description
 
 This is a component library for Nitro. It is built using [Vite](https://vitejs.dev/) and [Storybook](https://storybook.js.org/). It uses [Tailwind CSS](https://tailwindcss.com/) for styling and [CVA](https://github.com/joe-bell/cva) for managing those styles.

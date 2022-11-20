@@ -1,11 +1,10 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { Annotation, ValidatedSequence } from "@Ariadne/types";
+import { ValidatedSequence } from "@Ariadne/types";
 import { getAnnotatedSequence } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 
 import CircularViewer from ".";
-import { Props } from "./CircularViewer";
 
 export default {
   title: "Ariadne/CircularViewer",

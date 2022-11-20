@@ -1,9 +1,7 @@
-import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { cva, VariantProps } from "class-variance-authority";
-import { Fragment } from "react";
 
-import { AnnotatedSequence, Annotation, StackedAnnotation } from "../types";
+import { AnnotatedSequence, StackedAnnotation } from "../types";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -11,7 +9,7 @@ export interface Props {
 export const SequenceViewer = ({ sequence }: Props) => {
   return (
     <>
-      <div className="font-mono grid content-stretch pt-4 text-center text-2xl tracking-widest dark:bg-noir-800 md:mx-4 h-full overflow-y-scroll">
+      <div className="font-mono content-stretch grid h-full overflow-y-scroll pt-4 text-center text-2xl tracking-widest dark:bg-noir-800 md:mx-4">
         <div className="flex flex-row flex-wrap space-x-1">
           {sequence.map(({ base, complement, annotations, index }) => {
             return (
