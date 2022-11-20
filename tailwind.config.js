@@ -3,6 +3,7 @@ const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const brandColor = colors.indigo;
+const noirColor = colors.zinc;
 
 module.exports = {
   darkMode: "class",
