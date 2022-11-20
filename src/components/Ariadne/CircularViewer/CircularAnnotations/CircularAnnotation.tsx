@@ -1,5 +1,5 @@
 import { genArc } from "../circularUtils";
-import type { Annotation, Coor } from "@Ariadne/types";
+import type { AnnotatedSequence, Annotation, Coor } from "@Ariadne/types";
 
 export const CircularAnnotation = ({
   sequence,
@@ -7,7 +7,7 @@ export const CircularAnnotation = ({
   radius,
   center,
 }: {
-  sequence: string;
+  sequence: AnnotatedSequence;
   radius: number;
   annotation: Annotation;
 

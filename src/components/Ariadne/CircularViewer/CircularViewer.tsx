@@ -30,14 +30,9 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
         width={sizeX}
         height={sizeY}
       >
-        <CircularIndex
-          cx={cx}
-          cy={cy}
-          radius={radius}
-          sequence={sequence.map((s) => s.base).join("")}
-        />
+        <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
         <CircularAnnotationGutter
-          sequence={sequence.map((s) => s.base).join("")}
+          sequence={sequence}
           annotations={annotations}
           cx={cx}
           cy={cy}

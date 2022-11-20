@@ -42,7 +42,7 @@ export const CircularIndex = ({
           alignmentBaseline="middle"
           fontSize={"1rem"}
         >
-          {sequence.length}
+          {sequence.length} bp
         </text>
       </svg>
     );
