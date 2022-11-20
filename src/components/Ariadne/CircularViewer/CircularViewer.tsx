@@ -30,13 +30,6 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
         width={sizeX}
         height={sizeY}
       >
-        <circle
-          cx={cx}
-          cy={cy}
-          r={radius}
-          fill="none"
-          strokeWidth={strokeWidth}
-        />
         <CircularIndex
           cx={cx}
           cy={cy}

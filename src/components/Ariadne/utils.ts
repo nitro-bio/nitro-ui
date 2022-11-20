@@ -3,6 +3,7 @@ import {
   AnnotatedSequence,
   Annotation,
   Nucl,
+  StackedAnnotation,
   ValidatedSequence,
 } from "./types";
 
@@ -33,9 +34,9 @@ export const getAnnotatedSequence = (
   annotations: Annotation[]
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
-
+  const [stackedAnnotations] = getStackedAnnotations(annotations);
   const mapFn = (base: Nucl | AA, idx: number) => {
-    const annotationsForBase = annotations.filter((annotation) => {
+    const annotationsForBase = stackedAnnotations.filter((annotation) => {
       return annotation.start <= idx && annotation.end >= idx;
     });
     return {
@@ -89,4 +90,19 @@ export const stackElements = <T extends Stackable>(elements: T[]) => {
     }
   });
   return stack.map((row) => row.sort((a, b) => a.start - b.start));
+};
+
+// returns annotations with their stack index and max stack index
+export const getStackedAnnotations = (
+  annotations: Annotation[]
+): [StackedAnnotation[], number] => {
+  const stackedAnnotations = stackElements(annotations);
+  return [
+    stackedAnnotations
+      .map((row, idx) =>
+        row.map((annotation) => ({ ...annotation, stack: idx }))
+      )
+      .flat(),
+    stackedAnnotations.length,
+  ];
 };

@@ -1,9 +1,9 @@
+import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { cva, VariantProps } from "class-variance-authority";
 import { Fragment } from "react";
 
-import { AnnotatedSequence, Annotation } from "../types";
-import { stackElements } from "../utils";
+import { AnnotatedSequence, Annotation, StackedAnnotation } from "../types";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -11,17 +11,17 @@ export interface Props {
 export const SequenceViewer = ({ sequence }: Props) => {
   return (
     <>
-      <div className="leading-0 justify-start font-mono flex flex-wrap pt-4 text-center text-3xl tracking-widest dark:bg-noir-800 md:mx-4 h-full overflow-scroll h-full">
+      <div className="font-mono grid content-stretch pt-4 text-center text-2xl tracking-widest dark:bg-noir-800 md:mx-4 h-full overflow-y-scroll">
         <div className="flex flex-row flex-wrap space-x-1">
           {sequence.map(({ base, complement, annotations, index }) => {
             return (
-              <div
-                className="mb-8 select-none"
-                key={`sequence-viewer-base-${index}`}
-              >
+              <div key={`sequence-viewer-base-${index}`}>
                 <CharComponent type="sequence" char={base} />{" "}
                 <CharComponent type="complement" char={complement} />{" "}
-                <SequenceAnnotation annotations={annotations} />
+                <SequenceAnnotation
+                  annotations={annotations}
+                  maxAnnotationStack={5}
+                />
               </div>
             );
           })}
@@ -31,19 +31,31 @@ export const SequenceViewer = ({ sequence }: Props) => {
   );
 };
 
-const SequenceAnnotation = ({ annotations }: { annotations: Annotation[] }) => {
+const SequenceAnnotation = ({
+  annotations,
+  maxAnnotationStack,
+}: {
+  annotations: StackedAnnotation[];
+  maxAnnotationStack: number;
+}) => {
+  const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
   return (
     <>
-      <Fragment>
-        {annotations.map((annotation) => {
+      {[...Array(maxAnnotationStack).keys()].map((i) => {
+        const annotation = orderedAnnotations.find((a) => a.stack === i);
+        if (annotation) {
+          console.log("rendering annotation");
           return (
             <div
               key={`${annotation.start}-${annotation.end}-${annotation.color}`}
-              className={classNames("h-4", `bg-${annotation.color}`)}
+              className={classNames("h-1", annotation.color)}
             />
           );
-        })}
-      </Fragment>
+        } else {
+          console.log("rendering placeholder");
+          return <div key={`placeholder-${i}`} className={"h-1"} />;
+        }
+      })}
     </>
   );
 };
@@ -54,7 +66,7 @@ const charStyles = cva("whitespace-pre-wrap", {
       sequence: "dark:text-brand-100 text-brand-400",
       midline_bar: "text-noir-400",
       midline_x: "text-red-400",
-      complement: "dark:text-brand-300 text-brand-600",
+      complement: "dark:text-brand-300 text-brand-600 select-none",
     },
   },
   defaultVariants: {

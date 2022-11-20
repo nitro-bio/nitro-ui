@@ -10,6 +10,10 @@ export interface Annotation {
   onClick: () => void;
 }
 
+export interface StackedAnnotation extends Annotation {
+  stack: number;
+}
+
 export type Nucl = "A" | "C" | "G" | "T";
 export type AA =
   | "A"
@@ -37,14 +41,14 @@ export type AA =
 export interface AnnotatedNucl {
   base: Nucl;
   complement: Nucl;
-  annotations: Annotation[];
+  annotations: StackedAnnotation[];
   index: number;
 }
 
 export interface AnnotatedAA {
   base: AA;
   complement: AA;
-  annotations: Annotation[];
+  annotations: StackedAnnotation[];
   index: number;
 }
 export type AnnotatedSequence = AnnotatedNucl[] | AnnotatedAA[];

@@ -1,4 +1,5 @@
-import { Annotation } from "@Ariadne/types";
+import { generateRandomAnnotations } from "@Ariadne/storyUtils";
+import { Annotation, ValidatedSequence } from "@Ariadne/types";
 import { getAnnotatedSequence } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
@@ -15,15 +16,11 @@ export default {
 } as ComponentMeta<typeof CircularViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({
-  sequence,
-  annotations,
-}: {
-  sequence: string;
-  annotations: Annotation[];
-}) => {
+const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
+  const annotations = generateRandomAnnotations(sequence, 5);
+  const validatedSequence = sequence.split("") as ValidatedSequence;
   const annotatedSequence = getAnnotatedSequence(
-    sequence.split(""),
+    validatedSequence,
     annotations
   );
   return (
@@ -40,27 +37,4 @@ const Template: ComponentStory<any> = ({
 export const CircularViewerStory = Template.bind({});
 CircularViewerStory.args = {
   sequence: "abcdefghijklmnopqrstuvwxyz",
-  annotations: [
-    {
-      start: 0,
-      end: 4,
-      color: "red-300",
-      text: "test",
-      onClick: () => console.log("clicked"),
-    },
-    {
-      start: 3,
-      end: 16,
-      color: "green-300",
-      text: "test",
-      onClick: () => console.log("clicked"),
-    },
-    {
-      start: 20,
-      end: 24,
-      color: "blue-300",
-      text: "test",
-      onClick: () => console.log("clicked"),
-    },
-  ],
 };

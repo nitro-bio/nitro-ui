@@ -16,6 +16,7 @@ module.exports = {
     {
       pattern: /text-.+/,
     },
+    "bg-teal-300",
   ],
   theme: {
     extend: {
