@@ -79,25 +79,27 @@ const LinearSelection = ({
   selection: AriadneSelection;
   sequence: AnnotatedSequence;
 }) => {
-  /* Collect internal selection data and propogate up */
   const { start: internalSelectionStart, end: internalSelectionEnd } =
     useSelectionRect(selectionRef);
-  useEffect(() => {
-    if (
-      selectionRef.current &&
-      internalSelectionStart &&
-      internalSelectionEnd
-    ) {
-      const svgWidth = selectionRef.current?.getBoundingClientRect().width;
-      const start = Math.floor(
-        (internalSelectionStart.x / svgWidth) * sequence.length
-      );
-      const end = Math.floor(
-        (internalSelectionEnd.x / svgWidth) * sequence.length
-      );
-      setSelection([start, end]);
-    }
-  }, [internalSelectionStart, internalSelectionEnd]);
+  useEffect(
+    function propagateSelectionUp() {
+      if (
+        selectionRef.current &&
+        internalSelectionStart &&
+        internalSelectionEnd
+      ) {
+        const svgWidth = selectionRef.current?.getBoundingClientRect().width;
+        const start = Math.floor(
+          (internalSelectionStart.x / svgWidth) * sequence.length
+        );
+        const end = Math.floor(
+          (internalSelectionEnd.x / svgWidth) * sequence.length
+        );
+        setSelection([start, end]);
+      }
+    },
+    [internalSelectionStart, internalSelectionEnd]
+  );
 
   /* Display selection data that has trickled down */
   const [start, end] = selection;

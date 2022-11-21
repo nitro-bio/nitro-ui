@@ -22,7 +22,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        noir: colors.zinc,
+        noir: noirColor,
         brand: brandColor,
       },
     },

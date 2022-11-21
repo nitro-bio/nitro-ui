@@ -91,3 +91,19 @@ export const findCoor = ({
     y: center.y + yAdjust,
   };
 };
+
+export const findIndexFromCoor = ({
+  coor,
+  center,
+  seqLength,
+}: {
+  coor: Coor;
+  center: Coor;
+  seqLength: number;
+}): number => {
+  const x = coor.x - center.x;
+  const y = coor.y - center.y;
+  const radians = Math.atan2(y, x);
+  const lengthPerc = radians / (Math.PI * 2) + 0.25;
+  return Math.round(lengthPerc * seqLength);
+};
