@@ -13,7 +13,7 @@ export const SequenceViewer = ({ sequence }: Props) => {
         <div className="flex flex-row flex-wrap space-x-1">
           {sequence.map(({ base, complement, annotations, index }) => {
             return (
-              <div key={`sequence-viewer-base-${index}`} contentEditable>
+              <div key={`sequence-viewer-base-${index}`}>
                 <CharComponent type="sequence" char={base} />{" "}
                 <CharComponent type="complement" char={complement} />{" "}
                 <SequenceAnnotation
@@ -42,7 +42,6 @@ const SequenceAnnotation = ({
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
-          console.log("rendering annotation");
           return (
             <div
               key={`${annotation.start}-${annotation.end}-${annotation.color}`}
@@ -50,7 +49,6 @@ const SequenceAnnotation = ({
             />
           );
         } else {
-          console.log("rendering placeholder");
           return <div key={`placeholder-${i}`} className={"h-1"} />;
         }
       })}

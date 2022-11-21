@@ -1,7 +1,8 @@
 import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { Fragment } from "react";
-import { AnnotatedSequence, Annotation } from "../types";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
+import { useSelectionRect } from "@Ariadne/hooks/useSelectionRect";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -12,13 +13,16 @@ const SVG_SIZE = 800;
 
 export const LinearViewer = (props: Props) => {
   const { sequence, annotations } = props;
+  const [selection, setSelection] = useState<AriadneSelection>([null, null]);
+  const selectionRef = useRef<SVGSVGElement>(null);
 
   const numberOfTicks = 5;
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
-  console.table(annotations);
+
   return (
-    <div className="font-mono p-6 font-thin text-brand-400">
+    <div className="font-mono select-none p-6 font-thin text-brand-400">
       <svg
+        ref={selectionRef}
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
         xmlns="http://www.w3.org/2000/svg"
         fontFamily="inherit"
@@ -53,8 +57,66 @@ export const LinearViewer = (props: Props) => {
         >
           {sequence.length} bases
         </text> */}
+        <LinearSelection
+          selectionRef={selectionRef}
+          selection={selection}
+          setSelection={setSelection}
+          sequence={sequence}
+        />
       </svg>
     </div>
+  );
+};
+
+const LinearSelection = ({
+  selection,
+  selectionRef,
+  setSelection,
+  sequence,
+}: {
+  selectionRef: React.RefObject<SVGSVGElement>;
+  setSelection: (selection: AriadneSelection) => void;
+  selection: AriadneSelection;
+  sequence: AnnotatedSequence;
+}) => {
+  /* Collect internal selection data and propogate up */
+  const { start: internalSelectionStart, end: internalSelectionEnd } =
+    useSelectionRect(selectionRef);
+  useEffect(() => {
+    if (
+      selectionRef.current &&
+      internalSelectionStart &&
+      internalSelectionEnd
+    ) {
+      const svgWidth = selectionRef.current?.getBoundingClientRect().width;
+      const start = Math.floor(
+        (internalSelectionStart.x / svgWidth) * sequence.length
+      );
+      const end = Math.floor(
+        (internalSelectionEnd.x / svgWidth) * sequence.length
+      );
+      setSelection([start, end]);
+    }
+  }, [internalSelectionStart, internalSelectionEnd]);
+
+  /* Display selection data that has trickled down */
+  const [start, end] = selection;
+  if (start === null || end === null) {
+    return null;
+  }
+
+  const leftEdge = Math.min(start, end);
+  const left = (leftEdge / sequence.length) * 100;
+  const width = (Math.abs(end - start) / sequence.length) * 100;
+  return (
+    <rect
+      x={`${left}%`}
+      y="40%"
+      width={`${width}%`}
+      height="20%"
+      fill="currentColor"
+      fillOpacity={0.2}
+    />
   );
 };
 
@@ -73,7 +135,7 @@ const LinearAnnotationGutter = ({
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (
             <LinearAnnotation
-              key={`annotation-${annotation.id}`}
+              key={`annotation-${annotation.start}-${annotation.end}`}
               annotation={annotation}
               sequence={sequence}
               stackIdx={stackIdx}

@@ -53,3 +53,5 @@ export interface AnnotatedAA {
 }
 export type AnnotatedSequence = AnnotatedNucl[] | AnnotatedAA[];
 export type ValidatedSequence = Nucl[] | AA[];
+
+export type AriadneSelection = [number | null, number | null];

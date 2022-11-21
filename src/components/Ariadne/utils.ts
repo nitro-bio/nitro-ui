@@ -37,7 +37,20 @@ export const getAnnotatedSequence = (
   const [stackedAnnotations] = getStackedAnnotations(annotations);
   const mapFn = (base: Nucl | AA, idx: number) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
-      return annotation.start <= idx && annotation.end >= idx;
+      // if the annotation spans the seam of the plasmid
+      if (annotation.start > annotation.end) {
+        const isBetweenAnnotationStartAndEndofSequence =
+          idx >= annotation.start && idx <= sequence.length;
+        const isBetweenStartOfSequenceAndAnnotationEnd =
+          idx >= 0 && idx <= annotation.end;
+        return (
+          isBetweenAnnotationStartAndEndofSequence ||
+          isBetweenStartOfSequenceAndAnnotationEnd
+        );
+      } else {
+        // regular case
+        return idx >= annotation.start && idx <= annotation.end;
+      }
     });
     return {
       base,
@@ -47,6 +60,7 @@ export const getAnnotatedSequence = (
     };
   };
   const annotatedSequence = sequence.map(mapFn);
+
   /* TODO: figure out how to get this to typecheck */
   return annotatedSequence as AnnotatedSequence;
 };
