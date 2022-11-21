@@ -7,13 +7,15 @@ import { useSelectionRect } from "@Ariadne/hooks/useSelectionRect";
 export interface Props {
   sequence: AnnotatedSequence;
   annotations: Annotation[];
+  selection: AriadneSelection;
+  setSelection: (selection: AriadneSelection) => void;
 }
 
 const SVG_SIZE = 800;
 
 export const LinearViewer = (props: Props) => {
-  const { sequence, annotations } = props;
-  const [selection, setSelection] = useState<AriadneSelection>([null, null]);
+  const { sequence, annotations, selection, setSelection } = props;
+
   const selectionRef = useRef<SVGSVGElement>(null);
 
   const numberOfTicks = 5;
@@ -106,6 +108,8 @@ const LinearSelection = ({
   if (start === null || end === null) {
     return null;
   }
+
+  /* TODO: need to check if we cross the seam in a parent */
 
   const leftEdge = Math.min(start, end);
   const left = (leftEdge / sequence.length) * 100;

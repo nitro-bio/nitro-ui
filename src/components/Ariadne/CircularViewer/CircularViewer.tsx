@@ -9,9 +9,17 @@ export interface Props {
   sequence: AnnotatedSequence;
   size: number;
   annotations: Annotation[];
+  selection: AriadneSelection;
+  setSelection: (selection: AriadneSelection) => void;
 }
 
-export const CircularViewer = ({ sequence, size, annotations }: Props) => {
+export const CircularViewer = ({
+  sequence,
+  size,
+  annotations,
+  selection,
+  setSelection,
+}: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
     cx: size / 2,
     cy: size / 2,
@@ -19,7 +27,7 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
     sizeY: size,
     radius: (size - 10) / 2,
   };
-  const [selection, setSelection] = useState<AriadneSelection>([null, null]);
+
   const selectionRef = useRef<SVGSVGElement>(null);
 
   return (
@@ -106,7 +114,7 @@ const CircularSelection = ({
     return null;
   }
   const center = { x: cx, y: cy };
-  const innerRadius = radius - 20;
+  const innerRadius = radius - 10;
   const outerRadius = radius;
   const length = Math.abs(end - start);
   const offset = Math.min(start, end);
