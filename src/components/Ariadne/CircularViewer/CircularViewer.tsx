@@ -1,6 +1,7 @@
 import CircularIndex from "./CircularIndex";
 import CircularAnnotationGutter from "./CircularAnnotations";
 import { AnnotatedSequence, Annotation } from "../types";
+import { useState } from "react";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -16,6 +17,11 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
     sizeY: size,
     radius: (size - 10) / 2,
   };
+  const [scrollVal, setScrollVal] = useState(0);
+
+  const handleScroll = (e: any) => {
+    setScrollVal(scrollVal + e.deltaY);
+  };
 
   return (
     <div className="font-mono flex items-center justify-center font-thin text-brand-400">
@@ -28,6 +34,8 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
         className={`stroke-current`}
         width={sizeX}
         height={sizeY}
+        transform={`rotate(${scrollVal})`}
+        onWheel={(e) => handleScroll(e)}
       >
         <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
         <CircularAnnotationGutter
