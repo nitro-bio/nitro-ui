@@ -28,20 +28,8 @@ export const CircularAnnotation = ({
     center: { x: cx, y: cy },
   });
 
-  const [showAnnotation, setShowAnnotation] = useState(false);
-
-  const handleMouseOver = () => {
-    setShowAnnotation(true);
-  };
-  const handleMouseOut = () => {
-    setShowAnnotation(false);
-  };
   return (
-    <svg
-      className={`${annotation.color} fill-current`}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    >
+    <svg className={`${annotation.color} fill-current`}>
       <path id={`curve-${index}`} d={arcPath} />
 
       <text
