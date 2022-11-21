@@ -66,27 +66,63 @@ const LinearAnnotationGutter = ({
   sequence: AnnotatedSequence;
 }) => {
   const stackedAnnotations = stackElements(annotations);
+  const [hoverContent, setHoverContent] = useState<any>(null);
   return (
     <g>
       <line x1="0" y1="50%" x2="100%" y2="50%" stroke="currentColor" />
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => {
-            const [isHovering, setIsHovering] = useState(false);
             const handleMouseOver = () => {
-              setIsHovering(true);
+              const annotationSVG = (
+                <svg style={{ position: "absolute", zIndex: 3 }}>
+                  <rect
+                    width="125"
+                    height="50"
+                    style={{ fill: "rgb(255,255,255)" }}
+                    x={`${(annotation.start / sequence.length) * 100}%`}
+                    y={`${50 + 4 * (stackIdx + 1)}%`}
+                  />
+                  <line
+                    id={`tick-${stackIdx + 1}`}
+                    x1={`${(annotation.start / sequence.length) * 100}%`}
+                    y1={`${50 + 3 * (stackIdx + 1)}%`}
+                    x2={`${(annotation.start / sequence.length) * 100}%`}
+                    y2={`${50 + 5 * (stackIdx + 1)}%`}
+                    stroke="currentColor"
+                    strokeWidth={1}
+                  />
+                  <text
+                    x={`${(annotation.start / sequence.length) * 100 + 5}%`}
+                    y={`${50 + 5 * (stackIdx + 1)}%`}
+                    textAnchor="middle"
+                    fill="black"
+                    stroke="black"
+                    alignmentBaseline="middle"
+                    fontSize={"0.7rem"}
+                  >
+                    test annotation
+                  </text>
+                </svg>
+              );
+
+              setHoverContent(annotationSVG);
             };
 
             const handleMouseOut = () => {
-              setIsHovering(false);
+              setHoverContent(null);
             };
 
             return (
-              <g
+              <svg
                 key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
                 className={classNames(annotation.color)}
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
+                width={"100%"}
+                height={"100%"}
+                z={0}
+                style={{ position: "relative", zIndex: 0 }}
               >
                 <line
                   x1={`${(annotation.start / sequence.length) * 100}%`}
@@ -96,43 +132,13 @@ const LinearAnnotationGutter = ({
                   stroke="currentColor"
                   strokeWidth={10}
                 />
-
-                {isHovering && (
-                  <g>
-                    <rect
-                      width="125"
-                      height="50"
-                      style={{ fill: "rgb(255,255,255)", position: "absolute" }}
-                      x={`${(annotation.start / sequence.length) * 100}%`}
-                      y={`${50 + 4 * (stackIdx + 1)}%`}
-                    />
-                    <line
-                      id={`tick-${stackIdx + 1}`}
-                      x1={`${(annotation.start / sequence.length) * 100}%`}
-                      y1={`${50 + 3 * (stackIdx + 1)}%`}
-                      x2={`${(annotation.start / sequence.length) * 100}%`}
-                      y2={`${50 + 5 * (stackIdx + 1)}%`}
-                      stroke="currentColor"
-                      strokeWidth={1}
-                    />
-                    <text
-                      x={`${(annotation.start / sequence.length) * 100 + 5}%`}
-                      y={`${50 + 5 * (stackIdx + 1)}%`}
-                      textAnchor="middle"
-                      fill="black"
-                      stroke="black"
-                      alignmentBaseline="middle"
-                      fontSize={"0.7rem"}
-                    >
-                      test annotation
-                    </text>
-                  </g>
-                )}
-              </g>
+              </svg>
             );
           })}
         </Fragment>
       ))}
+
+      {hoverContent}
     </g>
   );
 };

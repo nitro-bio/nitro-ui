@@ -1,6 +1,5 @@
 import { genArc } from "../circularUtils";
 import type { AnnotatedSequence, Annotation, Coor } from "@Ariadne/types";
-import { useState } from "react";
 
 export const CircularAnnotation = ({
   sequence,
@@ -37,6 +36,7 @@ export const CircularAnnotation = ({
         dy={5}
         fill="black"
         stroke="black"
+        strokeWidth={0.5}
         alignmentBaseline="middle"
         fontSize={"0.5rem"}
       >
