@@ -1,16 +1,18 @@
 import { genArc } from "../circularUtils";
 import type { AnnotatedSequence, Annotation, Coor } from "@Ariadne/types";
+import { useState } from "react";
 
 export const CircularAnnotation = ({
   sequence,
   annotation,
   radius,
   center,
+  index,
 }: {
   sequence: AnnotatedSequence;
   radius: number;
   annotation: Annotation;
-
+  index: string;
   center: Coor;
 }) => {
   const { x: cx, y: cy } = center;
@@ -26,11 +28,32 @@ export const CircularAnnotation = ({
     center: { x: cx, y: cy },
   });
 
+  const [showAnnotation, setShowAnnotation] = useState(false);
+
+  const handleMouseOver = () => {
+    setShowAnnotation(true);
+  };
+  const handleMouseOut = () => {
+    setShowAnnotation(false);
+  };
   return (
-    <svg className={`${annotation.color} fill-current`}>
-      <path d={arcPath} fill="currentColor" stroke="currentColor">
-        <text>Annotation</text>
-      </path>
+    <svg
+      className={`${annotation.color} fill-current`}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+    >
+      <path id={`curve-${index}`} d={arcPath} />
+
+      <text
+        dx={5}
+        dy={5}
+        fill="black"
+        stroke="black"
+        alignmentBaseline="middle"
+        fontSize={"0.5rem"}
+      >
+        <textPath href={`#curve-${index}`}>test</textPath>
+      </text>
     </svg>
   );
 };
