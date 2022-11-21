@@ -1,6 +1,6 @@
 import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { AnnotatedSequence, Annotation } from "../types";
 
 export interface Props {
@@ -17,7 +17,7 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div className="font-mono p-6 font-thin text-brand-400">
+    <div className="font-mono relative p-6 font-thin text-brand-400">
       <svg
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
         xmlns="http://www.w3.org/2000/svg"
@@ -71,21 +71,66 @@ const LinearAnnotationGutter = ({
       <line x1="0" y1="50%" x2="100%" y2="50%" stroke="currentColor" />
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
-          {annotations.map((annotation) => (
-            <g
-              key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
-              className={classNames(annotation.color)}
-            >
-              <line
-                x1={`${(annotation.start / sequence.length) * 100}%`}
-                y1={`${50 + 3 * (stackIdx + 1)}%`}
-                x2={`${(annotation.end / sequence.length) * 100}%`}
-                y2={`${50 + 3 * (stackIdx + 1)}%`}
-                stroke="currentColor"
-                strokeWidth={10}
-              />
-            </g>
-          ))}
+          {annotations.map((annotation) => {
+            const [isHovering, setIsHovering] = useState(false);
+            const handleMouseOver = () => {
+              setIsHovering(true);
+            };
+
+            const handleMouseOut = () => {
+              setIsHovering(false);
+            };
+
+            return (
+              <g
+                key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
+                className={classNames(annotation.color)}
+                onMouseOver={handleMouseOver}
+                onMouseOut={handleMouseOut}
+              >
+                <line
+                  x1={`${(annotation.start / sequence.length) * 100}%`}
+                  y1={`${50 + 3 * (stackIdx + 1)}%`}
+                  x2={`${(annotation.end / sequence.length) * 100}%`}
+                  y2={`${50 + 3 * (stackIdx + 1)}%`}
+                  stroke="currentColor"
+                  strokeWidth={10}
+                />
+
+                {isHovering && (
+                  <g>
+                    <rect
+                      width="125"
+                      height="50"
+                      style={{ fill: "rgb(255,255,255)", position: "absolute" }}
+                      x={`${(annotation.start / sequence.length) * 100}%`}
+                      y={`${50 + 4 * (stackIdx + 1)}%`}
+                    />
+                    <line
+                      id={`tick-${stackIdx + 1}`}
+                      x1={`${(annotation.start / sequence.length) * 100}%`}
+                      y1={`${50 + 3 * (stackIdx + 1)}%`}
+                      x2={`${(annotation.start / sequence.length) * 100}%`}
+                      y2={`${50 + 5 * (stackIdx + 1)}%`}
+                      stroke="currentColor"
+                      strokeWidth={1}
+                    />
+                    <text
+                      x={`${(annotation.start / sequence.length) * 100 + 5}%`}
+                      y={`${50 + 5 * (stackIdx + 1)}%`}
+                      textAnchor="middle"
+                      fill="black"
+                      stroke="black"
+                      alignmentBaseline="middle"
+                      fontSize={"0.7rem"}
+                    >
+                      test annotation
+                    </text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
         </Fragment>
       ))}
     </g>
