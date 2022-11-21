@@ -18,16 +18,14 @@ export const CircularIndex = ({
   if (sequence.length > 80) {
     return (
       <svg className={`bg-brand-800 fill-current text-brand-800`}>
-        <g>
-          <circle
-            cx={cx}
-            cy={cy}
-            r={radius * 0.75}
-            fill={"none"}
-            stroke="currentColor"
-            strokeWidth={2}
-          />
-        </g>
+        <circle
+          cx={cx}
+          cy={cy}
+          r={radius * 0.75}
+          fill={"none"}
+          stroke="currentColor"
+          strokeWidth={2}
+        />
         <Ticks
           cx={cx}
           cy={cy}
