@@ -17,7 +17,13 @@ export default {
 } as ComponentMeta<typeof CircularViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
+const Template: ComponentStory<any> = ({
+  sequence,
+  initialSelection,
+}: {
+  sequence: string;
+  initialSelection?: AriadneSelection;
+}) => {
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
     [sequence]
@@ -30,11 +36,17 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
     validatedSequence,
     annotations
   );
-  const [selection, setSelection] = useState<AriadneSelection>([null, null]);
+  const [selection, setSelection] = useState<AriadneSelection | null>(
+    initialSelection ?? null
+  );
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
       <div className="row-span-2 grid shrink-0 content-center  py-12">
-        <SequenceViewer sequence={annotatedSequence} />
+        <SequenceViewer
+          sequence={annotatedSequence}
+          selection={selection}
+          setSelection={setSelection}
+        />
       </div>
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
@@ -57,8 +69,40 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
   );
 };
 
-export const KitchenSink = Template.bind({});
-KitchenSink.args = {
+export const KitchenSinkViewerStory = Template.bind({});
+KitchenSinkViewerStory.args = {
   sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+};
+export const KitchenSinkViewerStoryForwardSelectionOverSeam = Template.bind({});
+KitchenSinkViewerStoryForwardSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 10,
+    end: 5,
+    direction: "forward",
+  },
+};
+
+export const KitchenSinkViewerStoryReverseSelection = Template.bind({});
+KitchenSinkViewerStoryReverseSelection.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 10,
+    end: 5,
+    direction: "reverse",
+  },
+};
+
+export const KitchenSinkViewerStoryReverseSelectionOverSeam = Template.bind({});
+KitchenSinkViewerStoryReverseSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
+  },
 };

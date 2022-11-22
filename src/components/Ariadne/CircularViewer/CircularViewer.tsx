@@ -1,15 +1,15 @@
-import CircularIndex from "./CircularIndex";
-import CircularAnnotationGutter from "./CircularAnnotations";
+import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
+import { useEffect, useRef } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
-import { useEffect, useRef, useState } from "react";
-import { useSelectionRect } from "@Ariadne/hooks/useSelectionRect";
-import { findIndexFromCoor, genArc } from "./circularUtils";
+import CircularAnnotationGutter from "./CircularAnnotations";
+import CircularIndex from "./CircularIndex";
+import { findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
   sequence: AnnotatedSequence;
   size: number;
   annotations: Annotation[];
-  selection: AriadneSelection;
+  selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
 }
 
@@ -79,47 +79,91 @@ const CircularSelection = ({
   cy: number;
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
-  selection: AriadneSelection;
+  selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
 }) => {
   /* Collect internal selection data and propogate up */
-  const { start: internalSelectionStart, end: internalSelectionEnd } =
-    useSelectionRect(selectionRef);
+  const {
+    start: internalSelectionStart,
+    end: internalSelectionEnd,
+    direction: internalDirection,
+  } = useCircularSelectionRect(selectionRef);
   useEffect(
     function propagateSelectionUp() {
       if (
         selectionRef.current &&
         internalSelectionStart &&
-        internalSelectionEnd
+        internalSelectionEnd &&
+        internalDirection
       ) {
-        const start = findIndexFromCoor({
-          coor: internalSelectionStart,
-          center: { x: cx, y: cy },
+        const start = findIndexFromAngle({
+          angle: internalSelectionStart,
           seqLength: sequence.length,
         });
-        const end = findIndexFromCoor({
-          coor: internalSelectionEnd,
-          center: { x: cx, y: cy },
+        const end = findIndexFromAngle({
+          angle: internalSelectionEnd,
           seqLength: sequence.length,
         });
-        setSelection([start, end]);
+        let prevLength = selection
+          ? Math.abs(selection.end - selection.start)
+          : 0;
+        let newLength = Math.abs(end - start);
+        if (internalDirection === "counterclockwise" && selection) {
+          prevLength = selection.end + sequence.length - selection.start;
+          newLength = end + sequence.length - start;
+        }
+        const deltaLength = Math.abs(prevLength - newLength);
+        const deltaThreshold = Math.max(0.7 * sequence.length, 10);
+        if (deltaLength > deltaThreshold && selection) {
+          setSelection({
+            start,
+            end,
+            direction: selection?.direction,
+          });
+
+          return;
+        }
+        setSelection({
+          start,
+          end,
+          direction: internalDirection === "clockwise" ? "forward" : "reverse",
+        });
       }
     },
     [internalSelectionStart, internalSelectionEnd]
   );
 
+  if (selection === null) {
+    return null;
+  }
+
   /* Display selection data that has trickled down */
-  const [start, end] = selection;
+  const { start, end, direction } = selection;
   if (start === null || end === null) {
     return null;
   }
   const center = { x: cx, y: cy };
   const innerRadius = radius - 10;
   const outerRadius = radius;
-  const length = Math.abs(end - start);
-  const offset = Math.min(start, end);
+  let length = -1;
+  if (end > start) {
+    if (direction === "forward") {
+      length = end - start;
+    } else {
+      length = sequence.length - end + start;
+    }
+  } else {
+    if (direction === "forward") {
+      length = sequence.length - start + end;
+    } else {
+      length = start - end;
+    }
+  }
+
+  const offset = direction === "forward" ? start : end;
   const seqLength = sequence.length;
-  console.table({ start, end, length, offset, seqLength });
+  /* console.table({ start, end, direction, length, offset, seqLength }); */
+
   const arc = genArc({
     center,
     innerRadius,
@@ -128,7 +172,7 @@ const CircularSelection = ({
     offset,
     outerRadius,
     seqLength,
-    sweepFWD: true,
+    direction,
   });
   return (
     <path

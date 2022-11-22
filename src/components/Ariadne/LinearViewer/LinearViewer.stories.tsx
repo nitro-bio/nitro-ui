@@ -16,7 +16,13 @@ export default {
 } as ComponentMeta<typeof LinearViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
+const Template: ComponentStory<any> = ({
+  sequence,
+  initialSelection,
+}: {
+  sequence: string;
+  initialSelection?: AriadneSelection;
+}) => {
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
     [sequence]
@@ -28,7 +34,9 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
     validatedSequence,
     annotations
   );
-  const [selection, setSelection] = useState<AriadneSelection>([null, null]);
+  const [selection, setSelection] = useState<AriadneSelection | null>(
+    initialSelection ?? null
+  );
 
   return (
     <Card className="max-w-xl">
@@ -44,5 +52,38 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
 
 export const LinearViewerStory = Template.bind({});
 LinearViewerStory.args = {
-  sequence: "ATGATGATATGATGATATGATGATATGATGATATGATGATATGATGATATGATGATATGATGAT",
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+};
+export const LinearViewerStoryForwardSelectionOverSeam = Template.bind({});
+LinearViewerStoryForwardSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 10,
+    end: 5,
+    direction: "forward",
+  },
+};
+
+export const LinearViewerStoryReverseSelection = Template.bind({});
+LinearViewerStoryReverseSelection.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 10,
+    end: 5,
+    direction: "reverse",
+  },
+};
+
+export const LinearViewerStoryReverseSelectionOverSeam = Template.bind({});
+LinearViewerStoryReverseSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
+  },
 };

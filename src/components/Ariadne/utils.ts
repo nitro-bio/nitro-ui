@@ -1,7 +1,8 @@
-import {
+import type {
   AA,
   AnnotatedSequence,
   Annotation,
+  AriadneSelection,
   Nucl,
   StackedAnnotation,
   ValidatedSequence,
@@ -119,4 +120,31 @@ export const getStackedAnnotations = (
       .flat(),
     stackedAnnotations.length,
   ];
+};
+export const baseInSelection = (
+  baseIndex: number,
+  selection: AriadneSelection,
+  sequenceLength: number
+) => {
+  const { start, end, direction } = selection;
+  if (start === null || end === null) {
+    return false;
+  }
+  if (direction === "forward" && start > end) {
+    const betweenStartAndSequenceEnd =
+      baseIndex >= start && baseIndex <= sequenceLength;
+    const betweenSequenceEndandEnd = baseIndex >= 0 && baseIndex <= end;
+    return betweenStartAndSequenceEnd || betweenSequenceEndandEnd;
+  }
+  if (direction === "reverse" && end > start) {
+    const betweenStartAndSequenceStart = baseIndex <= start && baseIndex >= 0;
+    const betweenSequenceEndAndEnd =
+      baseIndex <= sequenceLength && baseIndex >= end;
+    return betweenStartAndSequenceStart || betweenSequenceEndAndEnd;
+  }
+  return baseIndex >= start && baseIndex <= end;
+};
+
+export const inRange = (value: number, min: number, max: number) => {
+  return value >= min && value <= max;
 };

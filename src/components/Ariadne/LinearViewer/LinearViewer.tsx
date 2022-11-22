@@ -1,13 +1,13 @@
+import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
 import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
-import { useSelectionRect } from "@Ariadne/hooks/useSelectionRect";
 
 export interface Props {
   sequence: AnnotatedSequence;
   annotations: Annotation[];
-  selection: AriadneSelection;
+  selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
 }
 
@@ -78,11 +78,14 @@ const LinearSelection = ({
 }: {
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
-  selection: AriadneSelection;
+  selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
 }) => {
-  const { start: internalSelectionStart, end: internalSelectionEnd } =
-    useSelectionRect(selectionRef);
+  const {
+    start: internalSelectionStart,
+    end: internalSelectionEnd,
+    direction: internalDirection,
+  } = useLinearSelectionRect(selectionRef);
   useEffect(
     function propagateSelectionUp() {
       if (
@@ -97,19 +100,75 @@ const LinearSelection = ({
         const end = Math.floor(
           (internalSelectionEnd.x / svgWidth) * sequence.length
         );
-        setSelection([start, end]);
+        setSelection({ start, end, direction: internalDirection });
       }
     },
     [internalSelectionStart, internalSelectionEnd]
   );
 
+  if (!selection) {
+    return null;
+  }
+
   /* Display selection data that has trickled down */
-  const [start, end] = selection;
+  const { start, end, direction } = selection;
   if (start === null || end === null) {
     return null;
   }
 
   /* TODO: need to check if we cross the seam in a parent */
+  /* if direction is backward and end > start we need to render two rectangles */
+  console.table({ start, end, direction });
+  if (direction === "forward" && start > end) {
+    const firstRectWidth = (end / sequence.length) * 100;
+    const secondRectStart = (start / sequence.length) * 100;
+    const secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
+    return (
+      <>
+        <rect
+          x={`${secondRectStart}%`}
+          width={`${secondRectWidth}%`}
+          y="40%"
+          height="20%"
+          fill="currentColor"
+          fillOpacity={0.2}
+        />
+        <rect
+          x={0}
+          width={`${firstRectWidth}%`}
+          y="40%"
+          height="20%"
+          fill="currentColor"
+          fillOpacity={0.2}
+        />
+      </>
+    );
+  }
+  if (direction === "reverse" && end > start) {
+    const firstRectWidth = (start / sequence.length) * 100;
+    const secondRectStart = (end / sequence.length) * 100;
+    const secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
+    return (
+      <>
+        <rect
+          x={`${secondRectStart}%`}
+          width={`${secondRectWidth}%`}
+          y="40%"
+          height="20%"
+          fill="currentColor"
+          fillOpacity={0.2}
+        />
+        <rect
+          x={0}
+          width={`${firstRectWidth}%`}
+          y="40%"
+          height="20%"
+          fill="currentColor"
+          fillOpacity={0.2}
+        />
+      </>
+    );
+  }
 
   const leftEdge = Math.min(start, end);
   const left = (leftEdge / sequence.length) * 100;
