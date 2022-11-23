@@ -19,8 +19,10 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
   };
   const [scrollVal, setScrollVal] = useState(0);
 
-  const handleScroll = (e: any) => {
-    setScrollVal(scrollVal + e.deltaY);
+  const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
+    /* smooth out scroll value */
+
+    setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
   };
 
   return (
@@ -34,17 +36,34 @@ export const CircularViewer = ({ sequence, size, annotations }: Props) => {
         className={`stroke-current`}
         width={sizeX}
         height={sizeY}
-        transform={`rotate(${scrollVal})`}
         onWheel={(e) => handleScroll(e)}
       >
-        <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
+        <CircularIndex
+          cx={cx}
+          cy={cy}
+          radius={radius}
+          sequence={sequence}
+          scrollVal={scrollVal}
+        />
         <CircularAnnotationGutter
           sequence={sequence}
           annotations={annotations}
           cx={cx}
           cy={cy}
           radius={radius}
+          scrollVal={scrollVal}
         />
+        <text
+          x={cx}
+          y={cy}
+          textAnchor="middle"
+          fill="currentColor"
+          stroke="currentColor"
+          alignmentBaseline="middle"
+          fontSize={"1rem"}
+        >
+          {sequence.length} bp
+        </text>
       </svg>
     </div>
   );

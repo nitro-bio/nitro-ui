@@ -7,43 +7,36 @@ export const CircularIndex = ({
   cx,
   cy,
   radius,
+  scrollVal,
 }: {
   sequence: AnnotatedSequence;
   cx: number;
   cy: number;
   radius: number;
+  scrollVal: number;
 }) => {
   const basesPerTick = Math.floor(20 * Math.log10(sequence.length));
 
   if (sequence.length > 80) {
     return (
       <svg className={`bg-brand-800 fill-current text-brand-800`}>
-        <circle
-          cx={cx}
-          cy={cy}
-          r={radius * 0.75}
-          fill={"none"}
-          stroke="currentColor"
-          strokeWidth={2}
-        />
-        <Ticks
-          cx={cx}
-          cy={cy}
-          radius={radius * 0.75}
-          basesPerTick={basesPerTick}
-          totalBases={sequence.length}
-        />
-        <text
-          x={cx}
-          y={cy}
-          textAnchor="middle"
-          fill="currentColor"
-          stroke="currentColor"
-          alignmentBaseline="middle"
-          fontSize={"1rem"}
-        >
-          {sequence.length} bp
-        </text>
+        <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius * 0.75}
+            fill={"none"}
+            stroke="currentColor"
+            strokeWidth={2}
+          />
+          <Ticks
+            cx={cx}
+            cy={cy}
+            radius={radius * 0.75}
+            basesPerTick={basesPerTick}
+            totalBases={sequence.length}
+          />
+        </g>
       </svg>
     );
   }
