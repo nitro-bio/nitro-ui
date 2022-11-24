@@ -1,5 +1,5 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
 import CircularAnnotationGutter from "./CircularAnnotations";
 import CircularIndex from "./CircularIndex";
@@ -27,11 +27,18 @@ export const CircularViewer = ({
     sizeY: size,
     radius: (size - 10) / 2,
   };
+  const [scrollVal, setScrollVal] = useState(0);
+
+  const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
+    /* smooth out scroll value */
+
+    setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
+  };
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
   return (
-    <div className="font-mono flex select-none items-center justify-center font-thin text-brand-400">
+    <div className="font-mono flex select-none items-center justify-center font-thin text-brand-800 dark:text-brand-600">
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${sizeX} ${sizeY}`}
@@ -42,14 +49,22 @@ export const CircularViewer = ({
         className={`stroke-current`}
         width={sizeX}
         height={sizeY}
+        onWheel={(e) => handleScroll(e)}
       >
-        <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
+        <CircularIndex
+          cx={cx}
+          cy={cy}
+          radius={radius}
+          sequence={sequence}
+          scrollVal={scrollVal}
+        />
         <CircularAnnotationGutter
           sequence={sequence}
           annotations={annotations}
           cx={cx}
           cy={cy}
           radius={radius}
+          scrollVal={scrollVal}
         />
         <CircularSelection
           sequence={sequence}
@@ -60,6 +75,18 @@ export const CircularViewer = ({
           selectionRef={selectionRef}
           setSelection={setSelection}
         />
+
+        <text
+          x={cx}
+          y={cy}
+          textAnchor="middle"
+          fill="currentColor"
+          stroke="currentColor"
+          alignmentBaseline="middle"
+          fontSize={"1rem"}
+        >
+          {sequence.length} bp
+        </text>
       </svg>
     </div>
   );

@@ -14,8 +14,6 @@ export const CircularAnnotation = ({
   center: Coor;
 }) => {
   const { x: cx, y: cy } = center;
-
-  /* if the annotation spans the seam, we start the arc beginning at the end (negative offset) and then draw from there */
   const annotationSpansSeam = annotation.end < annotation.start;
   const offset = annotationSpansSeam
     ? annotation.start

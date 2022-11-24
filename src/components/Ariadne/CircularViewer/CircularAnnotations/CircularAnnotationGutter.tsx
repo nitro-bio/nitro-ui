@@ -10,18 +10,19 @@ export const CircularAnnotationGutter = ({
   cy,
   radius,
   sequence,
+  scrollVal,
 }: {
   annotations: Annotation[];
   cx: number;
   cy: number;
   radius: number;
   sequence: AnnotatedSequence;
+  scrollVal: number;
 }) => {
   const gutterRadius = radius * 0.3;
   const stackedAnnotations = stackElements(annotations);
-
   return (
-    <g>
+    <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
       <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={0.8} />;
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
