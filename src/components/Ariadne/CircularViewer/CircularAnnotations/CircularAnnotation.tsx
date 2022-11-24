@@ -23,7 +23,7 @@ export const CircularAnnotation = ({
     outerRadius: radius + 5,
     largeArc: false,
     length: annotation.end - annotation.start,
-    sweepFWD: true,
+    direction: "forward" /* TODO: use annotation direction */,
     seqLength: sequence.length,
     offset,
     center: { x: cx, y: cy },

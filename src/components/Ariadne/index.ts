@@ -1,3 +1,3 @@
-export * from "@Ariadne/CircularViewer";
-export * from "@Ariadne/LinearViewer";
-export * from "@Ariadne/SequenceViewer";
+export * from "./CircularViewer";
+export * from "./LinearViewer";
+export * from "./SequenceViewer";

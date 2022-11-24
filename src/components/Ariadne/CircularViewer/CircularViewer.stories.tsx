@@ -1,8 +1,9 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { ValidatedSequence } from "@Ariadne/types";
+import { AriadneSelection, ValidatedSequence } from "@Ariadne/types";
 import { getAnnotatedSequence } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
+import { useMemo, useState } from "react";
 
 import CircularViewer from ".";
 
@@ -15,12 +16,24 @@ export default {
 } as ComponentMeta<typeof CircularViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
-  const annotations = generateRandomAnnotations(sequence, 5);
+const Template: ComponentStory<any> = ({
+  sequence,
+  initialSelection,
+}: {
+  sequence: string;
+  initialSelection?: AriadneSelection;
+}) => {
+  const annotations = useMemo(
+    () => generateRandomAnnotations(sequence, 5),
+    [sequence]
+  );
   const validatedSequence = sequence.split("") as ValidatedSequence;
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
     annotations
+  );
+  const [selection, setSelection] = useState<AriadneSelection | null>(
+    initialSelection ?? null
   );
   return (
     <Card className="max-w-xl">
@@ -28,12 +41,51 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
         sequence={annotatedSequence}
         size={400}
         annotations={annotations}
+        selection={selection}
+        setSelection={setSelection}
       />
     </Card>
   );
 };
 
+export const MiniCircularViewerStory = Template.bind({});
+MiniCircularViewerStory.args = {
+  sequence: "ATGCATGCATGCATGCATGC",
+};
 export const CircularViewerStory = Template.bind({});
 CircularViewerStory.args = {
-  sequence: "abcdefghijklmnopqrstuvwxyz",
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+};
+export const CircularViewerStoryForwardSelectionOverSeam = Template.bind({});
+CircularViewerStoryForwardSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 10,
+    end: 5,
+    direction: "forward",
+  },
+};
+
+export const CircularViewerStoryReverseSelection = Template.bind({});
+CircularViewerStoryReverseSelection.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 1,
+    end: 25,
+    direction: "reverse",
+  },
+};
+
+export const CircularViewerStoryReverseSelectionOverSeam = Template.bind({});
+CircularViewerStoryReverseSelectionOverSeam.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
+  },
 };

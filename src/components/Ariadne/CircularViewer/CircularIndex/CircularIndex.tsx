@@ -19,13 +19,15 @@ export const CircularIndex = ({
 
   if (sequence.length > 80) {
     return (
-      <svg className={`bg-brand-800 fill-current text-brand-800`}>
+      <svg
+        className={`bg-brand-800 fill-current text-brand-800 dark:text-brand-600`}
+      >
         <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
           <circle
             cx={cx}
             cy={cy}
             r={radius * 0.75}
-            fill={"none"}
+            fill="none"
             stroke="currentColor"
             strokeWidth={2}
           />
