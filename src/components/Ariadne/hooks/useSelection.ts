@@ -1,0 +1,216 @@
+import { findAngleFromCoor } from "@Ariadne/CircularViewer/circularUtils";
+import { Angle, Coor } from "@Ariadne/types";
+import { inRange } from "@Ariadne/utils";
+import { RefObject, useEffect, useRef, useState } from "react";
+import { useStateRef } from "./useStateRef";
+// for cartesian coordinates
+export const useLinearSelectionRect = (
+  ref: RefObject<SVGSVGElement | null>
+) => {
+  const [start, setStart, startRef] = useStateRef<Coor | null>(null);
+  const [end, setEnd] = useStateRef<Coor | null>(null);
+
+  const [direction, setDirection] = useState<"forward" | "reverse">("forward");
+
+  const active = useRef(false);
+
+  const onMouseDown = (e: MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { left, top } = ref.current?.getBoundingClientRect() || {
+      left: 0,
+      top: 0,
+    };
+    const x = clientX - left;
+    const y = clientY - top;
+
+    active.current = true;
+
+    setStart({ x, y });
+  };
+  const onMouseUp = () => {
+    active.current = false;
+  };
+
+  // must use refs in event handlers to get most up to date values
+  const onMouseMove = (e: MouseEvent) => {
+    if (active.current) {
+      const { clientX, clientY } = e;
+      const { left, top } = ref.current?.getBoundingClientRect() || {
+        left: 0,
+        top: 0,
+      };
+      const x = clientX - left;
+      const y = clientY - top;
+      const { startX } = {
+        startX: startRef.current?.x,
+      };
+      if (startX && startX > x) {
+        setDirection("reverse");
+      } else {
+        setDirection("forward");
+      }
+      setEnd({ x, y });
+    }
+  };
+  useEffect(() => {
+    const node = ref.current;
+
+    if (node) {
+      node.addEventListener("mousedown", onMouseDown);
+      node.addEventListener("mousemove", onMouseMove);
+    }
+    if (window) {
+      window.addEventListener("mouseup", onMouseUp);
+    }
+    return () => {
+      node?.removeEventListener("mousedown", onMouseDown);
+      node?.removeEventListener("mousemove", onMouseMove);
+      window?.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [ref]);
+  return { start, end, direction };
+};
+
+// for circular coordinates
+export const useCircularSelectionRect = (
+  ref: RefObject<SVGSVGElement | null>
+) => {
+  const [start, setStart, startRef] = useStateRef<Angle | null>(null);
+  const [end, setEnd] = useStateRef<Angle | null>(null);
+
+  const [direction, setDirection] = useState<
+    "clockwise" | "counterclockwise" | null
+  >(null);
+  const ANGLE_DELTA_THRESHOLD_IN_DEGREES = 2;
+
+  const active = useRef(false);
+
+  const onMouseDown = (e: MouseEvent) => {
+    if (ref.current) {
+      setStart(null);
+      setEnd(null);
+      setDirection(null);
+      active.current = true;
+
+      const { clientX, clientY } = e;
+      const { left, top, width, height } = ref.current.getBoundingClientRect();
+      const x = clientX - left;
+      const y = clientY - top;
+      const center = { x: width / 2, y: height / 2 };
+      const startAngle = findAngleFromCoor({ coor: { x, y }, center });
+      setStart({
+        degrees: startAngle,
+        center,
+      });
+    }
+  };
+
+  const onMouseUp = () => {
+    active.current = false;
+
+    setDirection(null);
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (active.current && ref.current) {
+      const { clientX, clientY } = e;
+      const { left, top, width, height } = ref.current.getBoundingClientRect();
+      const x = clientX - left;
+      const y = clientY - top;
+      const center = { x: width / 2, y: height / 2 };
+      // if we're close to the center, don't update selection
+      if (
+        Math.sqrt(Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2)) <
+        0.4 * (width / 2)
+      ) {
+        console.debug("within 0.5 radius of center, not updating selection");
+        return;
+      }
+
+      const endAngle = findAngleFromCoor({ coor: { x, y }, center });
+      if (startRef.current) {
+        const startAngle = startRef.current.degrees;
+        const endAngleIsNearStartAngle = inRange(
+          endAngle,
+          startAngle - ANGLE_DELTA_THRESHOLD_IN_DEGREES,
+          startAngle + ANGLE_DELTA_THRESHOLD_IN_DEGREES
+        );
+        if (endAngleIsNearStartAngle) {
+          setDirection(null);
+        }
+      }
+      setEnd({
+        degrees: endAngle,
+        center,
+      });
+    }
+  };
+
+  useEffect(
+    function determineDirection() {
+      if (start && end && direction === null) {
+        const startAngle = start.degrees;
+        const endAngle = end.degrees;
+        const delta = endAngle - startAngle;
+        const guessedDirection = delta > 0 ? "clockwise" : "counterclockwise";
+        setDirection(guessedDirection);
+      }
+    },
+    [start, end]
+  );
+
+  useEffect(
+    function handleEventListeners() {
+      const node = ref.current;
+      if (node) {
+        node.addEventListener("mousedown", onMouseDown);
+        node.addEventListener("mousemove", onMouseMove);
+        node.addEventListener("mouseup", onMouseUp);
+      }
+      if (window) {
+        window.addEventListener("mouseup", onMouseUp);
+      }
+
+      return () => {
+        node?.removeEventListener("mousedown", onMouseDown);
+        node?.removeEventListener("mousemove", onMouseMove);
+        node?.removeEventListener("mouseup", onMouseUp);
+        window?.removeEventListener("mouseup", onMouseUp);
+      };
+    },
+    [ref.current, start, direction]
+  );
+  return { start, end, direction };
+};
+
+export function useTextSelection(ref: RefObject<Node | null>) {
+  // we store info about the current Range here
+  const [range, setRange] = useState<Range | undefined | null>(undefined);
+
+  // In this effect we're registering for the documents "selectionchange" event
+  useEffect(() => {
+    function handleChange() {
+      // get selection information from the browser
+      const selection = window.getSelection();
+
+      // we only want to proceed when we have a valid selection
+      if (
+        !selection ||
+        selection.isCollapsed ||
+        !ref.current ||
+        !selection.containsNode(ref.current, true)
+      ) {
+        setRange(undefined);
+        return;
+      }
+      const range = selection.getRangeAt(0);
+
+      setRange(range);
+    }
+
+    document.addEventListener("selectionchange", handleChange);
+    return () => document.removeEventListener("selectionchange", handleChange);
+  }, []);
+
+  return { range, ref };
+}

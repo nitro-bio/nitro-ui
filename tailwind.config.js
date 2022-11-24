@@ -2,7 +2,7 @@
 const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-const brandColor = colors.indigo;
+const brandColor = colors.rose;
 const noirColor = colors.zinc;
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        noir: colors.zinc,
+        noir: noirColor,
         brand: brandColor,
       },
     },

@@ -2,6 +2,11 @@ export interface Coor {
   x: number;
   y: number;
 }
+export interface Angle {
+  degrees: number;
+  center: Coor;
+}
+
 export interface Annotation {
   start: number;
   end: number;
@@ -53,3 +58,9 @@ export interface AnnotatedAA {
 }
 export type AnnotatedSequence = AnnotatedNucl[] | AnnotatedAA[];
 export type ValidatedSequence = Nucl[] | AA[];
+
+export type AriadneSelection = {
+  start: number;
+  end: number;
+  direction: "forward" | "reverse";
+};
