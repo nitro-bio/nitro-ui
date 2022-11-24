@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "scripts": {
     "build": "tsc && vite build",
     "dev": "yarn storybook",

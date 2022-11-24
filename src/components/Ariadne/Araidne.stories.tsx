@@ -6,7 +6,7 @@ import { CircularViewer } from "./CircularViewer";
 import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomAnnotations } from "./storyUtils";
-import { AA, AriadneSelection, Nucl } from "./types";
+import { AA, Annotation, AriadneSelection, Nucl } from "./types";
 import { getAnnotatedSequence } from "./utils";
 
 export default {
