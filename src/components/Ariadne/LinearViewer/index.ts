@@ -1,2 +1,2 @@
 import { LinearViewer } from "./LinearViewer";
-export default LinearViewer;
+export { LinearViewer };
