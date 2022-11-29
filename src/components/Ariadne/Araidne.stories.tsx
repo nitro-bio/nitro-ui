@@ -2,11 +2,11 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { CircularViewer } from "./CircularViewer";
-import { LinearViewer } from "./LinearViewer";
-import { SequenceViewer } from "./SequenceViewer";
+import CircularViewer from "./CircularViewer";
+import LinearViewer from "./LinearViewer";
+import SequenceViewer from "./SequenceViewer";
 import { generateRandomAnnotations } from "./storyUtils";
-import { AA, Annotation, AriadneSelection, Nucl } from "./types";
+import { AA, AriadneSelection, Nucl } from "./types";
 import { getAnnotatedSequence } from "./utils";
 
 export default {
@@ -41,7 +41,7 @@ const Template: ComponentStory<any> = ({
   );
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
-      <div className="row-span-2 grid shrink-0 content-center  py-12">
+      <div className="row-span-2 grid shrink-0 content-center py-12">
         <SequenceViewer
           sequence={annotatedSequence}
           selection={selection}
@@ -51,7 +51,7 @@ const Template: ComponentStory<any> = ({
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
           sequence={annotatedSequence}
-          size={400}
+          size={300}
           annotations={annotations}
           selection={selection}
           setSelection={setSelection}

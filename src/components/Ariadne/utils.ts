@@ -70,11 +70,8 @@ interface Stackable {
   start: number;
   end: number;
 }
-// modified from seqviz
+// from seqviz
 export const stackElements = <T extends Stackable>(elements: T[]) => {
-  if (elements.length === 0) {
-    return [];
-  }
   // utility funcs for stackElements
   const last = (arr: T[]): T => arr[arr.length - 1];
   const first = (arr: T[]): T => arr[0];

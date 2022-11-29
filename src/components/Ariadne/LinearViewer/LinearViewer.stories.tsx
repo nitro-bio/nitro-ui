@@ -5,7 +5,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { LinearViewer } from ".";
+import LinearViewer from ".";
 
 export default {
   title: "Ariadne/LinearViewer",

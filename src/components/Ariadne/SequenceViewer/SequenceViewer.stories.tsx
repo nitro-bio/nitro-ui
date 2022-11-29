@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { SequenceViewer } from ".";
+import SequenceViewer from ".";
 import type { AA, AriadneSelection, Nucl } from "../types";
 
 export default {
