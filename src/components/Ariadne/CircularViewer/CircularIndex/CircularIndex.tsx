@@ -15,9 +15,9 @@ export const CircularIndex = ({
   radius: number;
   scrollVal: number;
 }) => {
-  const basesPerTick = Math.floor(20 * Math.log10(sequence.length));
+  const basesPerTick = Math.floor(20 * Math.log10(sequence.annotated.length));
 
-  if (sequence.length > 80) {
+  if (sequence.annotated.length > 80) {
     return (
       <svg
         className={`bg-brand-800 fill-current text-brand-800 dark:text-brand-600`}
@@ -36,7 +36,7 @@ export const CircularIndex = ({
             cy={cy}
             radius={radius * 0.75}
             basesPerTick={basesPerTick}
-            totalBases={sequence.length}
+            totalBases={sequence.annotated.length}
           />
         </g>
       </svg>
@@ -44,14 +44,14 @@ export const CircularIndex = ({
   }
   return (
     <text className="text-brand-800">
-      {sequence.map(({ base: letter }, index) => {
+      {sequence.annotated.map(({ base: letter }, index) => {
         const { x, y } = findCoor({
           index,
           radius: radius * 0.7,
           center: { x: cx, y: cy },
-          seqLength: sequence.length,
+          seqLength: sequence.annotated.length,
         });
-        const rotateDegrees = (index / sequence.length) * 360;
+        const rotateDegrees = (index / sequence.annotated.length) * 360;
         return (
           <tspan
             key={`base-${index}`}

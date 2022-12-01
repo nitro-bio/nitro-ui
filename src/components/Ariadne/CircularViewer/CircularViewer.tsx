@@ -1,6 +1,12 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
 import { useEffect, useRef, useState } from "react";
-import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
+import { Button } from "../..";
+import {
+  AnnotatedSequence,
+  Annotation,
+  AriadneSelection,
+  AriadneSearch,
+} from "../types";
 import CircularAnnotationGutter from "./CircularAnnotations";
 import CircularIndex from "./CircularIndex";
 import { findIndexFromAngle, genArc } from "./circularUtils";
@@ -11,6 +17,8 @@ export interface Props {
   annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
+  search: AriadneSearch | null;
+  resetSearch: () => void;
 }
 
 export const CircularViewer = ({
@@ -19,6 +27,8 @@ export const CircularViewer = ({
   annotations,
   selection,
   setSelection,
+  search,
+  resetSearch,
 }: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
     cx: size / 2,
@@ -37,57 +47,102 @@ export const CircularViewer = ({
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
-  return (
-    <div className="font-mono flex select-none items-center justify-center font-thin text-brand-800 dark:text-brand-600">
-      <svg
-        ref={selectionRef}
-        viewBox={`0 0 ${sizeX} ${sizeY}`}
-        xmlns="http://www.w3.org/2000/svg"
-        fontFamily="inherit"
-        fontSize="inherit"
-        fontWeight="inherit"
-        className={`stroke-current`}
-        width={sizeX}
-        height={sizeY}
-        onWheel={(e) => handleScroll(e)}
-      >
-        <CircularIndex
-          cx={cx}
-          cy={cy}
-          radius={radius}
-          sequence={sequence}
-          scrollVal={scrollVal}
-        />
-        <CircularAnnotationGutter
-          sequence={sequence}
-          annotations={annotations}
-          cx={cx}
-          cy={cy}
-          radius={radius}
-          scrollVal={scrollVal}
-        />
-        <CircularSelection
-          sequence={sequence}
-          selection={selection}
-          cx={cx}
-          cy={cy}
-          radius={radius}
-          selectionRef={selectionRef}
-          setSelection={setSelection}
-        />
+  useEffect(() => {
+    if (search && sequence.raw.includes(search.searchString.toUpperCase())) {
+      const start = sequence.raw.indexOf(search.searchString);
+      const end = search.searchString.length;
 
-        <text
-          x={cx}
-          y={cy}
-          textAnchor="middle"
-          fill="currentColor"
-          stroke="currentColor"
-          alignmentBaseline="middle"
-          fontSize={"1rem"}
+      if (selection && selection.start === start && selection.end === end) {
+        //pass
+      } else {
+        setSelection({
+          start: start,
+          end: end,
+          direction: "forward",
+          clicked: false,
+        });
+      }
+    } else if (search && search.strand === "complement") {
+      const splitString = sequence.raw.split("");
+      const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
+      const complement = splitString.map((base: string) => {
+        return basePairMap[base];
+      });
+
+      const complementString = complement.join("");
+      console.log(complementString);
+      if (complementString.includes(search.searchString.toUpperCase())) {
+        const start = complementString.indexOf(search.searchString);
+        const end = search.searchString.length;
+
+        if (selection && selection.start === start && selection.end === end) {
+          //pass
+        } else {
+          setSelection({
+            start: start,
+            end: end,
+            direction: "forward",
+            clicked: false,
+          });
+        }
+      }
+    }
+  }, [search]);
+
+  return (
+    <div>
+      <div className="font-mono flex select-none items-center justify-center font-thin text-brand-800 dark:text-brand-600">
+        <svg
+          ref={selectionRef}
+          viewBox={`0 0 ${sizeX} ${sizeY}`}
+          xmlns="http://www.w3.org/2000/svg"
+          fontFamily="inherit"
+          fontSize="inherit"
+          fontWeight="inherit"
+          className={`stroke-current`}
+          width={sizeX}
+          height={sizeY}
+          onWheel={(e) => handleScroll(e)}
         >
-          {sequence.length} bp
-        </text>
-      </svg>
+          <CircularIndex
+            cx={cx}
+            cy={cy}
+            radius={radius}
+            sequence={sequence}
+            scrollVal={scrollVal}
+          />
+          <CircularAnnotationGutter
+            sequence={sequence}
+            annotations={annotations}
+            cx={cx}
+            cy={cy}
+            radius={radius}
+            scrollVal={scrollVal}
+          />
+          <CircularSelection
+            sequence={sequence}
+            selection={selection}
+            cx={cx}
+            cy={cy}
+            radius={radius}
+            selectionRef={selectionRef}
+            setSelection={setSelection}
+            resetSearch={resetSearch}
+          />
+
+          <text
+            x={cx}
+            y={cy}
+            textAnchor="middle"
+            fill="currentColor"
+            stroke="currentColor"
+            alignmentBaseline="middle"
+            fontSize={"1rem"}
+          >
+            {sequence.annotated.length} bp
+          </text>
+        </svg>
+      </div>
     </div>
   );
 };
@@ -100,6 +155,7 @@ const CircularSelection = ({
   selectionRef,
   setSelection,
   sequence,
+  resetSearch,
 }: {
   radius: number;
   cx: number;
@@ -108,6 +164,7 @@ const CircularSelection = ({
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
+  resetSearch: () => void;
 }) => {
   /* Collect internal selection data and propogate up */
   const {
@@ -125,27 +182,32 @@ const CircularSelection = ({
       ) {
         const start = findIndexFromAngle({
           angle: internalSelectionStart,
-          seqLength: sequence.length,
+          seqLength: sequence.annotated.length,
         });
         const end = findIndexFromAngle({
           angle: internalSelectionEnd,
-          seqLength: sequence.length,
+          seqLength: sequence.annotated.length,
         });
         let prevLength = selection
           ? Math.abs(selection.end - selection.start)
           : 0;
         let newLength = Math.abs(end - start);
         if (internalDirection === "counterclockwise" && selection) {
-          prevLength = selection.end + sequence.length - selection.start;
-          newLength = end + sequence.length - start;
+          prevLength =
+            selection.end + sequence.annotated.length - selection.start;
+          newLength = end + sequence.annotated.length - start;
         }
         const deltaLength = Math.abs(prevLength - newLength);
-        const deltaThreshold = Math.max(0.7 * sequence.length, 10);
+        const deltaThreshold = Math.max(0.7 * sequence.annotated.length, 10);
+        if (selection && !selection.clicked) {
+          resetSearch();
+        }
         if (deltaLength > deltaThreshold && selection) {
           setSelection({
             start,
             end,
             direction: selection?.direction,
+            clicked: true,
           });
 
           return;
@@ -154,6 +216,7 @@ const CircularSelection = ({
           start,
           end,
           direction: internalDirection === "clockwise" ? "forward" : "reverse",
+          clicked: true,
         });
       }
     },
@@ -177,18 +240,18 @@ const CircularSelection = ({
     if (direction === "forward") {
       length = end - start;
     } else {
-      length = sequence.length - end + start;
+      length = sequence.annotated.length - end + start;
     }
   } else {
     if (direction === "forward") {
-      length = sequence.length - start + end;
+      length = sequence.annotated.length - start + end;
     } else {
       length = start - end;
     }
   }
 
   const offset = direction === "forward" ? start : end;
-  const seqLength = sequence.length;
+  const seqLength = sequence.annotated.length;
   /* console.table({ start, end, direction, length, offset, seqLength }); */
 
   const arc = genArc({

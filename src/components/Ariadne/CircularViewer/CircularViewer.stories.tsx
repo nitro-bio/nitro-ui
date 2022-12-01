@@ -6,6 +6,7 @@ import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from ".";
+import { AriadneSearch } from "..";
 
 export default {
   title: "Ariadne/CircularViewer",
@@ -30,19 +31,35 @@ const Template: ComponentStory<any> = ({
   const validatedSequence = sequence.split("") as ValidatedSequence;
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
-    annotations
+    annotations,
+    sequence
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
+  const [searchStr, setSearch] = useState("");
+
+  const search = {
+    strand: "main",
+    searchBaseType: "DNA",
+    searchString: searchStr,
+  } as AriadneSearch;
+
   return (
     <Card className="max-w-xl">
+      <input
+        value={searchStr}
+        type="text"
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <CircularViewer
         sequence={annotatedSequence}
         size={400}
         annotations={annotations}
         selection={selection}
         setSelection={setSelection}
+        search={searchStr ? search : null}
+        resetSearch={() => setSearch("")}
       />
     </Card>
   );

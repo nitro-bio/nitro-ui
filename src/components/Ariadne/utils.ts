@@ -32,7 +32,8 @@ export const getComplement = (sequence: string) => {
 
 export const getAnnotatedSequence = (
   sequence: ValidatedSequence,
-  annotations: Annotation[]
+  annotations: Annotation[],
+  raw: string
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
   const [stackedAnnotations] = getStackedAnnotations(annotations);
@@ -60,7 +61,7 @@ export const getAnnotatedSequence = (
       complement: getComplement(base),
     };
   };
-  const annotatedSequence = sequence.map(mapFn);
+  const annotatedSequence = { annotated: sequence.map(mapFn), raw: raw };
 
   /* TODO: figure out how to get this to typecheck */
   return annotatedSequence as AnnotatedSequence;
