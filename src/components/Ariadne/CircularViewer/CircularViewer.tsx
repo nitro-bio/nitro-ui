@@ -31,7 +31,6 @@ export const CircularViewer = ({
 
   const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
     /* smooth out scroll value */
-
     setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
   };
 
@@ -74,6 +73,7 @@ export const CircularViewer = ({
           radius={radius}
           selectionRef={selectionRef}
           setSelection={setSelection}
+          scrollVal={scrollVal}
         />
 
         <text
@@ -100,6 +100,7 @@ const CircularSelection = ({
   selectionRef,
   setSelection,
   sequence,
+  scrollVal,
 }: {
   radius: number;
   cx: number;
@@ -108,8 +109,10 @@ const CircularSelection = ({
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
+  scrollVal: number;
 }) => {
   /* Collect internal selection data and propogate up */
+
   const {
     start: internalSelectionStart,
     end: internalSelectionEnd,
@@ -209,6 +212,7 @@ const CircularSelection = ({
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
+      transform={`rotate(${scrollVal} ${cx} ${cy})`}
     />
   );
 };
