@@ -1,32 +1,33 @@
-import React, {
-  useEffect,
-  useState,
-  MouseEvent,
+import {
   DragEvent,
   DragEventHandler,
+  MouseEvent,
+  useEffect,
+  useState,
 } from "react";
 import ReactFlow, {
+  applyEdgeChanges,
+  applyNodeChanges,
+  Edge,
+  EdgeChange,
   MarkerType,
+  Node,
+  NodeChange,
+  NodeMouseHandler,
+  NodeTypes,
+  OnEdgesChange,
+  OnNodesChange,
   ReactFlowProvider,
   useReactFlow,
-  Node,
-  Edge,
-  NodeTypes,
-  OnNodesChange,
-  applyNodeChanges,
-  NodeMouseHandler,
-  NodeChange,
-  OnEdgesChange,
-  EdgeChange,
-  applyEdgeChanges,
 } from "reactflow";
 
-import Sidebar from "./Sidebar";
 import CustomNode from "./CustomNode";
+import Sidebar from "./Sidebar";
 import useAutoLayout, { Direction } from "./useAutoLayout";
-import * as initialElements from "./initialElements";
 
 import "reactflow/dist/style.css";
+
+import { GENES } from "../types";
 import styles from "./styles.module.css";
 
 const nodeTypes: NodeTypes = {
@@ -52,6 +53,25 @@ type NodeData = {
   label: string;
 };
 
+const initialNodes: Node[] = GENES.map((gene) => ({
+  id: gene.id,
+  type: "custom",
+  data: { label: gene.label },
+  position: { x: 0, y: 0 },
+}));
+
+const initialEdges: Edge[] = [];
+GENES.forEach((gene, index) => {
+  if (index < GENES.length - 1) {
+    initialEdges.push({
+      id: `${gene.id}-${GENES[index + 1].id}`,
+      source: gene.id,
+      target: GENES[index + 1].id,
+    });
+  }
+});
+console.log(initialNodes);
+console.log(initialEdges);
 /**
  * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
  */
@@ -60,8 +80,8 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
   const { fitView } = useReactFlow();
 
   useAutoLayout({ direction });
-  const [nodes, setNodes] = useState<Node<NodeData>[]>(initialElements.nodes);
-  const [edges, setEdges] = useState<Edge[]>(initialElements.edges);
+  const [nodes, setNodes] = useState<Node<NodeData>[]>(initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
   // this function adds a new node and connects it to the source node
   const createConnection = (sourceId: string) => {
