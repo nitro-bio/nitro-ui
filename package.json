@@ -16,8 +16,11 @@
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
     "class-variance-authority": "^0.2.4",
+    "classnames": "^2.3.2",
+    "d3-hierarchy": "^3.1.2",
     "jotai": "^1.10.0",
     "react-markdown": "^8.0.3",
+    "reactflow": "^11.3.3",
     "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
@@ -41,7 +44,6 @@
     "babel-loader": "^8.3.0",
     "eslint": "^8.27.0",
     "eslint-plugin-react": "^7.31.10",
-    "graphviz-react": "^1.2.5",
     "json": "^11.0.0",
     "postcss": "^8.4.19",
     "prettier": "^2.7.1",

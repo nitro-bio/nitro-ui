@@ -1,13 +1,13 @@
 export const GENES = [
-  { id: 0, label: "gene1" },
-  { id: 1, label: "gene2" },
-  { id: 2, label: "gene3" },
-  { id: 3, label: "gene4" },
-  { id: 4, label: "gene5" },
-  { id: 5, label: "gene6" },
-  { id: 6, label: "gene7" },
-  { id: 7, label: "gene8" },
-  { id: 8, label: "gene9" },
-  { id: 9, label: "gene10" },
+  { id: "gene1", label: "gene1" },
+  { id: "gene2", label: "gene2" },
+  { id: "gene3", label: "gene3" },
+  { id: "gene4", label: "gene4" },
+  { id: "gene5", label: "gene5" },
+  { id: "gene6", label: "gene6" },
+  { id: "gene7", label: "gene7" },
+  { id: "gene8", label: "gene8" },
+  { id: "gene9", label: "gene9" },
+  { id: "gene10", label: "gene10" },
 ];
 export type Gene = typeof GENES[number];

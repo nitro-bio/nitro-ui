@@ -14,7 +14,7 @@ export interface ComboboxProps
     Props {}
 
 interface ComboboxOption {
-  id: number;
+  id: string;
   label: string;
 }
 
