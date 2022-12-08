@@ -1,8 +1,8 @@
 import React, { useState, DragEvent } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
-import cx from "classnames";
 
 import styles from "./styles.module.css";
+import { classNames } from "@utils/stringUtils";
 
 function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
   const [isDropzoneActive, setDropzoneActive] = useState<boolean>(false);
@@ -23,13 +23,12 @@ function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
     setDropzoneActive(false);
   };
 
-  const className = cx(styles.node, {
-    [styles.nodeDropzone]: isDropzoneActive,
-  });
-
   return (
     <div
-      className={className}
+      className={classNames(
+        "rounded-full bg-brand-600 p-4 text-white shadow-lg",
+        isDropzoneActive ?? "bg-brand-700 shadow-xl"
+      )}
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragEnter={onDragEnter}

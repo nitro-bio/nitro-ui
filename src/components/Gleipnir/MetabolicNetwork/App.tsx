@@ -22,7 +22,7 @@ import ReactFlow, {
 } from "reactflow";
 
 import CustomNode from "./CustomNode";
-import Sidebar from "./Sidebar";
+
 import useAutoLayout, { Direction } from "./useAutoLayout";
 
 import "reactflow/dist/style.css";
@@ -96,22 +96,6 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
     setEdges((edges) => edges.concat([connectingEdge]));
   };
 
-  // this function is called once the node from the sidebar is dropped onto a node in the current graph
-  const onDrop: DragEventHandler = (evt: DragEvent<HTMLDivElement>) => {
-    // make sure that the event target is a DOM element
-    if (evt.target instanceof Element) {
-      // from the target element search for the node wrapper element which has the node id as attribute
-      const targetId = evt.target
-        .closest(".react-flow__node")
-        ?.getAttribute("data-id");
-
-      if (targetId) {
-        // now we can create a connection to the drop target node
-        createConnection(targetId);
-      }
-    }
-  };
-
   // this function is called when a node in the graph is clicked
   // enables a second possibility to add nodes to the canvas
   const onNodeClick: NodeMouseHandler = (
@@ -136,8 +120,7 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
   }, [nodes, fitView]);
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
+    <div className="flex h-full">
       <ReactFlow
         className={styles.reactFlow}
         proOptions={proOptions}
@@ -147,7 +130,6 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         fitView
-        onDrop={onDrop}
         onNodeClick={onNodeClick}
         // newly added edges get these options automatically
         defaultEdgeOptions={defaultEdgeOptions}
@@ -161,9 +143,11 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
 // as we are accessing the internal React Flow state in our component, we need to wrap it with the ReactFlowProvider
 const ReactFlowWrapper = (props: ExampleProps) => {
   return (
-    <ReactFlowProvider>
-      <ReactFlowPro {...props} />
-    </ReactFlowProvider>
+    <div className="h-[800px]">
+      <ReactFlowProvider>
+        <ReactFlowPro {...props} />
+      </ReactFlowProvider>
+    </div>
   );
 };
 
