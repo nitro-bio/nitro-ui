@@ -27,7 +27,7 @@ import useAutoLayout, { Direction } from "./useAutoLayout";
 
 import "reactflow/dist/style.css";
 
-import { GENES } from "../types";
+import { GENES, PATHWAY } from "../types";
 import styles from "./styles.module.css";
 
 const nodeTypes: NodeTypes = {
@@ -60,18 +60,7 @@ const initialNodes: Node[] = GENES.map((gene) => ({
   position: { x: 0, y: 0 },
 }));
 
-const initialEdges: Edge[] = [];
-GENES.forEach((gene, index) => {
-  if (index < GENES.length - 1) {
-    initialEdges.push({
-      id: `${gene.id}-${GENES[index + 1].id}`,
-      source: gene.id,
-      target: GENES[index + 1].id,
-    });
-  }
-});
-console.log(initialNodes);
-console.log(initialEdges);
+const initialEdges: Edge[] = PATHWAY;
 /**
  * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
  */

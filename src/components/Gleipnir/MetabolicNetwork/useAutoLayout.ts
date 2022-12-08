@@ -63,7 +63,7 @@ function useAutoLayout(options: Options) {
 
     const nodes: Node[] = getNodes();
     const edges: Edge[] = getEdges();
-
+    console.table(edges);
     const hierarchy = stratify<Node>()
       .id((d) => d.id)
       // get the id of each node by searching through the edges
