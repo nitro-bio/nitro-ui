@@ -3,9 +3,12 @@ import { Handle, NodeProps, Position } from "reactflow";
 
 import styles from "./styles.module.css";
 import { classNames } from "@utils/stringUtils";
+import { useAtom } from "jotai";
+import { currentGeneAtom } from "../Gleipnir";
 
 function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
   const [isDropzoneActive, setDropzoneActive] = useState<boolean>(false);
+  const [currentGene] = useAtom(currentGeneAtom);
 
   const onDrop = () => {
     setDropzoneActive(false);
@@ -23,11 +26,14 @@ function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
     setDropzoneActive(false);
   };
 
+  const isCurrent = currentGene?.id === data.label;
+  console.log(isCurrent);
   return (
     <div
       className={classNames(
-        "rounded-full bg-brand-600 p-4 text-white shadow-lg",
-        isDropzoneActive ?? "bg-brand-700 shadow-xl"
+        "duration-400 rounded-full p-4 text-white shadow-lg transition-colors ease-in-out",
+        isDropzoneActive && "bg-brand-400 shadow-xl",
+        isCurrent ? "bg-green-700 shadow-xl" : "bg-brand-600"
       )}
       onDrop={onDrop}
       onDragOver={onDragOver}

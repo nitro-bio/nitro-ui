@@ -45,7 +45,7 @@ const defaultEdgeOptions = {
   pathOptions: { offset: 5 },
 };
 
-type ExampleProps = {
+type MetabolicNetworkProps = {
   direction?: Direction;
 };
 
@@ -64,7 +64,7 @@ const initialEdges: Edge[] = PATHWAY;
 /**
  * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
  */
-function ReactFlowPro({ direction = "TB" }: ExampleProps) {
+function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
   // this hook handles the computation of the layout once the elements or the direction changes
   const { fitView } = useReactFlow();
 
@@ -140,8 +140,7 @@ function ReactFlowPro({ direction = "TB" }: ExampleProps) {
   );
 }
 
-// as we are accessing the internal React Flow state in our component, we need to wrap it with the ReactFlowProvider
-const ReactFlowWrapper = (props: ExampleProps) => {
+const MetabolicNetwork = (props: MetabolicNetworkProps) => {
   return (
     <div className="h-[800px]">
       <ReactFlowProvider>
@@ -151,4 +150,4 @@ const ReactFlowWrapper = (props: ExampleProps) => {
   );
 };
 
-export default ReactFlowWrapper;
+export default MetabolicNetwork;
