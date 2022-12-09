@@ -40,8 +40,8 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
   return (
-    <Card className="grid-row-auto grid grid-cols-1 content-center lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
-      <div className="row-span-2 grid shrink-0 content-center  py-12">
+    <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
+      <div className="row-span-2 grid shrink-0 content-center py-12">
         <SequenceViewer
           sequence={annotatedSequence}
           selection={selection}
@@ -51,13 +51,12 @@ const Template: ComponentStory<any> = ({
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
           sequence={annotatedSequence}
-          size={400}
           annotations={annotations}
           selection={selection}
           setSelection={setSelection}
         />
       </div>
-      <div className="row-span-1 grid shrink-0 content-center ">
+      <div className="row-span-1 grid shrink-0 content-center">
         <LinearViewer
           sequence={annotatedSequence}
           annotations={annotations}
