@@ -39,7 +39,7 @@ const Template: ComponentStory<any> = ({
   );
 
   return (
-    <Card className="max-w-xl">
+    <Card className="w-full max-w-xl">
       <LinearViewer
         sequence={annotatedSequence}
         annotations={annotations}
