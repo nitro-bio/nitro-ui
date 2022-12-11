@@ -25,6 +25,7 @@ import { GENES, PATHWAY } from "../types";
 import styles from "./styles.module.css";
 import { currentGeneAtom } from "../Gleipnir";
 import { useAtom } from "jotai";
+import CustomEdge from "./CustomEdge";
 
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
@@ -56,7 +57,24 @@ const initialNodes: Node[] = GENES.map((gene) => ({
   position: { x: 0, y: 0 },
 }));
 
-const initialEdges: Edge[] = PATHWAY;
+const edgeTypes = {
+  custom: CustomEdge,
+};
+
+const initialEdges: Edge[] = PATHWAY.map((edge) => {
+  const source = edge.source;
+  const target = edge.target;
+
+  return {
+    id: `${source}-${target}`,
+    ...defaultEdgeOptions,
+    data: edge.data,
+    type: "custom",
+    source,
+    target,
+  };
+});
+
 /**
  * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
  */
@@ -69,33 +87,7 @@ function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
   useAutoLayout({ direction });
   const [nodes, setNodes] = useState<Node<NodeData>[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-  /*
-   *   // this function adds a new node and connects it to the source node
-   *   const createConnection = (sourceId: string) => {
-   *     // create an incremental ID based on the number of elements already in the graph
-   *     const targetId = `${nodes.length + 1}`;
-   *
-   *     const targetNode: Node<NodeData> = {
-   *       id: targetId,
-   *       data: { label: `Node ${targetId}` },
-   *       position: { x: 0, y: 0 }, // no need to pass a position as it is computed by the layout hook
-   *       type: "custom",
-   *       style: { opacity: 0 },
-   *     };
-   *
-   *     const connectingEdge: Edge = {
-   *       id: `${sourceId}->${targetId}`,
-   *       source: sourceId,
-   *       target: targetId,
-   *       style: { opacity: 0 },
-   *     };
-   *
-   *     setNodes((nodes) => nodes.concat([targetNode]));
-   *     setEdges((edges) => edges.concat([connectingEdge]));
-   *   };
-   *  */
-  // this function is called when a node in the graph is clicked
-  // enables a second possibility to add nodes to the canvas
+
   const onNodeClick: NodeMouseHandler = (
     _: MouseEvent,
     node: Node<NodeData>
@@ -129,6 +121,7 @@ function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
         nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         fitView

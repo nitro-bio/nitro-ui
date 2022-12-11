@@ -11,16 +11,54 @@ export const GENES = [
   { id: "NFxB", label: "NFxB" },
 ];
 export const PATHWAY = [
-  { id: "Ras->RGL", source: "Ras", target: "RGL" },
-  { id: "RGL->Ral", source: "RGL", target: "Ral" },
-  { id: "Ral->RalBP1", source: "Ral", target: "RalBP1" },
-  { id: "RalBP1->Rac", source: "RalBP1", target: "Rac" },
-
-  { id: "Ral->PLD", source: "Ral", target: "PLD" },
-
-  { id: "Ral->Sec5", source: "Ral", target: "Sec5" },
-  { id: "Sec5->TBK1", source: "Sec5", target: "TBK1" },
-  { id: "TBK1->NFxB", source: "TBK1", target: "NFxB" },
+  {
+    id: "Ras->RGL",
+    source: "Ras",
+    target: "RGL",
+    data: { label: "Product a" },
+  },
+  {
+    id: "RGL->Ral",
+    source: "RGL",
+    target: "Ral",
+    data: { label: "Product b" },
+  },
+  {
+    id: "Ral->RalBP1",
+    source: "Ral",
+    target: "RalBP1",
+    data: { label: "Product c" },
+  },
+  {
+    id: "RalBP1->Rac",
+    source: "RalBP1",
+    target: "Rac",
+    data: { label: "Product d" },
+  },
+  {
+    id: "Ral->PLD",
+    source: "Ral",
+    target: "PLD",
+    data: { label: "Product e" },
+  },
+  {
+    id: "Ral->Sec5",
+    source: "Ral",
+    target: "Sec5",
+    data: { label: "Product f" },
+  },
+  {
+    id: "Sec5->TBK1",
+    source: "Sec5",
+    target: "TBK1",
+    data: { label: "Product g" },
+  },
+  {
+    id: "TBK1->NFxB",
+    source: "TBK1",
+    target: "NFxB",
+    data: { label: "Product h" },
+  },
 
   { id: "Ral->JNK", source: "Ral", target: "JNK" },
 ];
