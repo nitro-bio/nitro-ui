@@ -7,31 +7,30 @@ import { findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
   sequence: AnnotatedSequence;
-  size: number;
   annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
 }
 
+const SVG_SIZE = 300;
+const SVG_PADDING = 30;
 export const CircularViewer = ({
   sequence,
-  size,
   annotations,
   selection,
   setSelection,
 }: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
-    cx: size / 2,
-    cy: size / 2,
-    sizeX: size,
-    sizeY: size,
-    radius: (size - 10) / 2,
+    cx: SVG_SIZE / 2,
+    cy: SVG_SIZE / 2,
+    sizeX: SVG_SIZE,
+    sizeY: SVG_SIZE,
+    radius: (SVG_SIZE - SVG_PADDING) / 2,
   };
   const [scrollVal, setScrollVal] = useState(0);
 
   const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
     /* smooth out scroll value */
-
     setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
   };
 
@@ -74,6 +73,7 @@ export const CircularViewer = ({
           radius={radius}
           selectionRef={selectionRef}
           setSelection={setSelection}
+          scrollVal={scrollVal}
         />
 
         <text
@@ -100,8 +100,10 @@ const CircularSelection = ({
   selectionRef,
   setSelection,
   sequence,
+  scrollVal,
 }: {
   radius: number;
+  scrollVal: number;
   cx: number;
   cy: number;
   selectionRef: React.RefObject<SVGSVGElement>;
@@ -170,8 +172,8 @@ const CircularSelection = ({
     return null;
   }
   const center = { x: cx, y: cy };
-  const innerRadius = radius - 10;
-  const outerRadius = radius;
+  const innerRadius = radius;
+  const outerRadius = radius + 10;
   let length = -1;
   if (end > start) {
     if (direction === "forward") {
@@ -202,13 +204,15 @@ const CircularSelection = ({
     direction,
   });
   return (
-    <path
-      d={arc}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
+      <path
+        d={arc}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
   );
 };

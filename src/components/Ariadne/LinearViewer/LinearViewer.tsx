@@ -11,7 +11,7 @@ export interface Props {
   setSelection: (selection: AriadneSelection) => void;
 }
 
-const SVG_SIZE = 800;
+const SVG_SIZE = 500;
 
 export const LinearViewer = (props: Props) => {
   const { sequence, annotations, selection, setSelection } = props;
@@ -22,17 +22,12 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div className="font-mono select-none p-6 font-thin text-brand-400">
+    <div className="font-mono flex h-full w-full select-none items-center justify-center overflow-hidden p-6 font-thin text-brand-400">
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
         xmlns="http://www.w3.org/2000/svg"
-        fontFamily="inherit"
-        fontSize="inherit"
-        fontWeight="inherit"
-        className="stroke-current"
-        width={"100%"}
-        height={"100%"}
+        className="w-full stroke-current"
       >
         <line
           x1="0"

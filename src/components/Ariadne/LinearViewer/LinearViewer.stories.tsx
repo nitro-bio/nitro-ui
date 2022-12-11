@@ -39,14 +39,16 @@ const Template: ComponentStory<any> = ({
   );
 
   return (
-    <Card className="max-w-xl">
-      <LinearViewer
-        sequence={annotatedSequence}
-        annotations={annotations}
-        selection={selection}
-        setSelection={setSelection}
-      />
-    </Card>
+    <div className="grid h-screen content-center">
+      <Card className="w-full max-w-xl">
+        <LinearViewer
+          sequence={annotatedSequence}
+          annotations={annotations}
+          selection={selection}
+          setSelection={setSelection}
+        />
+      </Card>
+    </div>
   );
 };
 
