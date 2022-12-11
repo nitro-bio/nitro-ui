@@ -40,13 +40,15 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
   return (
-    <Card className="h-[400px] max-w-xl">
-      <SequenceViewer
-        sequence={annotatedSequence}
-        selection={selection}
-        setSelection={setSelection}
-      />
-    </Card>
+    <div className="grid h-screen content-center">
+      <Card className="h-[400px] max-w-xl">
+        <SequenceViewer
+          sequence={annotatedSequence}
+          selection={selection}
+          setSelection={setSelection}
+        />
+      </Card>
+    </div>
   );
 };
 
