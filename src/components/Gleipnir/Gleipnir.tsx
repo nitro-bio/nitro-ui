@@ -1,6 +1,6 @@
 import Combobox from "@ui/Combobox";
 import { useState } from "react";
-import { MetabolicNetwork } from "./MetabolicNetwork";
+import MetabolicNetwork from "./MetabolicNetwork";
 import { Gene, GENES } from "./types";
 
 import { atom, useAtom } from "jotai";

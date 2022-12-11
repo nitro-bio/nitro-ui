@@ -1,2 +1,3 @@
-import ReactFlowWrapper from "./App";
-export { ReactFlowWrapper as MetabolicNetwork };
+import MetabolicNetwork from "./MetabolicNetwork";
+
+export default MetabolicNetwork;
