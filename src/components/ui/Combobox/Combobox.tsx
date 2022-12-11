@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox as HeadlessCombobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { classNames } from "@utils/stringUtils";
@@ -7,6 +7,7 @@ import { classNames } from "@utils/stringUtils";
 interface Props {
   options: ComboboxOption[];
   onSelect: (option: ComboboxOption) => void;
+  selectedOptionIdx: number;
 }
 
 const comboboxStyles = cva();
@@ -19,8 +20,23 @@ interface ComboboxOption {
   label: string;
 }
 
-export function Combobox({ options, onSelect }: ComboboxProps) {
+export function Combobox({
+  options,
+  selectedOptionIdx,
+  onSelect,
+}: ComboboxProps) {
   const [selected, setSelected] = useState(options[0]);
+  useEffect(
+    function syncSelectedOption() {
+      if (selectedOptionIdx >= 0) {
+        const selectedOption = options[selectedOptionIdx];
+        console.table({ selectedOption, selectedOptionIdx });
+        setSelected(selectedOption);
+      }
+    },
+    [selectedOptionIdx, options]
+  );
+
   const [query, setQuery] = useState("");
 
   const filteredOptions: ComboboxOption[] =
