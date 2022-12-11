@@ -39,9 +39,9 @@ const getPosition = (x: number, y: number, direction: Direction) => {
 // initialize the tree layout (see https://observablehq.com/@d3/tree for examples)
 const layout = tree<Node>()
   // the node size configures the spacing between the nodes ([width, height])
-  .nodeSize([130, 120])
+  .nodeSize([100, 200])
   // this is needed for creating equal space between all nodes
-  .separation(() => 1);
+  .separation(() => 3);
 
 const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
 const nodesInitializedSelector = (state: ReactFlowState) =>

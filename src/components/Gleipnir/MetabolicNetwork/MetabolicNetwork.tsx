@@ -111,7 +111,7 @@ function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
   // every time our nodes change, we want to center the graph again
   useEffect(() => {
     fitView({ duration: 400 });
-  }, [nodes, fitView]);
+  }, [nodes]);
 
   return (
     <div className="flex h-full">

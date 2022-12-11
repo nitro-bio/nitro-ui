@@ -60,6 +60,11 @@ export const PATHWAY = [
     data: { label: "Product h" },
   },
 
-  { id: "Ral->JNK", source: "Ral", target: "JNK" },
+  {
+    id: "Ral->JNK",
+    source: "Ral",
+    target: "JNK",
+    data: { label: "Product i" },
+  },
 ];
 export type Gene = typeof GENES[number];

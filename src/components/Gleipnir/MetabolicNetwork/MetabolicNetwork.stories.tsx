@@ -16,7 +16,7 @@ export default {
 const Template: ComponentStory<any> = (args: { query: string }) => {
   const [currentGene, setCurrentGene] = useState<Gene | null>(null);
   return (
-    <Card className="max-w-xl">
+    <Card className="">
       <MetabolicNetwork />
     </Card>
   );
