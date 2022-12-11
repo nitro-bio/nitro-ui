@@ -40,7 +40,7 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
   return (
-    <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 lg:h-screen lg:grid-cols-2 lg:grid-rows-2">
+    <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
       <div className="row-span-2 grid shrink-0 content-center py-12">
         <SequenceViewer
           sequence={annotatedSequence}

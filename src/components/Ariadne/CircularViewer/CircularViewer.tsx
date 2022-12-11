@@ -13,7 +13,7 @@ export interface Props {
 }
 
 const SVG_SIZE = 300;
-
+const SVG_PADDING = 30;
 export const CircularViewer = ({
   sequence,
   annotations,
@@ -25,7 +25,7 @@ export const CircularViewer = ({
     cy: SVG_SIZE / 2,
     sizeX: SVG_SIZE,
     sizeY: SVG_SIZE,
-    radius: (SVG_SIZE - 10) / 2,
+    radius: (SVG_SIZE - SVG_PADDING) / 2,
   };
   const [scrollVal, setScrollVal] = useState(0);
 
@@ -172,8 +172,8 @@ const CircularSelection = ({
     return null;
   }
   const center = { x: cx, y: cy };
-  const innerRadius = radius - 10;
-  const outerRadius = radius;
+  const innerRadius = radius;
+  const outerRadius = radius + 10;
   let length = -1;
   if (end > start) {
     if (direction === "forward") {

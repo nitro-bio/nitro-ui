@@ -36,15 +36,16 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
   return (
-    <Card className="max-w-xl">
-      <CircularViewer
-        sequence={annotatedSequence}
-        size={400}
-        annotations={annotations}
-        selection={selection}
-        setSelection={setSelection}
-      />
-    </Card>
+    <div className="grid h-screen content-center">
+      <Card className="max-w-xl">
+        <CircularViewer
+          sequence={annotatedSequence}
+          annotations={annotations}
+          selection={selection}
+          setSelection={setSelection}
+        />
+      </Card>
+    </div>
   );
 };
 
