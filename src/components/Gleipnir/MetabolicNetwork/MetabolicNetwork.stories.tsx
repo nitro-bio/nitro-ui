@@ -1,7 +1,8 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useState } from "react";
-import { Gene, GENES } from "../types";
+import { GENES, REACTIONS } from "../storyUtils";
+import { Gene } from "../types";
 import MetabolicNetwork from "./MetabolicNetwork";
 
 export default {
@@ -13,11 +14,16 @@ export default {
 } as ComponentMeta<typeof MetabolicNetwork>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = (args: { query: string }) => {
-  const [currentGene, setCurrentGene] = useState<Gene | null>(null);
+const Template: ComponentStory<any> = () => {
+  const [currentGene, setCurrentGene] = useState<Gene | null>(GENES[0]);
   return (
     <Card className="">
-      <MetabolicNetwork />
+      <MetabolicNetwork
+        genes={GENES}
+        currentGene={currentGene}
+        setCurrentGene={setCurrentGene}
+        reactions={REACTIONS}
+      />
     </Card>
   );
 };

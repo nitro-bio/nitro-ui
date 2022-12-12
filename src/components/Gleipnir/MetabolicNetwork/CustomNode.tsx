@@ -1,14 +1,27 @@
-import React, { useState, DragEvent } from "react";
+import { DragEvent, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 
-import styles from "./styles.module.css";
 import { classNames } from "@utils/stringUtils";
-import { useAtom } from "jotai";
-import { currentGeneAtom } from "../Gleipnir";
+import { Gene } from "../types";
+import styles from "./styles.module.css";
 
-function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
+type CustomNodeProps = NodeProps & {
+  data: {
+    label: string;
+    type: string;
+    onDragOver: (event: DragEvent<HTMLDivElement>) => void;
+    onDrop: (event: DragEvent<HTMLDivElement>) => void;
+  };
+  currentGene: Gene | null;
+};
+
+function CustomNode({
+  data,
+  sourcePosition,
+  targetPosition,
+  currentGene,
+}: CustomNodeProps) {
   const [isDropzoneActive, setDropzoneActive] = useState<boolean>(false);
-  const [currentGene] = useAtom(currentGeneAtom);
 
   const onDrop = () => {
     setDropzoneActive(false);
@@ -27,7 +40,7 @@ function CustomNode({ data, sourcePosition, targetPosition }: NodeProps) {
   };
 
   const isCurrent = currentGene?.id === data.label;
-  console.log(isCurrent);
+
   return (
     <div
       className={classNames(

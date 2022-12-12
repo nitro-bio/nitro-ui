@@ -113,7 +113,7 @@ const LinearSelection = ({
 
   /* TODO: need to check if we cross the seam in a parent */
   /* if direction is backward and end > start we need to render two rectangles */
-  console.table({ start, end, direction });
+
   if (direction === "forward" && start > end) {
     const firstRectWidth = (end / sequence.length) * 100;
     const secondRectStart = (start / sequence.length) * 100;

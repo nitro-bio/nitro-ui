@@ -1,5 +1,5 @@
 import { AnnotatedSequence } from "@Ariadne/types";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { findCoor } from "../circularUtils";
 
 export const CircularIndex = ({

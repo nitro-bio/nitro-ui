@@ -1,5 +1,3 @@
-import { classNames } from "@utils/stringUtils";
-import React from "react";
 import { getBezierPath, Position } from "reactflow";
 
 export default function CustomEdge({
@@ -25,17 +23,6 @@ export default function CustomEdge({
   data?: { label: string };
   markerEnd?: string;
 }) {
-  console.table({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    data,
-    markerEnd,
-    className,
-  });
   const [edgePath] = getBezierPath({
     sourceX,
     sourceY,

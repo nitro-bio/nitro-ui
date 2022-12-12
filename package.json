@@ -19,6 +19,7 @@
     "class-variance-authority": "^0.2.4",
     "d3-hierarchy": "^3.1.2",
     "jotai": "^1.11.1",
+    "molstar": "^3.26.0",
     "react-markdown": "^8.0.3",
     "reactflow": "^11.3.3",
     "remark-gfm": "^3.0.1"

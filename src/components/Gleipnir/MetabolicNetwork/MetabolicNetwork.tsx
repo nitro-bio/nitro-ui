@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
@@ -21,15 +21,9 @@ import useAutoLayout, { Direction } from "./useAutoLayout";
 
 import "reactflow/dist/style.css";
 
-import { GENES, PATHWAY } from "../types";
-import styles from "./styles.module.css";
-import { currentGeneAtom } from "../Gleipnir";
-import { useAtom } from "jotai";
+import { Gene, Reaction } from "../types";
 import CustomEdge from "./CustomEdge";
-
-const nodeTypes: NodeTypes = {
-  custom: CustomNode,
-};
+import styles from "./styles.module.css";
 
 const proOptions = {
   account: "paid-pro",
@@ -43,48 +37,60 @@ const defaultEdgeOptions = {
 };
 
 type MetabolicNetworkProps = {
+  genes: Gene[];
+  currentGene: Gene | null;
+  setCurrentGene: (gene: Gene) => void;
+  reactions: Reaction[];
   direction?: Direction;
 };
 
-type NodeData = {
-  label: string;
-};
-
-const initialNodes: Node[] = GENES.map((gene) => ({
-  id: gene.id,
-  type: "custom",
-  data: { label: gene.label },
-  position: { x: 0, y: 0 },
-}));
+type NodeData = Gene;
 
 const edgeTypes = {
   custom: CustomEdge,
 };
 
-const initialEdges: Edge[] = PATHWAY.map((edge) => {
-  const source = edge.source;
-  const target = edge.target;
-
-  return {
-    id: `${source}-${target}`,
-    ...defaultEdgeOptions,
-    data: edge.data,
-    type: "custom",
-    source,
-    target,
-  };
-});
-
 /**
  * This example shows how you can automatically arrange your nodes after adding child nodes to your graph.
  */
-function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
+function ReactFlowPro({
+  direction = "TB",
+  genes,
+  currentGene,
+  setCurrentGene,
+  reactions,
+}: MetabolicNetworkProps) {
   // this hook handles the computation of the layout once the elements or the direction changes
   const { fitView } = useReactFlow();
-
-  const [currentGene, setCurrentGene] = useAtom(currentGeneAtom);
+  const nodeTypes: NodeTypes = useMemo(() => {
+    return {
+      custom: (args) => <CustomNode {...args} currentGene={currentGene} />,
+    };
+  }, [currentGene]);
 
   useAutoLayout({ direction });
+
+  const initialNodes: Node[] = genes.map((gene) => ({
+    id: gene.id,
+    type: "custom",
+    data: { label: gene.label, description: gene.description },
+    position: { x: 0, y: 0 },
+  }));
+
+  const initialEdges: Edge[] = reactions.map((edge) => {
+    const source = edge.source;
+    const target = edge.target;
+
+    return {
+      id: `${source}-${target}`,
+      ...defaultEdgeOptions,
+      data: { label: edge.fwdProduct },
+      type: "custom",
+      source,
+      target,
+    };
+  });
+
   const [nodes, setNodes] = useState<Node<NodeData>[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
@@ -95,8 +101,8 @@ function ReactFlowPro({ direction = "TB" }: MetabolicNetworkProps) {
     const newCurrentGene = {
       id: node.id,
       label: node.data.label,
+      description: node.data.description,
     };
-    console.log(newCurrentGene);
     setCurrentGene(newCurrentGene);
   };
 

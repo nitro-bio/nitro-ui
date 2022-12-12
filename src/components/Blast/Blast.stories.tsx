@@ -1,10 +1,7 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
-import { useMemo, useState } from "react";
 import GlobalAlignmentViz from "@Blast/GlobalAlignmentViz";
 import ResultCard from "@Blast/ResultCard";
 import SequenceCard from "@Blast/SequenceCard";
-import TextAlignmentViz from "@Blast/TextAlignmentViz";
+import { ComponentStory } from "@storybook/react";
 import { generateResults } from "./blastUtils";
 export default {
   title: "Blast/Blast",

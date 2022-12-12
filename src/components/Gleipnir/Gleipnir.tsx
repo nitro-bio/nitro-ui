@@ -1,29 +1,36 @@
-import Combobox from "@ui/Combobox";
 import { useState } from "react";
 import MetabolicNetwork from "./MetabolicNetwork";
-import { Gene, GENES } from "./types";
+import { Gene, Protein, Reaction } from "./types";
 
-import { atom, useAtom } from "jotai";
 import GeneDetails from "./GeneDetails";
 
-export const currentGeneAtom = atom<Gene | null>(null);
-export const Gleipnir = () => {
-  const [currentGene, setCurrentGene] = useAtom(currentGeneAtom);
-  const currentGeneIdx = GENES.findIndex((gene) => gene.id === currentGene?.id);
+export const Gleipnir = ({
+  genes,
+  proteins,
+  reactions,
+}: {
+  genes: Gene[];
+  proteins: Protein[];
+  reactions: Reaction[];
+}) => {
+  const [currentGene, setCurrentGene] = useState<Gene | null>(genes[0]);
   return (
-    <div className="grid grid-cols-1 content-between bg-noir-50 md:grid-cols-2">
-      <div className="grid content-start bg-red-50 p-8">
-        <Combobox
-          options={GENES}
-          onSelect={setCurrentGene}
-          selectedOptionIdx={currentGeneIdx}
+    <div className="grid grid-cols-1 items-center justify-center gap-8 md:grid-cols-2">
+      <div className="max-w-xl flex-1">
+        <GeneDetails
+          proteins={proteins}
+          currentGene={currentGene}
+          genes={genes}
+          setCurrentGene={setCurrentGene}
         />
       </div>
-      <div className="row-span-2 grid content-center bg-blue-50">
-        <MetabolicNetwork />
-      </div>
-      <div className="grid content-start bg-green-50 p-8">
-        <GeneDetails />
+      <div className="grid flex-1 content-start p-8">
+        <MetabolicNetwork
+          genes={genes}
+          currentGene={currentGene}
+          setCurrentGene={setCurrentGene}
+          reactions={reactions}
+        />
       </div>
     </div>
   );
