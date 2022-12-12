@@ -33,7 +33,7 @@ export const generateRandomAnnotations = (
       end,
       color: randomColor,
       text: `Example Annotation ${i}`,
-      onClick: () => console.log("Clicked on annotation ${i}"),
+      onClick: () => console.debug("Clicked on annotation ${i}"),
     };
     annotations.push(annotation);
     if (annotations.length >= maxAnnotations) {

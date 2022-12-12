@@ -191,7 +191,6 @@ const CircularSelection = ({
 
   const offset = direction === "forward" ? start : end;
   const seqLength = sequence.length;
-  /* console.table({ start, end, direction, length, offset, seqLength }); */
 
   const arc = genArc({
     center,

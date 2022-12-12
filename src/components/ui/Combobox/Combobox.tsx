@@ -1,11 +1,13 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox as HeadlessCombobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { classNames } from "@utils/stringUtils";
 
 interface Props {
   options: ComboboxOption[];
   onSelect: (option: ComboboxOption) => void;
+  selectedOptionIdx: number;
 }
 
 const comboboxStyles = cva();
@@ -14,12 +16,27 @@ export interface ComboboxProps
     Props {}
 
 interface ComboboxOption {
-  id: number;
+  id: string;
   label: string;
 }
 
-export function Combobox({ options }: ComboboxProps) {
+export function Combobox({
+  options,
+  selectedOptionIdx,
+  onSelect,
+}: ComboboxProps) {
   const [selected, setSelected] = useState(options[0]);
+  useEffect(
+    function syncSelectedOption() {
+      if (selectedOptionIdx >= 0) {
+        const selectedOption = options[selectedOptionIdx];
+
+        setSelected(selectedOption);
+      }
+    },
+    [selectedOptionIdx, options]
+  );
+
   const [query, setQuery] = useState("");
 
   const filteredOptions: ComboboxOption[] =
@@ -33,11 +50,17 @@ export function Combobox({ options }: ComboboxProps) {
         );
 
   return (
-    <HeadlessCombobox value={selected} onChange={setSelected}>
+    <HeadlessCombobox
+      value={selected}
+      onChange={(e) => {
+        setSelected(e);
+        onSelect(e);
+      }}
+    >
       <div className="relative mt-1">
-        <div className="focus-visible:ring-white relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+        <div className="focus-visible:ring-brand-300 relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 dark:border dark:border-brand-300 sm:text-sm">
           <HeadlessCombobox.Input
-            className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-noir-100"
+            className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-brand-100"
             displayValue={(opt: ComboboxOption) => opt.label}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -55,7 +78,7 @@ export function Combobox({ options }: ComboboxProps) {
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <HeadlessCombobox.Options className="ring-black absolute mt-1 max-h-60 w-full overflow-auto  rounded-md py-1 text-base shadow-lg ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm">
+          <HeadlessCombobox.Options className="ring-brand-300 absolute z-10 mt-1 max-h-60 w-full  overflow-auto rounded-md bg-white py-1 text-base shadow-2xl ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm">
             {filteredOptions.length === 0 && query !== "" ? (
               <div className="relative cursor-default select-none py-2 px-4 text-noir-700">
                 Nothing found.
@@ -65,30 +88,34 @@ export function Combobox({ options }: ComboboxProps) {
                 <HeadlessCombobox.Option
                   key={opt.id}
                   className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                    classNames(
+                      "relative cursor-default select-none py-2 pl-10 pr-4",
                       active
                         ? "bg-brand-600 text-white dark:text-noir-100"
                         : "text-noir-900 dark:text-noir-100"
-                    }`
+                    )
                   }
                   value={opt}
+                  onSelect={() => setSelected(opt)}
                 >
                   {({ selected, active }) => (
                     <>
                       <span
-                        className={`block truncate ${
+                        className={classNames(
+                          "block truncate",
                           selected ? "font-medium" : "font-normal"
-                        }`}
+                        )}
                       >
                         {opt.label}
                       </span>
                       {selected ? (
                         <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                          className={classNames(
+                            "absolute inset-y-0 left-0 flex items-center pl-3",
                             active
                               ? "text-white dark:text-noir-800"
                               : "text-brand-600"
-                          }`}
+                          )}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
