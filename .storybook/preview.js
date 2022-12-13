@@ -7,4 +7,9 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  options: { showPanel: false },
+};
+
+export const globalTypes = {
+  darkMode: { defaultValue: true },
 };

@@ -53,7 +53,7 @@ const ListCard = ({ ...props }: ListCardProps) => {
       <a href={href} className="mt-2">
         <div className="group relative flex flex-col items-start md:col-span-3">
           <h2 className="text-base font-semibold tracking-tight text-noir-800 dark:text-noir-100">
-            <div className="absolute -inset-y-6 -inset-x-4 z-0 scale-95 bg-noir-200/50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 dark:bg-noir-800/50 sm:-inset-x-6 sm:rounded-2xl"></div>
+            <div className="absolute -inset-y-6 -inset-x-4 z-0 scale-95 bg-noir-200/50 bg-white/50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 dark:bg-noir-800 sm:-inset-x-6 sm:rounded-2xl"></div>
             <span className="absolute -inset-y-6 -inset-x-4 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
             <span className="relative z-10">{title}</span>
           </h2>

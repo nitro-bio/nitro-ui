@@ -16,6 +16,8 @@
     "3dmol": "^1.8.0",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
+    "@storybook/addons": "^6.5.14",
+    "@storybook/theming": "^6.5.14",
     "class-variance-authority": "^0.2.4",
     "d3-hierarchy": "^3.1.2",
     "jotai": "^1.11.1",

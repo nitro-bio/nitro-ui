@@ -15,7 +15,7 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
   const results = generateResults({ sequence: sequence });
   const sequenceName = "Test Sequence";
   return (
-    <div className="flex h-full w-full items-start justify-center pt-16 dark:bg-noir-600">
+    <div className="flex h-full w-full items-start justify-center px-4 pt-16 dark:bg-noir-600">
       <div className="grid-row-auto grid max-w-7xl grid-cols-1 content-center gap-4 lg:grid-cols-2">
         <div className="col-span-2 flex flex-1 items-center justify-center lg:col-span-1 ">
           <GlobalAlignmentViz

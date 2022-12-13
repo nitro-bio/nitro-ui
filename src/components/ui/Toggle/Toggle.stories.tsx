@@ -10,7 +10,7 @@ export default {
 const Template: ComponentStory<typeof Toggle> = () => {
   const [checked, setChecked] = useState(false);
   return (
-    <div className="h-screen p-24 dark:bg-noir-800">
+    <div className="h-screen bg-white p-24 dark:bg-noir-800">
       <Toggle checked={checked} onClick={() => setChecked(!checked)} />
     </div>
   );
