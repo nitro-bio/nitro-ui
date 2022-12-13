@@ -7,4 +7,5 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  options: { showPanel: false },
 };
