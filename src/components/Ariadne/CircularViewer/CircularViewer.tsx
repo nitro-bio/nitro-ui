@@ -1,5 +1,5 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
 import CircularAnnotationGutter from "./CircularAnnotations";
 import CircularIndex from "./CircularIndex";
@@ -27,12 +27,6 @@ export const CircularViewer = ({
     sizeY: SVG_SIZE,
     radius: (SVG_SIZE - SVG_PADDING) / 2,
   };
-  const [scrollVal, setScrollVal] = useState(0);
-
-  const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
-    /* smooth out scroll value */
-    setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
-  };
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -48,22 +42,14 @@ export const CircularViewer = ({
         className={`stroke-current`}
         width={sizeX}
         height={sizeY}
-        onWheel={(e) => handleScroll(e)}
       >
-        <CircularIndex
-          cx={cx}
-          cy={cy}
-          radius={radius}
-          sequence={sequence}
-          scrollVal={scrollVal}
-        />
+        <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
         <CircularAnnotationGutter
           sequence={sequence}
           annotations={annotations}
           cx={cx}
           cy={cy}
           radius={radius}
-          scrollVal={scrollVal}
         />
         <CircularSelection
           sequence={sequence}
@@ -73,7 +59,6 @@ export const CircularViewer = ({
           radius={radius}
           selectionRef={selectionRef}
           setSelection={setSelection}
-          scrollVal={scrollVal}
         />
 
         <text
@@ -100,10 +85,9 @@ const CircularSelection = ({
   selectionRef,
   setSelection,
   sequence,
-  scrollVal,
 }: {
   radius: number;
-  scrollVal: number;
+
   cx: number;
   cy: number;
   selectionRef: React.RefObject<SVGSVGElement>;
@@ -203,7 +187,7 @@ const CircularSelection = ({
     direction,
   });
   return (
-    <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
+    <g>
       <path
         d={arc}
         fill="none"

@@ -15,7 +15,7 @@ export default {
 } as ComponentMeta<typeof GeneDetails>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = (args: { query: string }) => {
+const Template: ComponentStory<any> = () => {
   const [currentGene, setCurrentGene] = useState<Gene | null>(GENES[0]);
   return (
     <Card className="max-w-3xl">

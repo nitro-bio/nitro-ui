@@ -7,13 +7,11 @@ export const CircularIndex = ({
   cx,
   cy,
   radius,
-  scrollVal,
 }: {
   sequence: AnnotatedSequence;
   cx: number;
   cy: number;
   radius: number;
-  scrollVal: number;
 }) => {
   const basesPerTick = Math.floor(20 * Math.log10(sequence.length));
 
@@ -22,7 +20,7 @@ export const CircularIndex = ({
       <svg
         className={`bg-brand-800 fill-current text-brand-800 dark:text-brand-600`}
       >
-        <g transform={`rotate(${scrollVal} ${cx} ${cy})`}>
+        <g>
           <circle
             cx={cx}
             cy={cy}

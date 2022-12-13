@@ -1,3 +1,4 @@
+import { classNames } from "@utils/stringUtils";
 import { getBezierPath, Position } from "reactflow";
 
 export default function CustomEdge({
@@ -40,7 +41,7 @@ export default function CustomEdge({
     <>
       <path
         id={`connecting-edge-${id}`}
-        className="text-noir-200 dark:text-noir-50"
+        className={classNames("text-noir-200 dark:text-noir-50", className)}
         d={edgePath}
         markerEnd={markerEnd}
         stroke="currentColor"
