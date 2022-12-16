@@ -67,7 +67,6 @@ export type AriadneSelection = {
   start: number;
   end: number;
   direction: "forward" | "reverse";
-  clicked: boolean;
 };
 
 export type AriadneSearch = {

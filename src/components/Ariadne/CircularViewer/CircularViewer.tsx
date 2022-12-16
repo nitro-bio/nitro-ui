@@ -1,6 +1,5 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "../..";
 import {
   AnnotatedSequence,
   Annotation,
@@ -15,8 +14,6 @@ export interface Props {
   sequence: AnnotatedSequence;
   size: number;
   annotations: Annotation[];
-  selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection) => void;
   search: AriadneSearch | null;
   resetSearch: () => void;
 }
@@ -25,8 +22,6 @@ export const CircularViewer = ({
   sequence,
   size,
   annotations,
-  selection,
-  setSelection,
   search,
   resetSearch,
 }: Props) => {
@@ -39,6 +34,10 @@ export const CircularViewer = ({
   };
   const [scrollVal, setScrollVal] = useState(0);
 
+  const [selection, setSelection] = useState<AriadneSelection | null>(null);
+
+  const [selections, setSelections] = useState<AriadneSelection[]>([]);
+
   const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
     /* smooth out scroll value */
 
@@ -48,20 +47,41 @@ export const CircularViewer = ({
   const selectionRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    if (search && sequence.raw.includes(search.searchString.toUpperCase())) {
-      const start = sequence.raw.indexOf(search.searchString);
-      const end = search.searchString.length;
+    if (
+      search &&
+      sequence.raw.includes(search.searchString.toUpperCase()) &&
+      search.strand === "main"
+    ) {
+      setSelection(null);
+      const indices = [];
+      let index = 0;
+      let startIndex = 0;
 
-      if (selection && selection.start === start && selection.end === end) {
-        //pass
-      } else {
-        setSelection({
-          start: start,
-          end: end,
-          direction: "forward",
-          clicked: false,
-        });
+      while (
+        (index = sequence.raw.indexOf(
+          search.searchString.toUpperCase(),
+          startIndex
+        )) > -1
+      ) {
+        indices.push(index);
+        startIndex = index + search.searchString.length;
       }
+
+      const sec: any = [];
+      indices.forEach((item: number, index: number) => {
+        if (index <= 24) {
+          const start = item;
+          const end = start + search.searchString.length - 1;
+
+          sec.push({
+            start: start,
+            end: end,
+            direction: "forward",
+            clicked: false,
+          });
+        }
+      });
+      setSelections(sec);
     } else if (search && search.strand === "complement") {
       const splitString = sequence.raw.split("");
       const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
@@ -70,24 +90,93 @@ export const CircularViewer = ({
       });
 
       const complementString = complement.join("");
-      console.log(complementString);
-      if (complementString.includes(search.searchString.toUpperCase())) {
-        const start = complementString.indexOf(search.searchString);
-        const end = search.searchString.length;
 
-        if (selection && selection.start === start && selection.end === end) {
-          //pass
-        } else {
-          setSelection({
-            start: start,
-            end: end,
-            direction: "forward",
-            clicked: false,
-          });
+      if (complementString.includes(search.searchString.toUpperCase())) {
+        const indices = [];
+        let index = 0;
+        let startIndex = 0;
+
+        while (
+          (index = complementString.indexOf(
+            search.searchString.toUpperCase(),
+            startIndex
+          )) > -1
+        ) {
+          indices.push(index);
+          startIndex = index + search.searchString.length;
         }
+        const sec: any = [];
+        indices.forEach((item: number, index: number) => {
+          if (index <= 24) {
+            const start = item;
+            const end = start + search.searchString.length - 1;
+
+            sec.push({
+              start: start,
+              end: end,
+              direction: "forward",
+              clicked: false,
+            });
+          }
+        });
+        setSelections(sec);
+        console.log(sec);
       }
+    } else {
+      setSelections([]);
     }
   }, [search]);
+
+  const getSelections = () => {
+    return selections.map((selection: AriadneSelection, index: number) => {
+      const { start, end, direction } = selection;
+      if (start === null || end === null) {
+        return null;
+      }
+      const center = { x: cx, y: cy };
+      const innerRadius = radius - 10;
+      const outerRadius = radius;
+      let length = -1;
+      if (end > start) {
+        if (direction === "forward") {
+          length = end - start;
+        } else {
+          length = sequence.annotated.length - end + start;
+        }
+      } else {
+        if (direction === "forward") {
+          length = sequence.annotated.length - start + end;
+        } else {
+          length = start - end;
+        }
+      }
+
+      const offset = direction === "forward" ? start : end;
+      const seqLength = sequence.annotated.length;
+
+      const arc = genArc({
+        center,
+        innerRadius,
+        largeArc: length > seqLength / 2 ? true : false,
+        length,
+        offset,
+        outerRadius,
+        seqLength,
+        direction,
+      });
+      return (
+        <path
+          key={index}
+          d={arc}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      );
+    });
+  };
 
   return (
     <div>
@@ -119,6 +208,8 @@ export const CircularViewer = ({
             radius={radius}
             scrollVal={scrollVal}
           />
+
+          {getSelections()}
           <CircularSelection
             sequence={sequence}
             selection={selection}
@@ -127,7 +218,7 @@ export const CircularViewer = ({
             radius={radius}
             selectionRef={selectionRef}
             setSelection={setSelection}
-            resetSearch={resetSearch}
+            setSelections={() => setSelections([])}
           />
 
           <text
@@ -154,8 +245,8 @@ const CircularSelection = ({
   selection,
   selectionRef,
   setSelection,
+  setSelections,
   sequence,
-  resetSearch,
 }: {
   radius: number;
   cx: number;
@@ -163,8 +254,8 @@ const CircularSelection = ({
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
+  setSelections: () => void;
   sequence: AnnotatedSequence;
-  resetSearch: () => void;
 }) => {
   /* Collect internal selection data and propogate up */
   const {
@@ -180,6 +271,7 @@ const CircularSelection = ({
         internalSelectionEnd &&
         internalDirection
       ) {
+        setSelections();
         const start = findIndexFromAngle({
           angle: internalSelectionStart,
           seqLength: sequence.annotated.length,
@@ -199,15 +291,12 @@ const CircularSelection = ({
         }
         const deltaLength = Math.abs(prevLength - newLength);
         const deltaThreshold = Math.max(0.7 * sequence.annotated.length, 10);
-        if (selection && !selection.clicked) {
-          resetSearch();
-        }
+
         if (deltaLength > deltaThreshold && selection) {
           setSelection({
             start,
             end,
             direction: selection?.direction,
-            clicked: true,
           });
 
           return;
@@ -216,7 +305,6 @@ const CircularSelection = ({
           start,
           end,
           direction: internalDirection === "clockwise" ? "forward" : "reverse",
-          clicked: true,
         });
       }
     },
@@ -228,6 +316,7 @@ const CircularSelection = ({
   }
 
   /* Display selection data that has trickled down */
+
   const { start, end, direction } = selection;
   if (start === null || end === null) {
     return null;
