@@ -48,11 +48,13 @@ const Template: ComponentStory<any> = ({
     <Card className="max-w-xl">
       <div className="flex flex-col space-y-3">
         <input
+          className="dark:bg-gray-600 dark:text-brand-400"
           value={searchStr}
           type="text"
+          placeholder="Input search sequence"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div className="flex flex-row space-x-3">
+        <div className="flex flex-row space-x-3 dark:text-brand-400">
           <label>Strand type: </label>
           <div>
             <input
@@ -63,7 +65,7 @@ const Template: ComponentStory<any> = ({
               type="radio"
               value="main"
               name="default-radio"
-              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2"
+              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 dark:bg-brand-600 dark:text-brand-400"
             />
             <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Forward
@@ -78,7 +80,7 @@ const Template: ComponentStory<any> = ({
               type="radio"
               value="complement"
               name="default-radio"
-              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2"
+              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 dark:bg-brand-600 dark:text-brand-400"
             />
             <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Reverse
@@ -93,7 +95,7 @@ const Template: ComponentStory<any> = ({
               type="radio"
               value="both"
               name="default-radio"
-              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2"
+              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 dark:bg-brand-600 dark:text-brand-400"
             />
             <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Both
