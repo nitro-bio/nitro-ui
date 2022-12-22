@@ -45,7 +45,7 @@ export function ResultCard(props: {
     <Card
       id={`card-${id}`}
       aria-labelledby={`result-title-${id}`}
-      className="group flex flex-col opacity-90 hover:scale-105 hover:opacity-100"
+      className="group flex flex-col opacity-90 hover:opacity-100 hover:shadow-xl"
     >
       <div className="mb-2">
         <div className="flex space-x-3">

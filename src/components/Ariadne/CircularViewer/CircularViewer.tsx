@@ -13,37 +13,29 @@ import { findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
   sequence: AnnotatedSequence;
-  size: number;
   annotations: Annotation[];
   search: AriadneSearch | null;
   resetSearch: () => void;
 }
 
+const SVG_SIZE = 300;
+const SVG_PADDING = 30;
 export const CircularViewer = ({
   sequence,
-  size,
   annotations,
   search,
   resetSearch,
 }: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
-    cx: size / 2,
-    cy: size / 2,
-    sizeX: size,
-    sizeY: size,
-    radius: (size - 10) / 2,
+    cx: SVG_SIZE / 2,
+    cy: SVG_SIZE / 2,
+    sizeX: SVG_SIZE,
+    sizeY: SVG_SIZE,
+    radius: (SVG_SIZE - SVG_PADDING) / 2,
   };
-  const [scrollVal, setScrollVal] = useState(0);
-
   const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   const [selections, setSelections] = useState<AriadneSelection[]>([]);
-
-  const handleScroll = (e: React.WheelEvent<SVGSVGElement>) => {
-    /* smooth out scroll value */
-
-    setScrollVal(Math.round(e.deltaY / 10) + scrollVal);
-  };
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -164,22 +156,14 @@ export const CircularViewer = ({
           className={`stroke-current`}
           width={sizeX}
           height={sizeY}
-          onWheel={(e) => handleScroll(e)}
         >
-          <CircularIndex
-            cx={cx}
-            cy={cy}
-            radius={radius}
-            sequence={sequence}
-            scrollVal={scrollVal}
-          />
+          <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
           <CircularAnnotationGutter
             sequence={sequence}
             annotations={annotations}
             cx={cx}
             cy={cy}
             radius={radius}
-            scrollVal={scrollVal}
           />
 
           {getSelections()}
@@ -222,6 +206,7 @@ const CircularSelection = ({
   sequence,
 }: {
   radius: number;
+
   cx: number;
   cy: number;
   selectionRef: React.RefObject<SVGSVGElement>;
@@ -295,8 +280,8 @@ const CircularSelection = ({
     return null;
   }
   const center = { x: cx, y: cy };
-  const innerRadius = radius - 10;
-  const outerRadius = radius;
+  const innerRadius = radius;
+  const outerRadius = radius + 10;
   let length = -1;
   if (end > start) {
     if (direction === "forward") {
@@ -327,13 +312,15 @@ const CircularSelection = ({
     direction,
   });
   return (
-    <path
-      d={arc}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <g>
+      <path
+        d={arc}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
   );
 };

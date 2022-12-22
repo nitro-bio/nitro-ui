@@ -111,7 +111,7 @@ export const SequenceViewer = ({
   return (
     <>
       <div
-        className="font-mono content-stretch text-md grid h-full overflow-y-scroll pt-4 text-center tracking-widest dark:bg-noir-800 md:mx-4"
+        className="font-mono content-stretch text-md grid h-full overflow-y-scroll bg-white pt-4 text-center tracking-widest dark:bg-noir-800 md:mx-4"
         ref={selectionRef}
       >
         <div className="mx-1 flex flex-row flex-wrap space-x-1">

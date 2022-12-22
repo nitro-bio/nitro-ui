@@ -13,11 +13,17 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "3dmol": "^1.8.0",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
+    "@storybook/addons": "^6.5.14",
+    "@storybook/theming": "^6.5.14",
     "class-variance-authority": "^0.2.4",
-    "jotai": "^1.10.0",
+    "d3-hierarchy": "^3.1.2",
+    "jotai": "^1.11.1",
+    "molstar": "^3.26.0",
     "react-markdown": "^8.0.3",
+    "reactflow": "^11.3.3",
     "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
@@ -43,8 +49,8 @@
     "eslint-plugin-react": "^7.31.10",
     "json": "^11.0.0",
     "postcss": "^8.4.19",
-    "prettier": "^2.7.1",
-    "prettier-plugin-tailwindcss": "^0.1.13",
+    "prettier": "^2.8.1",
+    "prettier-plugin-tailwindcss": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook-tailwind-dark-mode": "^1.0.15",

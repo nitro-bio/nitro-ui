@@ -103,7 +103,6 @@ const Template: ComponentStory<any> = ({
       </div>
       <CircularViewer
         sequence={annotatedSequence}
-        size={400}
         annotations={annotations}
         search={searchStr ? search : null}
         resetSearch={() => setSearch("")}

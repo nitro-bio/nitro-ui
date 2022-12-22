@@ -2,7 +2,7 @@
 const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-const brandColor = colors.rose;
+const brandColor = colors.fuchsia;
 const noirColor = colors.zinc;
 
 module.exports = {

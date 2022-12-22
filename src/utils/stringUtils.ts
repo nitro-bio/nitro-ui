@@ -1,3 +1,5 @@
-export function classNames(...classes: (string | undefined | null | false)[]) {
+export function classNames(
+  ...classes: (string | undefined | null | boolean)[]
+) {
   return classes.filter(Boolean).join(" ");
 }
