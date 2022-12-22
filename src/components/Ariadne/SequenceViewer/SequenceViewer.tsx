@@ -1,11 +1,12 @@
 import { useTextSelection } from "@Ariadne/hooks/useSelection";
-import { baseInSelection } from "@Ariadne/utils";
+import { baseInSelection, getIndexes } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { cva, VariantProps } from "class-variance-authority";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   AnnotatedSequence,
+  AriadneSearch,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
@@ -13,15 +14,80 @@ import {
 export interface Props {
   sequence: AnnotatedSequence;
   selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection) => void;
+  search: AriadneSearch | null;
+  setSelection: (selection: AriadneSelection | null) => void;
 }
 export const SequenceViewer = ({
   sequence,
   selection,
   setSelection,
+  search,
 }: Props) => {
   const selectionRef = useRef<HTMLDivElement>(null);
   const { range } = useTextSelection(selectionRef);
+
+  const [selections, setSelections] = useState<AriadneSelection[]>([]);
+  const [searchVal, setSearchVal] = useState<AriadneSearch | null>(search);
+
+  useEffect(() => {
+    if (search && search.searchString !== searchVal?.searchString) {
+      setSelection(null);
+      if (
+        sequence.raw.includes(search.searchString.toUpperCase()) &&
+        search.strand === "main"
+      ) {
+        const result = getIndexes(sequence.raw, search.searchString, false);
+        setSelections(result);
+      } else if (search && search.strand === "complement") {
+        let splitString = sequence.raw.split("");
+        splitString = splitString.reverse();
+        const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
+        const complement = splitString.map((base: string) => {
+          return basePairMap[base];
+        });
+
+        const complementString = complement.join("");
+
+        const result = getIndexes(complementString, search.searchString, true);
+        console.log(result);
+        setSelections(result);
+      } else if (search?.strand === "both") {
+        const forwardResult = getIndexes(
+          sequence.raw,
+          search.searchString,
+          false
+        );
+
+        let splitString = sequence.raw.split("");
+        splitString = splitString.reverse();
+        const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
+        const complement = splitString.map((base: string) => {
+          return basePairMap[base];
+        });
+
+        const complementString = complement.join("");
+
+        const reverseResult = getIndexes(
+          complementString,
+          search.searchString,
+          true
+        );
+        let result = null;
+        if (forwardResult) {
+          result = forwardResult.concat(reverseResult);
+        } else {
+          result = reverseResult;
+        }
+
+        setSelections(result);
+      } else {
+        setSelections([]);
+      }
+    } else {
+      setSelections([]);
+    }
+    setSearchVal(search);
+  }, [search]);
 
   useEffect(
     function propagateSelectionUp() {
@@ -31,6 +97,7 @@ export const SequenceViewer = ({
         const endIdx =
           range?.endContainer?.parentElement?.getAttribute("data-seq-index");
         if (startIdx && endIdx) {
+          setSelections([]);
           setSelection({
             start: parseInt(startIdx),
             end: parseInt(endIdx),
@@ -48,28 +115,50 @@ export const SequenceViewer = ({
         ref={selectionRef}
       >
         <div className="mx-1 flex flex-row flex-wrap space-x-1">
-          {sequence.map(({ base, complement, annotations, index }) => {
-            return (
-              <div key={`sequence-viewer-base-${index}`} data-seq-index={index}>
-                <CharComponent type="sequence" char={base} index={index} />
-                <SelectionMarker
-                  index={index}
-                  selection={selection}
-                  sequenceLength={sequence.length}
-                />
-                <CharComponent
-                  type="complement"
-                  char={complement}
-                  index={index}
-                />
-                <SequenceAnnotation
-                  annotations={annotations}
-                  maxAnnotationStack={5}
-                  index={index}
-                />
-              </div>
-            );
-          })}
+          {sequence.annotated.map(
+            ({ base, complement, annotations, index }) => {
+              return (
+                <div
+                  key={`sequence-viewer-base-${index}`}
+                  data-seq-index={index}
+                >
+                  <CharComponent type="sequence" char={base} index={index} />
+
+                  {selections.length > 0 &&
+                    selections.map((selection: AriadneSelection) => {
+                      if (
+                        baseInSelection(index, selection, sequence.raw.length)
+                      ) {
+                        return (
+                          <SelectionMarker
+                            key={index}
+                            index={index}
+                            selection={selection}
+                            sequenceLength={sequence.raw.length}
+                          />
+                        );
+                      }
+                    })}
+                  <SelectionMarker
+                    index={index}
+                    selection={selection}
+                    sequenceLength={sequence.raw.length}
+                  />
+
+                  <CharComponent
+                    type="complement"
+                    char={complement}
+                    index={index}
+                  />
+                  <SequenceAnnotation
+                    annotations={annotations}
+                    maxAnnotationStack={5}
+                    index={index}
+                  />
+                </div>
+              );
+            }
+          )}
         </div>
       </div>
     </>

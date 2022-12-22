@@ -1,5 +1,5 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
-import { stackElements } from "@Ariadne/utils";
+import { getIndexes, stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { Fragment, useEffect, useRef, useState } from "react";
 import {
@@ -28,6 +28,7 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.raw.length / numberOfTicks);
 
   const [selections, setSelections] = useState<AriadneSelection[]>([]);
+  const [searchVal, setSearchVal] = useState<AriadneSearch | null>(search);
 
   const getSelections = () => {
     return selections.map((selection: AriadneSelection, index: number) => {
@@ -110,83 +111,58 @@ export const LinearViewer = (props: Props) => {
   };
 
   useEffect(() => {
-    if (
-      search &&
-      sequence.raw.includes(search.searchString.toUpperCase()) &&
-      search.strand === "main"
-    ) {
+    if (search && search.searchString !== searchVal?.searchString) {
       setSelection(null);
-      const indices = [];
-      let index = 0;
-      let startIndex = 0;
-
-      while (
-        (index = sequence.raw.indexOf(
-          search.searchString.toUpperCase(),
-          startIndex
-        )) > -1
+      if (
+        sequence.raw.includes(search.searchString.toUpperCase()) &&
+        search.strand === "main"
       ) {
-        indices.push(index);
-        startIndex = index + search.searchString.length;
-      }
-
-      const sec: any = [];
-      indices.forEach((item: number, index: number) => {
-        if (index <= 24) {
-          const start = item;
-          const end = start + search.searchString.length - 1;
-
-          sec.push({
-            start: start,
-            end: end,
-            direction: "forward",
-            clicked: false,
-          });
-        }
-      });
-      setSelections(sec);
-    } else if (search && search.strand === "complement") {
-      const splitString = sequence.raw.split("");
-      const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
-      const complement = splitString.map((base: string) => {
-        return basePairMap[base];
-      });
-
-      const complementString = complement.join("");
-
-      if (complementString.includes(search.searchString.toUpperCase())) {
-        const indices = [];
-        let index = 0;
-        let startIndex = 0;
-
-        while (
-          (index = complementString.indexOf(
-            search.searchString.toUpperCase(),
-            startIndex
-          )) > -1
-        ) {
-          indices.push(index);
-          startIndex = index + search.searchString.length;
-        }
-        const sec: any = [];
-        indices.forEach((item: number, index: number) => {
-          if (index <= 24) {
-            const start = item;
-            const end = start + search.searchString.length - 1;
-
-            sec.push({
-              start: start,
-              end: end,
-              direction: "forward",
-              clicked: false,
-            });
-          }
+        const result = getIndexes(sequence.raw, search.searchString, false);
+        setSelections(result);
+      } else if (search && search.strand === "complement") {
+        let splitString = sequence.raw.split("");
+        splitString = splitString.reverse();
+        const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
+        const complement = splitString.map((base: string) => {
+          return basePairMap[base];
         });
-        setSelections(sec);
+
+        const complementString = complement.join("");
+
+        const result = getIndexes(complementString, search.searchString, true);
+        setSelections(result);
+      } else if (search?.strand === "both") {
+        const forwardResult = getIndexes(
+          sequence.raw,
+          search.searchString,
+          false
+        );
+
+        let splitString = sequence.raw.split("");
+        splitString = splitString.reverse();
+        const basePairMap: any = { A: "T", T: "A", C: "G", G: "C" };
+        const complement = splitString.map((base: string) => {
+          return basePairMap[base];
+        });
+
+        const complementString = complement.join("");
+
+        const reverseResult = getIndexes(
+          complementString,
+          search.searchString,
+          true
+        );
+
+        const result = forwardResult.concat(reverseResult);
+
+        setSelections(result);
+      } else {
+        setSelections([]);
       }
     } else {
       setSelections([]);
     }
+    setSearchVal(search);
   }, [search]);
 
   const [selectionsData, setSelectionsData] = useState<any>(null);

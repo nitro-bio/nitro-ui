@@ -152,3 +152,48 @@ export const baseInSelection = (
 export const inRange = (value: number, min: number, max: number) => {
   return value >= min && value <= max;
 };
+
+export const getIndexes = (
+  baseStr: string,
+  searchStr: string,
+  reverse: boolean
+) => {
+  if (baseStr.includes(searchStr.toUpperCase())) {
+    const indices = [];
+    let index = 0;
+    let startIndex = 0;
+
+    while (
+      (index = baseStr.indexOf(searchStr.toUpperCase(), startIndex)) > -1
+    ) {
+      if (reverse) {
+        indices.push(baseStr.length - 1 - index);
+      } else {
+        indices.push(index);
+      }
+      startIndex = index + searchStr.length;
+    }
+    const sec: any = [];
+    indices.forEach((item: number, index: number) => {
+      if (index <= 24) {
+        let start = item;
+        let end = null;
+        if (reverse) {
+          end = start;
+          start = start - (searchStr.length - 1);
+        } else {
+          end = start + (searchStr.length - 1);
+        }
+
+        sec.push({
+          start: start,
+          end: end,
+          direction: "forward",
+          clicked: false,
+        });
+      }
+    });
+    return sec;
+  }
+  return [];
+};

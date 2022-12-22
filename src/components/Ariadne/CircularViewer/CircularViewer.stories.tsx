@@ -84,6 +84,21 @@ const Template: ComponentStory<any> = ({
               Reverse
             </label>
           </div>
+          <div>
+            <input
+              onChange={(e) => {
+                setStrandType(e.target.value);
+              }}
+              checked={strandType === "both"}
+              type="radio"
+              value="both"
+              name="default-radio"
+              className="focus:ring-blue-500 h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2"
+            />
+            <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Both
+            </label>
+          </div>
         </div>
       </div>
       <CircularViewer
