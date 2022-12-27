@@ -56,11 +56,21 @@ export interface AnnotatedAA {
   annotations: StackedAnnotation[];
   index: number;
 }
-export type AnnotatedSequence = AnnotatedNucl[] | AnnotatedAA[];
+export type AnnotatedSequence = {
+  annotated: AnnotatedNucl[] | AnnotatedAA[];
+  raw: string;
+};
+
 export type ValidatedSequence = Nucl[] | AA[];
 
 export type AriadneSelection = {
   start: number;
   end: number;
   direction: "forward" | "reverse";
+};
+
+export type AriadneSearch = {
+  strand: "main" | "complement" | "both";
+  searchBaseType: "DNA" | "RNA" | "AA";
+  searchString: string;
 };
