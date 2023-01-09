@@ -1,4 +1,5 @@
-export * from "@Blast/GlobalAlignmentViz";
-export * from "@Blast/ResultCard";
-export * from "@Blast/SequenceCard";
-export * from "@Blast/TextAlignmentViz";
+import GlobalAlignmentViz from "@Blast/GlobalAlignmentViz";
+import ResultCard from "@Blast/ResultCard";
+import SequenceCard from "@Blast/SequenceCard";
+import TextAlignmentViz from "@Blast/TextAlignmentViz";
+export { GlobalAlignmentViz, ResultCard, SequenceCard, TextAlignmentViz };

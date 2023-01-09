@@ -1,2 +1,2 @@
 import { SequenceViewer } from "./SequenceViewer";
-export { SequenceViewer };
+export default SequenceViewer;
