@@ -1,11 +1,11 @@
-import { generateResults } from "@Blast/blastUtils";
-import ResultCard from "@Blast/ResultCard";
+import { generateBlastResults } from "./components/Blast/blastUtils";
+import { ResultCard } from "./components";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-const results = generateResults({
+const results = generateBlastResults({
   sequence: "TAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC",
 });
 

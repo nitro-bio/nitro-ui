@@ -1,3 +1,3 @@
-import { SequenceCard } from "@Blast/SequenceCard/SequenceCard";
+import { SequenceCard } from "./SequenceCard";
 
 export default SequenceCard;

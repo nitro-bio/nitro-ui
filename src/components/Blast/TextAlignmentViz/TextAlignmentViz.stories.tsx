@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
-import { generateResults } from "../blastUtils";
+import { generateBlastResults } from "../blastUtils";
 import { TextAlignmentViz } from "./TextAlignmentViz";
 
 export default {
@@ -13,7 +13,7 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = (args: { query: string }) => {
-  const results = generateResults({
+  const results = generateBlastResults({
     sequence: args.query,
   });
 

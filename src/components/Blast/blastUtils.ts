@@ -1,7 +1,7 @@
 import { getRndInteger } from "@utils/mathUtils";
 import { BlastResponseDatum } from "./types";
 
-export const generateResults = (args: { sequence: string }) => {
+export const generateBlastResults = (args: { sequence: string }) => {
   const { sequence } = args;
   return [
     {

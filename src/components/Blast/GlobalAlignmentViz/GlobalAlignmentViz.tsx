@@ -39,7 +39,7 @@ export const GlobalAlignmentViz = ({
     ];
 
     return (
-      <a href={`#card-${item.id}`}>
+      <a key={`#card-${item.id}`} href={`#card-${item.id}`}>
         <div
           key={item.title}
           className={
