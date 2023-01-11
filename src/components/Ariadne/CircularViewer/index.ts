@@ -1,3 +1,3 @@
 import { CircularViewer } from "./CircularViewer";
 
-export { CircularViewer };
+export default CircularViewer;

@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.0.11",
+  "version": "0.0.12",
   "scripts": {
     "build": "tsc && vite build",
     "dev": "yarn storybook",
@@ -10,7 +10,13 @@
     "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:fix": "prettier --check --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
+  },
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "dependencies": {
     "3dmol": "^1.8.0",
@@ -58,11 +64,6 @@
     "typescript": "^4.6.4",
     "vite": "^3.2.0",
     "vite-plugin-dts": "^1.6.6"
-  },
-  "license": "UNLICENSED",
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
   },
   "files": [
     "dist"

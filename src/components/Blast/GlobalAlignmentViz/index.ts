@@ -1,3 +1,3 @@
-import { GlobalAlignmentViz } from "@Blast/GlobalAlignmentViz/GlobalAlignmentViz";
+import { GlobalAlignmentViz } from "./GlobalAlignmentViz";
 
 export default GlobalAlignmentViz;

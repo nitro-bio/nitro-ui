@@ -5,7 +5,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { CircularViewer } from ".";
+import CircularViewer from ".";
 
 export default {
   title: "Ariadne/CircularViewer",

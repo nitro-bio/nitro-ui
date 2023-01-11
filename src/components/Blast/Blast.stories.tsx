@@ -1,8 +1,8 @@
-import GlobalAlignmentViz from "@Blast/GlobalAlignmentViz";
-import ResultCard from "@Blast/ResultCard";
-import SequenceCard from "@Blast/SequenceCard";
+import GlobalAlignmentViz from "./GlobalAlignmentViz";
+import ResultCard from "./ResultCard";
+import SequenceCard from "./SequenceCard";
 import { ComponentStory } from "@storybook/react";
-import { generateResults } from "./blastUtils";
+import { generateBlastResults } from "./blastUtils";
 export default {
   title: "Blast/Blast",
   argTypes: {
@@ -12,7 +12,7 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
-  const results = generateResults({ sequence: sequence });
+  const results = generateBlastResults({ sequence: sequence });
   const sequenceName = "Test Sequence";
   return (
     <div className="flex h-full w-full items-start justify-center px-4 pt-16 dark:bg-noir-600">

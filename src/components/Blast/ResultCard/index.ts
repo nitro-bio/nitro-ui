@@ -1,3 +1,3 @@
-import { ResultCard } from "@Blast/ResultCard/ResultCard";
+import { ResultCard } from "./ResultCard";
 
 export default ResultCard;

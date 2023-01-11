@@ -1,3 +1,3 @@
-import { TextAlignmentViz } from "@Blast/TextAlignmentViz/TextAlignmentViz";
+import { TextAlignmentViz } from "./TextAlignmentViz";
 
 export default TextAlignmentViz;

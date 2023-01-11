@@ -2,9 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { CircularViewer } from "./CircularViewer";
-import { LinearViewer } from "./LinearViewer";
-import { SequenceViewer } from "./SequenceViewer";
+import { CircularViewer, LinearViewer, SequenceViewer } from ".";
 import { generateRandomAnnotations } from "./storyUtils";
 import { AA, AriadneSelection, Nucl } from "./types";
 import { getAnnotatedSequence } from "./utils";
