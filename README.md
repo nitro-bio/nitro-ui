@@ -1,5 +1,36 @@
 # Component Library for Nitro
 
+## Use in a project
+
+This library is still in Alpha, so use at your own risk.
+
+First, install from npm
+
+```
+npm install @ninjha01/nitro-ui
+```
+
+If you'd like to use the builtin tailwind config, make sure to import the css file.
+
+```
+import "@ninjha01/nitro-ui/nitro.css"
+```
+
+If you'd like to use your own tailwind config, add the following to your tailwind config file.
+
+```
+module.exports = {
+	...
+	content: [
+		...
+		"node_modules/@ninjha01/nitro-ui/dist/**/*.{js,ts,jsx,tsx}",
+	],
+	...
+}
+```
+
+## Development
+
 ### Quick Start
 
 ```bash
