@@ -7,7 +7,21 @@ export interface Angle {
   center: Coor;
 }
 
+export const annotationTypes = [
+  "CDS",
+  "enhancer",
+  "intron",
+  "misc_feature",
+  "polyA_signal",
+  "promoter",
+  "protein_bind",
+  "rep_origin",
+];
+
+export type AnnotationType = typeof annotationTypes[number];
+
 export interface Annotation {
+  type: AnnotationType;
   start: number;
   end: number;
   color: string;

@@ -1,5 +1,5 @@
 import { getRndInteger } from "../..";
-import type { Annotation } from "./types";
+import { Annotation, annotationTypes } from "./types";
 
 const colors = [
   "dark:text-red-500 dark:bg-red-500 text-red-300 bg-red-300",
@@ -28,7 +28,8 @@ export const generateRandomAnnotations = (
         start + max_annotation_length
       ) % sequence.length;
     const randomColor = colors[getRndInteger(0, colors.length)];
-    const annotation = {
+    const annotation: Annotation = {
+      type: annotationTypes[getRndInteger(0, annotationTypes.length)],
       start,
       end,
       color: randomColor,
