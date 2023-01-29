@@ -22,7 +22,7 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div className="font-mono flex h-full w-full select-none items-center justify-center overflow-hidden p-6 font-thin text-brand-400">
+    <div className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400">
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
@@ -31,9 +31,9 @@ export const LinearViewer = (props: Props) => {
       >
         <line
           x1="0"
-          y1="50%"
+          y1="20%"
           x2="100%"
-          y2="50%"
+          y2="20%"
           stroke="currentColor"
           strokeWidth={10}
         />
@@ -43,17 +43,6 @@ export const LinearViewer = (props: Props) => {
           totalBases={sequence.length}
         />
         <LinearAnnotationGutter annotations={annotations} sequence={sequence} />
-        {/* <text
-          x={"50%"}
-          dy={-10}
-          textAnchor="middle"
-          fill="currentColor"
-          stroke="currentColor"
-          alignmentBaseline="middle"
-          fontSize={"1.8rem"}
-        >
-          {sequence.length} bases
-        </text> */}
         <LinearSelection
           selectionRef={selectionRef}
           selection={selection}
@@ -123,16 +112,16 @@ const LinearSelection = ({
         <rect
           x={`${secondRectStart}%`}
           width={`${secondRectWidth}%`}
-          y="40%"
-          height="20%"
+          y="16%"
+          height="8%"
           fill="currentColor"
           fillOpacity={0.2}
         />
         <rect
           x={0}
           width={`${firstRectWidth}%`}
-          y="40%"
-          height="20%"
+          y="16%"
+          height="8%"
           fill="currentColor"
           fillOpacity={0.2}
         />
@@ -148,16 +137,16 @@ const LinearSelection = ({
         <rect
           x={`${secondRectStart}%`}
           width={`${secondRectWidth}%`}
-          y="40%"
-          height="20%"
+          y="16%"
+          height="8%"
           fill="currentColor"
           fillOpacity={0.2}
         />
         <rect
           x={0}
           width={`${firstRectWidth}%`}
-          y="40%"
-          height="20%"
+          y="16%"
+          height="8%"
           fill="currentColor"
           fillOpacity={0.2}
         />
@@ -171,9 +160,9 @@ const LinearSelection = ({
   return (
     <rect
       x={`${left}%`}
-      y="40%"
+      y="16%"
       width={`${width}%`}
-      height="20%"
+      height="8%"
       fill="currentColor"
       fillOpacity={0.2}
     />
@@ -190,7 +179,7 @@ const LinearAnnotationGutter = ({
   const stackedAnnotations = stackElements(annotations);
   return (
     <g>
-      <line x1="0" y1="50%" x2="100%" y2="50%" stroke="currentColor" />
+      <line x1="0" y1="20%" x2="100%" y2="20%" stroke="currentColor" />
       {stackedAnnotations.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (
@@ -233,19 +222,34 @@ const LinearAnnotation = ({
       </Fragment>
     );
   }
+  const annotationRectangleWidth =
+    ((annotation.end - annotation.start) / sequence.length) * 100;
+
   return (
     <g
       key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
-      className={classNames(annotation.color)}
+      className={classNames(
+        annotation.color,
+        "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100"
+      )}
     >
-      <line
-        x1={`${(annotation.start / sequence.length) * 100}%`}
-        y1={`${50 + 3 * (stackIdx + 1)}%`}
-        x2={`${(annotation.end / sequence.length) * 100}%`}
-        y2={`${50 + 3 * (stackIdx + 1)}%`}
-        stroke="currentColor"
-        strokeWidth={10}
-      />
+      <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
+      <rect
+        x={`${(annotation.start / sequence.length) * 100}%`}
+        y={`${20 + 10 * (stackIdx + 1)}%`}
+        width={`${annotationRectangleWidth}%`}
+        height={10}
+        fill="currentColor"
+      ></rect>
+      <text
+        x={`${(annotation.start / sequence.length) * 100}%`}
+        y={`${19 + 10 * (stackIdx + 1)}%`}
+        fontFamily="Verdana"
+        fontSize="15"
+        fill="currentColor"
+      >
+        {annotation.text}
+      </text>
     </g>
   );
 };
@@ -266,7 +270,7 @@ const Ticks = ({
           x1: ((i * basesPerTick) / totalBases) * SVG_SIZE,
           x2: ((i * basesPerTick) / totalBases) * SVG_SIZE,
         };
-        const { y1, y2 } = { y1: "50%", y2: "45%" };
+        const { y1, y2 } = { y1: "20%", y2: "15%" };
         return (
           <g key={`tick-${i}`} className="fill-current text-brand-400/50">
             <line
