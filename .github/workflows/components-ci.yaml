@@ -3,9 +3,6 @@ name: CI for Components
 # on all branches
 on: [push]
 
-env:
-  NEXT_TELEMETRY_DISABLED: 1
-
 jobs:
   frontend_compile:
     runs-on: ubuntu-latest
@@ -21,5 +18,10 @@ jobs:
         run: yarn run format
       - name: Run ESLint
         run: yarn run lint
-      - name: Build project
+      - name: Build component Library
+        run: yarn run build
+      - name: Build Storybook
         run: yarn run build-storybook
+        env:
+            NODE_OPTIONS: "--max_old_space_size=4096" # to get around JavaScript heap out of memory error
+
