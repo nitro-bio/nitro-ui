@@ -1,4 +1,0 @@
-yarn build
-tgz="$PWD/$(yarn pack)"
-cd ../personal-site/;
-yarn add "$tgz";
