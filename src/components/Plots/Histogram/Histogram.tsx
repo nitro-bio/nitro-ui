@@ -52,7 +52,7 @@ export const Histogram = ({
         Bins:
         <input
           type="range"
-          min={10}
+          min={2}
           max={100}
           value={bins}
           onChange={(e) => {
