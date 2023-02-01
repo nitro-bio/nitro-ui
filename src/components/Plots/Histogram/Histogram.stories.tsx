@@ -21,28 +21,13 @@ HistogramStory.args = {
 
 export const HistogramWithWeightsStory = Template.bind({});
 HistogramWithWeightsStory.args = {
-  data: [
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-    { x: 2, y: 1 },
-    { x: 3, y: 1 },
-    { x: 4, y: 2 },
-    { x: 5, y: 1 },
-    { x: 6, y: 1 },
-    { x: 7, y: 1 },
-    { x: 8, y: 2 },
-    { x: 9, y: 1 },
-    { x: 10, y: 1 },
-    { x: 11, y: 1 },
-    { x: 12, y: 2 },
-    { x: 13, y: 1 },
-    { x: 14, y: 1 },
-    { x: 15, y: 1 },
-    { x: 16, y: 2 },
-    { x: 17, y: 1 },
-    { x: 18, y: 1 },
-    { x: 19, y: 1 },
-  ],
+  data: Array.from({ length: 100000 }, (_, i) => ({
+    x: i,
+    y: 0,
+  })),
   initialBins: 8,
+  maxBins: 1000,
   weightFunc: (d) => d.x,
+  colClassName:
+    "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out",
 };
