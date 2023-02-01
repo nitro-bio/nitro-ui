@@ -80,6 +80,7 @@ const BinColumn = ({
   return (
     <div
       className="bg-brand-500"
+      title={`binMin: ${bin.binMin}, binMax: ${bin.binMax}, weight: ${valuesWeight} count: ${values.length}`}
       style={{
         height: `${heightPct}%`,
       }}
