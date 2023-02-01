@@ -5,22 +5,44 @@ import { bin } from "d3";
 type Point = {
   x: number;
   y: number;
+  style?: string;
 };
 export interface HistogramProps {
   data: Point[];
+  weightFunc?: (d: Point) => number;
   initialBins?: number;
 }
-export const Histogram = ({ data, initialBins }: HistogramProps) => {
+export const Histogram = ({
+  data,
+  initialBins,
+  weightFunc,
+}: HistogramProps) => {
   const [bins, setBins] = useState(initialBins ?? 10);
   const binnedData = binData(data, bins);
-  const maxCount = Math.max(...binnedData.map((d) => d.values.length));
+
+  // by default we weight every point equally
+  const internalWeightFunc = weightFunc ?? (() => 1);
+
+  let maxWeight = 0;
+  binnedData.forEach((bin) => {
+    const weight = bin.values.reduce((acc, point) => {
+      return acc + internalWeightFunc(point);
+    }, 0);
+    if (weight > maxWeight) {
+      maxWeight = weight;
+    }
+  });
+
   return (
     <div className="flex flex-col">
       <div className="grid h-[400px] w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end gap-2  px-8 pt-16">
         {binnedData.map((bd, i) => (
-          <div key={`bin-${i}`}>
-            <BinColumn bin={bd} maxCount={maxCount} maxHeight={300} />
-          </div>
+          <BinColumn
+            key={`bin-${i}`}
+            bin={bd}
+            maxWeight={maxWeight}
+            weightFunc={internalWeightFunc}
+          />
         ))}
       </div>
       <label
@@ -34,7 +56,6 @@ export const Histogram = ({ data, initialBins }: HistogramProps) => {
           max={100}
           value={bins}
           onChange={(e) => {
-            console.log("called");
             setBins(Number(e.target.value));
           }}
         />
@@ -45,19 +66,22 @@ export const Histogram = ({ data, initialBins }: HistogramProps) => {
 
 const BinColumn = ({
   bin,
-  maxCount,
-  maxHeight,
+  maxWeight,
+  weightFunc,
 }: {
   bin: Bin;
-  maxCount: number;
-  maxHeight: number;
+  maxWeight: number;
+  weightFunc: (d: Point) => number;
 }) => {
   const { values } = bin;
+  const valuesWeight = values.reduce((acc, d) => acc + weightFunc(d), 0);
+  const heightPct = Math.ceil((valuesWeight / maxWeight) * 100);
+  console.table({ heightPct, valuesWeight, maxWeight });
   return (
     <div
       className="bg-brand-500"
       style={{
-        height: `${(values.length / maxCount) * maxHeight}px`,
+        height: `${heightPct}%`,
       }}
     />
   );
