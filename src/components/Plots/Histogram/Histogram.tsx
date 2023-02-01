@@ -23,7 +23,10 @@ export const Histogram = ({ data, initialBins }: HistogramProps) => {
           </div>
         ))}
       </div>
-      <label htmlFor="bins" className="flex items-center gap-4 px-2 py-10">
+      <label
+        htmlFor="bins"
+        className="flex items-center gap-4 px-2 py-10 text-noir-700 dark:text-noir-200"
+      >
         Bins:
         <input
           type="range"
