@@ -1,2 +1,2 @@
-export * from "./utils";
-export * from "./types";
+import Histogram from "./Histogram";
+export { Histogram };

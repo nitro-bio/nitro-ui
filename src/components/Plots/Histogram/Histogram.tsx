@@ -15,10 +15,8 @@ export const Histogram = ({ data, initialBins }: HistogramProps) => {
   const binnedData = binData(data, bins);
   const maxCount = Math.max(...binnedData.map((d) => d.values.length));
   return (
-    <Card className="rounded-xl">
-      <h1>Histogram</h1>
-
-      <div className="grid h-[400px] w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end gap-2 border px-8 pt-16">
+    <div className="flex flex-col">
+      <div className="grid h-[400px] w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end gap-2  px-8 pt-16">
         {binnedData.map((bd, i) => (
           <div key={`bin-${i}`}>
             <BinColumn bin={bd} maxCount={maxCount} maxHeight={300} />
@@ -38,7 +36,7 @@ export const Histogram = ({ data, initialBins }: HistogramProps) => {
           }}
         />
       </label>
-    </Card>
+    </div>
   );
 };
 
@@ -54,7 +52,7 @@ const BinColumn = ({
   const { values } = bin;
   return (
     <div
-      className="bg-red-500"
+      className="bg-brand-500"
       style={{
         height: `${(values.length / maxCount) * maxHeight}px`,
       }}
