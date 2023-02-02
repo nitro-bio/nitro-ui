@@ -8,13 +8,15 @@ export interface Props {
   sequence: AnnotatedSequence;
   annotations: Annotation[];
   selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection) => void;
+  setSelection: (selection: AriadneSelection | null) => void;
+  onDoubleClick?: () => void;
 }
 
 const SVG_SIZE = 500;
 
 export const LinearViewer = (props: Props) => {
-  const { sequence, annotations, selection, setSelection } = props;
+  const { sequence, annotations, selection, setSelection, onDoubleClick } =
+    props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -22,7 +24,10 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400">
+    <div
+      className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400"
+      onDoubleClick={onDoubleClick}
+    >
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
