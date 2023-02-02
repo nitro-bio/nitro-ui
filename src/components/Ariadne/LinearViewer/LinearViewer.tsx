@@ -232,6 +232,11 @@ const LinearAnnotation = ({
         annotation.className,
         "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100"
       )}
+      onClick={() => {
+        if ("onClick" in annotation) {
+          annotation.onClick(annotation);
+        }
+      }}
     >
       <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
       <rect

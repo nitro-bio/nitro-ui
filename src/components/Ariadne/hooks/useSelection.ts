@@ -22,10 +22,9 @@ export const useLinearSelectionRect = (
     };
     const x = clientX - left;
     const y = clientY - top;
-
     active.current = true;
-
     setStart({ x, y });
+    setEnd({ x, y });
   };
   const onMouseUp = () => {
     active.current = false;
