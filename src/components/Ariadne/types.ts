@@ -24,9 +24,9 @@ export interface Annotation {
   type: AnnotationType;
   start: number;
   end: number;
-  color: string;
+  className?: string;
   text: string;
-  onClick: () => void;
+  onClick: (ann: Annotation) => void;
 }
 
 export interface StackedAnnotation extends Annotation {

@@ -227,9 +227,9 @@ const LinearAnnotation = ({
 
   return (
     <g
-      key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
+      key={`annotation-${annotation.start}-${annotation.end}`}
       className={classNames(
-        annotation.color,
+        annotation.className,
         "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100"
       )}
     >

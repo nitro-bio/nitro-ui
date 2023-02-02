@@ -1,7 +1,7 @@
 import { getRndInteger } from "../..";
 import { Annotation, annotationTypes } from "./types";
 
-const colors = [
+const classNames = [
   "dark:text-red-500 dark:bg-red-500 text-red-300 bg-red-300",
   "dark:text-blue-500 dark:bg-blue-500 text-blue-300 bg-blue-300",
   "dark:text-green-500 dark:bg-green-500 text-green-300 bg-green-300",
@@ -27,12 +27,12 @@ export const generateRandomAnnotations = (
         start + min_annotation_length,
         start + max_annotation_length
       ) % sequence.length;
-    const randomColor = colors[getRndInteger(0, colors.length)];
+    const randomClassName = classNames[getRndInteger(0, classNames.length)];
     const annotation: Annotation = {
       type: annotationTypes[getRndInteger(0, annotationTypes.length)],
       start,
       end,
-      color: randomColor,
+      className: randomClassName,
       text: `Example Annotation ${i}`,
       onClick: () => console.debug("Clicked on annotation ${i}"),
     };

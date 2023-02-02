@@ -1,5 +1,6 @@
 import { genArc } from "../circularUtils";
 import type { AnnotatedSequence, Annotation, Coor } from "@Ariadne/types";
+import { classNames } from "@utils/stringUtils";
 
 export const CircularAnnotation = ({
   sequence,
@@ -30,7 +31,7 @@ export const CircularAnnotation = ({
   });
 
   return (
-    <svg className={`${annotation.color} fill-current`}>
+    <svg className={classNames("fill-current", annotation.className)}>
       <path d={arcPath} fill="currentColor" stroke="currentColor">
         <text>Annotation</text>
       </path>
