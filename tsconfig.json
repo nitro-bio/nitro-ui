@@ -19,7 +19,8 @@
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],
       "@Blast/*": ["./src/components/Blast/*"],
-      "@Ariadne/*": ["./src/components/Ariadne/*"]
+      "@Ariadne/*": ["./src/components/Ariadne/*"],
+      "@hooks/*": ["./src/hooks/*"]
     }
   },
   "include": [

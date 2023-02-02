@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.0.16",
+  "version": "0.0.23",
   "scripts": {
     "build": "tsc && vite build && yarn build-css",
     "build-css": "npx tailwindcss -o ./nitro.css --minify && mv ./nitro.css ./dist/nitro.css",
@@ -12,7 +12,7 @@
     "format:fix": "prettier --check --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "prepublish": "yarn lint && yarn format && yarn build"
+    "prepublishOnly": "yarn lint && yarn format && yarn build"
   },
   "dependencies": {
     "3dmol": "^1.8.0",
@@ -20,7 +20,9 @@
     "@heroicons/react": "^2.0.13",
     "@storybook/addons": "^6.5.14",
     "@storybook/theming": "^6.5.14",
+    "@types/d3": "^7.4.0",
     "class-variance-authority": "^0.2.4",
+    "d3": "^7.8.2",
     "d3-hierarchy": "^3.1.2",
     "jotai": "^1.11.1",
     "molstar": "^3.26.0",

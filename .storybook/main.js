@@ -33,6 +33,10 @@ module.exports = {
             find: "@Ariadne",
             replacement: path.resolve(__dirname, "../src/components/Ariadne"),
           },
+          {
+            find: "@hooks",
+            replacement: path.resolve(__dirname, "../src/hooks"),
+          },
         ],
       },
     };
