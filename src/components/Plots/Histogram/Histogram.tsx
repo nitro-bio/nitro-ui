@@ -128,7 +128,7 @@ function HistogramInfo({
   return (
     <label
       htmlFor="bins"
-      className="flex items-center gap-4 px-2 py-10 text-noir-700 dark:text-noir-700"
+      className="flex items-center gap-4 px-2 py-10 text-noir-700 dark:text-noir-200"
     >
       Bins Requested: {bins} Recieved: {binnedData.length}
       <input
@@ -138,7 +138,6 @@ function HistogramInfo({
         value={bins}
         onChange={(e) => {
           const newBins = parseInt(e.target.value);
-          console.table({ newBins });
           setBins(newBins);
         }}
       />
