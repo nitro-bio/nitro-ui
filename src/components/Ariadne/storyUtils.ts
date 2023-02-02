@@ -32,6 +32,7 @@ export const generateRandomAnnotations = (
       type: annotationTypes[getRndInteger(0, annotationTypes.length)],
       start,
       end,
+      direction: getRndInteger(0, 2) === 0 ? "forward" : "reverse",
       className: randomClassName,
       text: `Example Annotation ${i}`,
       onClick: () => console.debug("Clicked on annotation ${i}"),

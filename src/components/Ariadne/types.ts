@@ -22,6 +22,7 @@ export type AnnotationType = typeof annotationTypes[number];
 
 export interface Annotation {
   type: AnnotationType;
+  direction: "forward" | "reverse";
   start: number;
   end: number;
   className?: string;
