@@ -15,13 +15,13 @@ const Template: ComponentStory<typeof Histogram> = (args) => {
 
 export const HistogramStory = Template.bind({});
 HistogramStory.args = {
-  data: generateRandomHistogramData(10000),
+  data: generateRandomHistogramData(1000),
   initialBins: 50,
 };
 
 export const HistogramWithWeightsStory = Template.bind({});
 HistogramWithWeightsStory.args = {
-  data: Array.from({ length: 100000 }, (_, i) => ({
+  data: Array.from({ length: 1000 }, (_, i) => ({
     x: i,
     y: 0,
   })),

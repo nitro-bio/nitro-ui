@@ -100,12 +100,15 @@ const binData = (data: Point[], bins: number): Bin[] => {
     .thresholds(bins)
     .value((d) => d.x)(data);
   return binned.map((bin, binIdx) => {
-    const sortedBin = bin.sort((a, b) => a.x - b.x);
+    const { x0: binMin, x1: binMax } = bin;
+    if (binMin === undefined || binMax === undefined) {
+      throw new Error("binMin or binMax is undefined");
+    }
     const res = {
       binIdx,
-      binMin: sortedBin[0].x,
-      binMax: sortedBin[sortedBin.length - 1].x,
-      values: sortedBin,
+      binMin,
+      binMax,
+      values: bin,
     };
     return res;
   });
