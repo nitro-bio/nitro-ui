@@ -105,72 +105,45 @@ const LinearSelection = ({
     return null;
   }
 
-  /* TODO: need to check if we cross the seam in a parent */
-  /* if direction is backward and end > start we need to render two rectangles */
+  // basic case
+  let firstRectStart = (Math.min(start, end) / sequence.length) * 100;
+  let firstRectWidth = (Math.abs(end - start) / sequence.length) * 100;
+  let secondRectStart = null;
+  let secondRectWidth = null;
 
+  /* if direction is backward and end > start we need to render two rectangles */
   if (direction === "forward" && start > end) {
-    const firstRectWidth = (end / sequence.length) * 100;
-    const secondRectStart = (start / sequence.length) * 100;
-    const secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
-    return (
-      <>
-        <rect
-          x={`${secondRectStart}%`}
-          width={`${secondRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-        <rect
-          x={0}
-          width={`${firstRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-      </>
-    );
+    firstRectStart = 0;
+    firstRectWidth = (end / sequence.length) * 100;
+    secondRectStart = (start / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
   if (direction === "reverse" && end > start) {
-    const firstRectWidth = (start / sequence.length) * 100;
-    const secondRectStart = (end / sequence.length) * 100;
-    const secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
-    return (
-      <>
-        <rect
-          x={`${secondRectStart}%`}
-          width={`${secondRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-        <rect
-          x={0}
-          width={`${firstRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-      </>
-    );
+    firstRectStart = 0;
+    firstRectWidth = (start / sequence.length) * 100;
+    secondRectStart = (end / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
   }
-
-  const leftEdge = Math.min(start, end);
-  const left = (leftEdge / sequence.length) * 100;
-  const width = (Math.abs(end - start) / sequence.length) * 100;
   return (
-    <rect
-      x={`${left}%`}
-      y="16%"
-      width={`${width}%`}
-      height="8%"
-      fill="currentColor"
-      fillOpacity={0.2}
-    />
+    <>
+      <rect
+        x={`${firstRectStart}%`}
+        width={`${firstRectWidth}%`}
+        y="16%"
+        height="8%"
+        fill="currentColor"
+        fillOpacity={0.2}
+      />
+
+      <rect
+        x={`${secondRectStart}%`}
+        width={`${secondRectWidth}%`}
+        y="16%"
+        height="8%"
+        fill="currentColor"
+        fillOpacity={0.2}
+      />
+    </>
   );
 };
 
