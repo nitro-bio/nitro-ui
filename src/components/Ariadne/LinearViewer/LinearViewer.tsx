@@ -8,13 +8,15 @@ export interface Props {
   sequence: AnnotatedSequence;
   annotations: Annotation[];
   selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection) => void;
+  setSelection: (selection: AriadneSelection | null) => void;
+  onDoubleClick?: () => void;
 }
 
 const SVG_SIZE = 500;
 
 export const LinearViewer = (props: Props) => {
-  const { sequence, annotations, selection, setSelection } = props;
+  const { sequence, annotations, selection, setSelection, onDoubleClick } =
+    props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -22,7 +24,10 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400">
+    <div
+      className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400"
+      onDoubleClick={onDoubleClick}
+    >
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
@@ -100,72 +105,45 @@ const LinearSelection = ({
     return null;
   }
 
-  /* TODO: need to check if we cross the seam in a parent */
-  /* if direction is backward and end > start we need to render two rectangles */
+  // basic case
+  let firstRectStart = (Math.min(start, end) / sequence.length) * 100;
+  let firstRectWidth = (Math.abs(end - start) / sequence.length) * 100;
+  let secondRectStart = null;
+  let secondRectWidth = null;
 
+  /* if direction is backward and end > start we need to render two rectangles */
   if (direction === "forward" && start > end) {
-    const firstRectWidth = (end / sequence.length) * 100;
-    const secondRectStart = (start / sequence.length) * 100;
-    const secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
-    return (
-      <>
-        <rect
-          x={`${secondRectStart}%`}
-          width={`${secondRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-        <rect
-          x={0}
-          width={`${firstRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-      </>
-    );
+    firstRectStart = 0;
+    firstRectWidth = (end / sequence.length) * 100;
+    secondRectStart = (start / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
   if (direction === "reverse" && end > start) {
-    const firstRectWidth = (start / sequence.length) * 100;
-    const secondRectStart = (end / sequence.length) * 100;
-    const secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
-    return (
-      <>
-        <rect
-          x={`${secondRectStart}%`}
-          width={`${secondRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-        <rect
-          x={0}
-          width={`${firstRectWidth}%`}
-          y="16%"
-          height="8%"
-          fill="currentColor"
-          fillOpacity={0.2}
-        />
-      </>
-    );
+    firstRectStart = 0;
+    firstRectWidth = (start / sequence.length) * 100;
+    secondRectStart = (end / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
   }
-
-  const leftEdge = Math.min(start, end);
-  const left = (leftEdge / sequence.length) * 100;
-  const width = (Math.abs(end - start) / sequence.length) * 100;
   return (
-    <rect
-      x={`${left}%`}
-      y="16%"
-      width={`${width}%`}
-      height="8%"
-      fill="currentColor"
-      fillOpacity={0.2}
-    />
+    <>
+      <rect
+        x={`${firstRectStart}%`}
+        width={`${firstRectWidth}%`}
+        y="16%"
+        height="8%"
+        fill="currentColor"
+        fillOpacity={0.2}
+      />
+
+      <rect
+        x={`${secondRectStart}%`}
+        width={`${secondRectWidth}%`}
+        y="16%"
+        height="8%"
+        fill="currentColor"
+        fillOpacity={0.2}
+      />
+    </>
   );
 };
 
@@ -227,11 +205,16 @@ const LinearAnnotation = ({
 
   return (
     <g
-      key={`annotation-${annotation.color}-${annotation.start}-${annotation.end}`}
+      key={`annotation-${annotation.start}-${annotation.end}`}
       className={classNames(
-        annotation.color,
+        annotation.className,
         "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100"
       )}
+      onClick={() => {
+        if ("onClick" in annotation) {
+          annotation.onClick(annotation);
+        }
+      }}
     >
       <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
       <rect

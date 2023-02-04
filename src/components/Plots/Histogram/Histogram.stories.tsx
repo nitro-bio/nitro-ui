@@ -28,6 +28,7 @@ HistogramWithWeightsStory.args = {
   initialBins: 8,
   maxBins: 1000,
   weightFunc: (d) => d.x,
-  colClassName:
+  colClassName: () =>
     "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out",
+  containerClassName: "h-[200px]",
 };

@@ -12,7 +12,6 @@ export const useDebounce = <T>({
   useEffect(
     () => {
       const handler = setTimeout(() => {
-        console.log("useDebounce: setting debounced value");
         setDebouncedValue(value);
       }, delay);
       return () => {

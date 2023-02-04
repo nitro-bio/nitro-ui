@@ -151,3 +151,23 @@ export const baseInSelection = (
 export const inRange = (value: number, min: number, max: number) => {
   return value >= min && value <= max;
 };
+
+export const getSequenceFromSelection = (
+  { start, end, direction }: AriadneSelection,
+  sequence: string
+) => {
+  if (start === null || end === null) {
+    return "";
+  }
+  if (direction === "forward" && start > end) {
+    const betweenStartAndSequenceEnd = sequence.slice(start);
+    const betweenSequenceEndandEnd = sequence.slice(0, end);
+    return betweenStartAndSequenceEnd + betweenSequenceEndandEnd;
+  }
+  if (direction === "reverse" && end > start) {
+    const betweenStartAndSequenceStart = sequence.slice(0, start);
+    const betweenSequenceEndAndEnd = sequence.slice(end);
+    return betweenSequenceEndAndEnd + betweenStartAndSequenceStart;
+  }
+  return sequence.slice(start, end);
+};

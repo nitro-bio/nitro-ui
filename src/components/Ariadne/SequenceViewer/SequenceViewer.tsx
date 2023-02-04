@@ -115,8 +115,8 @@ const SequenceAnnotation = ({
         if (annotation) {
           return (
             <div
-              key={`${annotation.start}-${annotation.end}-${annotation.color}`}
-              className={classNames("h-1", annotation.color)}
+              key={`${annotation.start}-${annotation.end}`}
+              className={classNames("h-1", annotation.className)}
               data-seq-index={index}
             />
           );

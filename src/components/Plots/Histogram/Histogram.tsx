@@ -3,7 +3,7 @@ import Card from "@ui/Card";
 import { bin } from "d3";
 import { useDebounce } from "@hooks/useDebounce";
 import { classNames } from "@utils/stringUtils";
-
+// NITRO UI
 type Point = {
   x: number;
   y: number;
@@ -14,7 +14,8 @@ export interface HistogramProps {
   weightFunc?: (d: Point) => number;
   initialBins?: number;
   maxBins?: number;
-  colClassName?: string;
+  colClassName?: (b: Bin) => string;
+  containerClassName?: string;
 }
 export const Histogram = ({
   data,
@@ -22,6 +23,7 @@ export const Histogram = ({
   weightFunc,
   maxBins,
   colClassName,
+  containerClassName,
 }: HistogramProps) => {
   const [bins, setBins] = useState(initialBins ?? 10);
   const debouncedBins = useDebounce<number>({ value: bins, delay: 500 });
@@ -41,7 +43,12 @@ export const Histogram = ({
 
   return (
     <div className="flex flex-col">
-      <div className="grid h-[400px] w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end px-8 pt-16">
+      <div
+        className={classNames(
+          "grid h-full w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end px-8 pt-16",
+          containerClassName
+        )}
+      >
         {binnedData.map((bd, i) => (
           <BinColumn
             key={`bin-${i}`}
@@ -71,14 +78,14 @@ const BinColumn = ({
   bin: Bin;
   maxWeight: number;
   weightFunc: (d: Point) => number;
-  colClassName?: string;
+  colClassName?: (b: Bin) => string;
 }) => {
   const { values } = bin;
   const valuesWeight = values.reduce((acc, d) => acc + weightFunc(d), 0);
   const heightPct = Math.ceil((valuesWeight / maxWeight) * 100);
   return (
     <div
-      className={classNames("min-w-[1px] bg-brand-500", colClassName)}
+      className={classNames("min-w-[1px] ", colClassName && colClassName(bin))}
       title={`binIdx: ${bin.binIdx} binMin: ${bin.binMin}, binMax: ${bin.binMax}, weight: ${valuesWeight} count: ${values.length}`}
       style={{
         height: `${heightPct}%`,
