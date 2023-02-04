@@ -20,12 +20,7 @@ export const Volcano = ({
   containerClassName,
 }: VolcanoProps) => {
   return (
-    <div
-      className={classNames(
-        "volcano border h-[400px] w-[400px] relative",
-        containerClassName
-      )}
-    >
+    <div className={classNames("relative", containerClassName)}>
       {data.map((d, i) => (
         <div
           key={i}
