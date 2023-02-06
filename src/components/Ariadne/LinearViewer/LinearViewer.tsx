@@ -2,21 +2,33 @@ import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
 import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { Fragment, useEffect, useRef } from "react";
-import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
+import {
+  AnnotatedSequence,
+  Annotation,
+  AriadneSelection,
+  StackedAnnotation,
+} from "../types";
 
 export interface Props {
   sequence: AnnotatedSequence;
-  annotations: Annotation[];
+  annotations: StackedAnnotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
+  selectionClassName?: (selection: AriadneSelection) => string;
 }
 
 const SVG_SIZE = 500;
 
 export const LinearViewer = (props: Props) => {
-  const { sequence, annotations, selection, setSelection, onDoubleClick } =
-    props;
+  const {
+    sequence,
+    annotations,
+    selection,
+    setSelection,
+    onDoubleClick,
+    selectionClassName,
+  } = props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -47,8 +59,12 @@ export const LinearViewer = (props: Props) => {
           numberOfTicks={numberOfTicks}
           totalBases={sequence.length}
         />
-        <LinearAnnotationGutter annotations={annotations} sequence={sequence} />
+        <LinearAnnotationGutter
+          stackedAnnotations={annotations}
+          sequence={sequence}
+        />
         <LinearSelection
+          selectionClassName={selectionClassName}
           selectionRef={selectionRef}
           selection={selection}
           setSelection={setSelection}
@@ -64,11 +80,13 @@ const LinearSelection = ({
   selectionRef,
   setSelection,
   sequence,
+  selectionClassName,
 }: {
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
+  selectionClassName?: (selection: AriadneSelection) => string;
 }) => {
   const {
     start: internalSelectionStart,
@@ -125,7 +143,7 @@ const LinearSelection = ({
     secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
   }
   return (
-    <>
+    <g className={classNames("fill-current", selectionClassName?.(selection))}>
       <rect
         x={`${firstRectStart}%`}
         width={`${firstRectWidth}%`}
@@ -143,22 +161,27 @@ const LinearSelection = ({
         fill="currentColor"
         fillOpacity={0.2}
       />
-    </>
+    </g>
   );
 };
 
 const LinearAnnotationGutter = ({
-  annotations,
+  stackedAnnotations,
   sequence,
 }: {
-  annotations: Annotation[];
+  stackedAnnotations: StackedAnnotation[];
   sequence: AnnotatedSequence;
 }) => {
-  const stackedAnnotations = stackElements(annotations);
+  const stacks: StackedAnnotation[][] = [];
+  stackedAnnotations.forEach((ann) => {
+    stacks[ann.stack] = stacks[ann.stack] || [];
+    stacks[ann.stack].push(ann);
+  });
+
   return (
     <g>
       <line x1="0" y1="20%" x2="100%" y2="20%" stroke="currentColor" />
-      {stackedAnnotations.map((annotations, stackIdx) => (
+      {stacks.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (
             <LinearAnnotation

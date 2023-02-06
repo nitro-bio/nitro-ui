@@ -1,6 +1,12 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { AriadneSelection, ValidatedSequence } from "@Ariadne/types";
-import { getAnnotatedSequence } from "@Ariadne/utils";
+import {
+  Annotation,
+  AnnotationType,
+  AriadneSelection,
+  StackedAnnotation,
+  ValidatedSequence,
+} from "@Ariadne/types";
+import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
@@ -19,20 +25,28 @@ export default {
 const Template: ComponentStory<any> = ({
   sequence,
   initialSelection,
+  selectionClassName,
+  customStackFn,
 }: {
   sequence: string;
+
   initialSelection?: AriadneSelection;
+  selectionClassName?: (selection: AriadneSelection) => string;
+  customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
   const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 5),
+    () => generateRandomAnnotations(sequence, 15),
     [sequence]
   );
+  const stackFn = customStackFn ? customStackFn : getStackedAnnotations;
+  const stackedAnnotations = stackFn(annotations);
+
   const validatedSequence = sequence
     .replace(/[^ACGT]/g, "")
     .split("") as ValidatedSequence;
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
-    annotations
+    stackedAnnotations
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
@@ -43,9 +57,10 @@ const Template: ComponentStory<any> = ({
       <Card className="w-full max-w-xl">
         <LinearViewer
           sequence={annotatedSequence}
-          annotations={annotations}
+          annotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
+          selectionClassName={selectionClassName}
         />
       </Card>
     </div>
@@ -87,5 +102,53 @@ LinearViewerStoryReverseSelectionOverSeam.args = {
     start: 5,
     end: 10,
     direction: "reverse",
+  },
+};
+
+export const LinearViewerStorySelectionClassName = Template.bind({});
+LinearViewerStorySelectionClassName.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
+  },
+  selectionClassName: (selection: AriadneSelection) => {
+    if (Math.abs(selection.end - selection.start) > 100) {
+      return "bg-red-500 fill-red-500 text-red-500";
+    } else {
+      return "bg-blue-500 fill-blue-500 text-blue-500";
+    }
+  },
+};
+
+export const LinearViewerCustomStackFn = Template.bind({});
+LinearViewerCustomStackFn.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  customStackFn: (annotations: Annotation[]): StackedAnnotation[] => {
+    // create a map of annotation type to list
+    const annotationMap = annotations.reduce((acc, annotation) => {
+      if (!acc[annotation.type]) {
+        acc[annotation.type] = [];
+      }
+      acc[annotation.type].push(annotation);
+      return acc;
+    }, {} as { [key: AnnotationType]: Annotation[] });
+
+    const stacks = Object.values(annotationMap)
+      .map((stack, stackIdx) => {
+        return stack.map((annotation: Annotation) => {
+          const res: StackedAnnotation = {
+            ...annotation,
+            stack: stackIdx,
+          };
+          return res;
+        });
+      })
+      .flat();
+
+    return stacks;
   },
 };
