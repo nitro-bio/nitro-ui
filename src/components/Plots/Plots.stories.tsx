@@ -15,7 +15,7 @@ const Template: ComponentStory<any> = () => {
   const volcanoData = generateRandomVolcanoData(1000);
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Card className="bg-white dark:bg-noir-800 grid content-fit">
+      <Card className="content-fit grid bg-white dark:bg-noir-800">
         <Histogram
           data={histoData}
           colClassName={() =>
@@ -24,7 +24,7 @@ const Template: ComponentStory<any> = () => {
           containerClassName={"h-[400px]"}
         />
       </Card>
-      <Card className="bg-white dark:bg-noir-800 grid content-fit">
+      <Card className="content-fit grid bg-white dark:bg-noir-800">
         <Volcano
           data={volcanoData}
           pointClassName={() =>

@@ -1,4 +1,4 @@
-import { Histogram } from "./Histogram";
-import { generateRandomHistogramData } from "./utils";
-export { generateRandomHistogramData };
-export default Histogram;
+import { Volcano } from "./Volcano";
+import { generateRandomVolcanoData } from "./utils";
+export { generateRandomVolcanoData };
+export default Volcano;

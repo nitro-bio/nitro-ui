@@ -25,7 +25,7 @@ export const Volcano = ({
         <div
           key={i}
           className={classNames(
-            "bg-brand-500 rounded-full h-2 w-2 absolute",
+            "absolute h-2 w-2 rounded-full bg-brand-500",
             pointClassName && pointClassName(d)
           )}
           style={{ left: `${d.x}%`, bottom: `${d.y}%` }}
