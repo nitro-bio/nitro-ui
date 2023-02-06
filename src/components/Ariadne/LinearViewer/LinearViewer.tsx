@@ -10,13 +10,21 @@ export interface Props {
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
+  selectionClassName?: (selection: AriadneSelection) => string;
 }
 
 const SVG_SIZE = 500;
 
 export const LinearViewer = (props: Props) => {
-  const { sequence, annotations, selection, setSelection, onDoubleClick } =
-    props;
+  const {
+    sequence,
+    annotations,
+    selection,
+    setSelection,
+    onDoubleClick,
+    selectionClassName,
+  } = props;
+  props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -49,6 +57,7 @@ export const LinearViewer = (props: Props) => {
         />
         <LinearAnnotationGutter annotations={annotations} sequence={sequence} />
         <LinearSelection
+          selectionClassName={selectionClassName}
           selectionRef={selectionRef}
           selection={selection}
           setSelection={setSelection}
@@ -64,11 +73,13 @@ const LinearSelection = ({
   selectionRef,
   setSelection,
   sequence,
+  selectionClassName,
 }: {
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
   sequence: AnnotatedSequence;
+  selectionClassName?: (selection: AriadneSelection) => string;
 }) => {
   const {
     start: internalSelectionStart,
@@ -125,7 +136,7 @@ const LinearSelection = ({
     secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
   }
   return (
-    <>
+    <g className={classNames("fill-current", selectionClassName?.(selection))}>
       <rect
         x={`${firstRectStart}%`}
         width={`${firstRectWidth}%`}
@@ -143,7 +154,7 @@ const LinearSelection = ({
         fill="currentColor"
         fillOpacity={0.2}
       />
-    </>
+    </g>
   );
 };
 

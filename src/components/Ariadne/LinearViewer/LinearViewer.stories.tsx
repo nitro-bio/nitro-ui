@@ -19,9 +19,11 @@ export default {
 const Template: ComponentStory<any> = ({
   sequence,
   initialSelection,
+  selectionClassName,
 }: {
   sequence: string;
   initialSelection?: AriadneSelection;
+  selectionClassName?: (selection: AriadneSelection) => string;
 }) => {
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
@@ -46,6 +48,7 @@ const Template: ComponentStory<any> = ({
           annotations={annotations}
           selection={selection}
           setSelection={setSelection}
+          selectionClassName={selectionClassName}
         />
       </Card>
     </div>
@@ -87,5 +90,23 @@ LinearViewerStoryReverseSelectionOverSeam.args = {
     start: 5,
     end: 10,
     direction: "reverse",
+  },
+};
+
+export const LinearViewerStorySelectionClassName = Template.bind({});
+LinearViewerStorySelectionClassName.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
+  },
+  selectionClassName: (selection: AriadneSelection) => {
+    if (Math.abs(selection.end - selection.start) > 100) {
+      return "bg-red-500 fill-red-500 text-red-500";
+    } else {
+      return "bg-blue-500 fill-blue-500 text-blue-500";
+    }
   },
 };
