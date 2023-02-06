@@ -32,10 +32,9 @@ export const getComplement = (sequence: string) => {
 
 export const getAnnotatedSequence = (
   sequence: ValidatedSequence,
-  annotations: Annotation[]
+  stackedAnnotations: StackedAnnotation[]
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
-  const [stackedAnnotations] = getStackedAnnotations(annotations);
   const mapFn = (base: Nucl | AA, idx: number) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
       // if the annotation spans the seam of the plasmid
@@ -113,16 +112,11 @@ export const stackElements = <T extends Stackable>(elements: T[]) => {
 // returns annotations with their stack index and max stack index
 export const getStackedAnnotations = (
   annotations: Annotation[]
-): [StackedAnnotation[], number] => {
+): StackedAnnotation[] => {
   const stackedAnnotations = stackElements(annotations);
-  return [
-    stackedAnnotations
-      .map((row, idx) =>
-        row.map((annotation) => ({ ...annotation, stack: idx }))
-      )
-      .flat(),
-    stackedAnnotations.length,
-  ];
+  return stackedAnnotations
+    .map((row, idx) => row.map((annotation) => ({ ...annotation, stack: idx })))
+    .flat();
 };
 export const baseInSelection = (
   baseIndex: number,

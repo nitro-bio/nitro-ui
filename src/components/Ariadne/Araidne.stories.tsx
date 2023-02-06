@@ -7,7 +7,7 @@ import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomAnnotations } from "./storyUtils";
 import { AA, AriadneSelection, Nucl } from "./types";
-import { getAnnotatedSequence } from "./utils";
+import { getAnnotatedSequence, getStackedAnnotations } from "./utils";
 
 export default {
   title: "Ariadne/Ariadne",
@@ -31,10 +31,10 @@ const Template: ComponentStory<any> = ({
   const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as
     | Nucl[]
     | AA[];
-
+  const stackedAnnotations = getStackedAnnotations(annotations);
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
-    annotations
+    stackedAnnotations
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
@@ -59,7 +59,7 @@ const Template: ComponentStory<any> = ({
       <div className="row-span-1 grid shrink-0 content-center">
         <LinearViewer
           sequence={annotatedSequence}
-          annotations={annotations}
+          annotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
         />
