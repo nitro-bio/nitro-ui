@@ -1,5 +1,5 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { getAnnotatedSequence } from "@Ariadne/utils";
+import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
@@ -27,6 +27,7 @@ const Template: ComponentStory<any> = ({
     () => generateRandomAnnotations(sequence, 5),
     [sequence]
   );
+  const stackedAnnotations = getStackedAnnotations(annotations);
 
   const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as
     | Nucl[]
@@ -34,7 +35,7 @@ const Template: ComponentStory<any> = ({
 
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
-    annotations
+    stackedAnnotations
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
