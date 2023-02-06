@@ -59,12 +59,6 @@ export const Histogram = ({
           />
         ))}
       </div>
-      <HistogramInfo
-        bins={bins}
-        binnedData={binnedData}
-        maxBins={maxBins}
-        setBins={setBins}
-      />
     </div>
   );
 };
