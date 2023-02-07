@@ -315,7 +315,9 @@ const LinearAnnotation = ({
       : `${xStartLoc},${yLoc} ${xStartLoc},${yLoc + 15} ${xStartLoc - 8},${
           yLoc + 7.5
         }`;
-  const cap = <polygon points={points} stroke="currentColor" />;
+  const cap = (
+    <polygon points={points} stroke="currentColor" strokeLinejoin="round" />
+  );
 
   return (
     <g
