@@ -302,22 +302,27 @@ const LinearAnnotation = ({
     ((annotation.end - annotation.start) / sequence.length) * 100;
 
   const xPerc = (annotation.start / sequence.length) * 100;
+  const xStartLoc = xPerc * 0.01 * SVG_SIZE;
+  const xEndLoc = (xPerc + annotationRectangleWidth) * 0.01 * SVG_SIZE;
   const yPerc = 20 + 5 * (stackIdx + 1);
-  const leftTriangle = (
-    <polygon
-      points={`${xPerc},${yPerc - 7} ${xPerc},${yPerc + 7} ${
-        xPerc - 8
-      },${yPerc}`}
-      stroke="currentColor"
-    />
-  );
+  const yLoc = yPerc * 0.01 * SVG_SIZE;
+
+  const points =
+    annotation.direction === "forward"
+      ? `${xEndLoc},${yLoc} ${xEndLoc},${yLoc + 15} ${xEndLoc + 8},${
+          yLoc + 7.5
+        }`
+      : `${xStartLoc},${yLoc} ${xStartLoc},${yLoc + 15} ${xStartLoc - 8},${
+          yLoc + 7.5
+        }`;
+  const cap = <polygon points={points} stroke="currentColor" />;
 
   return (
     <g
       key={`annotation-${annotation.start}-${annotation.end}`}
       className={classNames(
         annotation.className,
-        "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100 fill-transparent hover:fill-red-500 group"
+        "group fill-transparent opacity-40 transition-opacity duration-200 ease-in-out hover:fill-red-500 hover:opacity-100"
       )}
       onClick={() => {
         if ("onClick" in annotation) {
@@ -326,7 +331,7 @@ const LinearAnnotation = ({
       }}
     >
       <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
-      {leftTriangle}
+      {cap}
       <rect
         x={`${xPerc}%`}
         y={`${yPerc}%`}
