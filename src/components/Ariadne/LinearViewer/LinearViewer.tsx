@@ -330,7 +330,7 @@ const LinearAnnotation = ({
         width={`${annotationRectangleWidth}%`}
         height={20}
       >
-        <span className="text-current-color pl-1 font-semibold text-xs">
+        <span className="text-current-color pl-1 text-xs font-semibold">
           {annotation.text}
         </span>
       </foreignObject>
