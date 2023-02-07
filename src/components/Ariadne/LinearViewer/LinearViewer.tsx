@@ -1,7 +1,6 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
-import { stackElements } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   AnnotatedSequence,
   Annotation,
@@ -16,6 +15,7 @@ export interface Props {
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
+  cursorClassName?: string;
 }
 
 const SVG_SIZE = 500;
@@ -28,6 +28,7 @@ export const LinearViewer = (props: Props) => {
     setSelection,
     onDoubleClick,
     selectionClassName,
+    cursorClassName,
   } = props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
@@ -70,8 +71,76 @@ export const LinearViewer = (props: Props) => {
           setSelection={setSelection}
           sequence={sequence}
         />
+        <LinearCursor
+          selection={selection}
+          selectionRef={selectionRef}
+          cursorClassName={cursorClassName}
+        />
       </svg>
     </div>
+  );
+};
+const LinearCursor = ({
+  selection,
+  selectionRef,
+  cursorClassName,
+}: {
+  selection: AriadneSelection | null;
+  selectionRef: React.RefObject<SVGSVGElement>;
+  cursorClassName?: string;
+}) => {
+  const [xPerc, setXPerc] = useState(0);
+
+  useEffect(
+    function hideOnSelection() {
+      const selectionActive = selection && selection.start !== selection.end;
+      if (selectionActive) {
+        setXPerc(-1);
+      }
+    },
+    [selection]
+  );
+
+  useEffect(
+    function mountMouseMoveListener() {
+      const node = selectionRef.current;
+      const onMouseMove = (e: MouseEvent) => {
+        const selectionActive = selection && selection.start !== selection.end;
+        if (selectionRef.current && !selectionActive) {
+          const { clientX } = e;
+          const { left, right } =
+            selectionRef.current.getBoundingClientRect() || {
+              left: 0,
+              right: 0,
+            };
+          const xRelative = clientX - left;
+          const nodeWidth = right - left;
+          const xPerc = xRelative / nodeWidth;
+          setXPerc(xPerc * 100);
+        }
+      };
+
+      if (node) {
+        node.addEventListener("mousemove", onMouseMove);
+      }
+      return () => {
+        node?.removeEventListener("mousemove", onMouseMove);
+      };
+    },
+    [selectionRef, selection]
+  );
+
+  return (
+    <g className={classNames(cursorClassName || "text-noir-800")}>
+      <line
+        x1={`${xPerc}%`}
+        y1="20%"
+        x2={`${xPerc + 1}%`}
+        y2="20%"
+        stroke="currentColor"
+        strokeWidth={10}
+      />
+    </g>
   );
 };
 
@@ -142,8 +211,14 @@ const LinearSelection = ({
     secondRectStart = (end / sequence.length) * 100;
     secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
   }
+
   return (
-    <g className={classNames("fill-current", selectionClassName?.(selection))}>
+    <g
+      className={classNames(
+        "fill-current stroke-current",
+        selectionClassName?.(selection)
+      )}
+    >
       <rect
         x={`${firstRectStart}%`}
         width={`${firstRectWidth}%`}
@@ -239,7 +314,7 @@ const LinearAnnotation = ({
         }
       }}
     >
-      <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
+      <title>{`${annotation.text} | xPerc: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
       <rect
         x={`${(annotation.start / sequence.length) * 100}%`}
         y={`${20 + 10 * (stackIdx + 1)}%`}

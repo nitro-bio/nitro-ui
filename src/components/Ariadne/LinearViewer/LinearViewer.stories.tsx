@@ -61,6 +61,7 @@ const Template: ComponentStory<any> = ({
           selection={selection}
           setSelection={setSelection}
           selectionClassName={selectionClassName}
+          cursorClassName="text-blue-200"
         />
       </Card>
     </div>
