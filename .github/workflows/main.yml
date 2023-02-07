@@ -1,4 +1,4 @@
-name: CI for Components
+name: Library + Storybook Build
 
 # on all branches
 on: [push]
