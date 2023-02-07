@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { SequenceViewer } from ".";
+import { SequenceViewer, CharType } from ".";
 import type { AA, AriadneSelection, Nucl } from "../types";
 
 export default {
@@ -19,9 +19,13 @@ export default {
 const Template: ComponentStory<any> = ({
   sequence,
   initialSelection,
+  containerClassName,
+  charClassName,
 }: {
   sequence: string;
   initialSelection?: AriadneSelection;
+  containerClassName?: string;
+  charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
 }) => {
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
@@ -37,7 +41,7 @@ const Template: ComponentStory<any> = ({
     validatedSequence,
     stackedAnnotations
   );
-  const [selection, setSelection] = useState<AriadneSelection | null>(
+  const [selection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
   return (
@@ -46,7 +50,8 @@ const Template: ComponentStory<any> = ({
         <SequenceViewer
           sequence={annotatedSequence}
           selection={selection}
-          setSelection={setSelection}
+          charClassName={charClassName}
+          containerClassName={containerClassName}
         />
       </Card>
     </div>
@@ -88,5 +93,28 @@ SequenceViewerStoryReverseSelectionOverSeam.args = {
     start: 5,
     end: 10,
     direction: "reverse",
+  },
+};
+
+export const SequenceViewerStoryCustomClassNames = Template.bind({});
+SequenceViewerStoryCustomClassNames.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  containerClassName: "text-xl bg-noir-800 skew-y-3",
+  charClassName: ({ char, type }: { char: string; type: CharType }) => {
+    if (type == "sequence") {
+      if (char == "A" || char == "T") {
+        return "dark:text-emerald-300 text-emerald-600";
+      } else {
+        return "dark:text-amber-300 text-amber-600";
+      }
+    }
+    if (type == "complement") {
+      if (char == "A" || char == "T") {
+        return "dark:text-sky-300 text-sky-600";
+      } else {
+        return "dark:text-fuchsia-300 text-fuchsia-600";
+      }
+    }
   },
 };

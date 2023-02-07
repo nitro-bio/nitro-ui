@@ -314,7 +314,7 @@ const LinearAnnotation = ({
         }
       }}
     >
-      <title>{`${annotation.text} | xPerc: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
+      <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
       <rect
         x={`${(annotation.start / sequence.length) * 100}%`}
         y={`${20 + 10 * (stackIdx + 1)}%`}

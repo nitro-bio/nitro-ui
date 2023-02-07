@@ -1,76 +1,74 @@
-import { useTextSelection } from "@Ariadne/hooks/useSelection";
 import { baseInSelection } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { cva, VariantProps } from "class-variance-authority";
-import { useEffect, useRef } from "react";
 
-import {
+import type {
   AnnotatedSequence,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
 
+export type CharType = "sequence" | "complement";
+
 export interface Props {
   sequence: AnnotatedSequence;
   selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection) => void;
+  containerClassName?: string;
+  charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
 }
 export const SequenceViewer = ({
   sequence,
   selection,
-  setSelection,
+  containerClassName,
+  charClassName,
 }: Props) => {
-  const selectionRef = useRef<HTMLDivElement>(null);
-  const { range } = useTextSelection(selectionRef);
-
-  useEffect(
-    function propagateSelectionUp() {
-      if (selectionRef.current && range?.startContainer) {
-        const startIdx =
-          range?.startContainer?.parentElement?.getAttribute("data-seq-index");
-        const endIdx =
-          range?.endContainer?.parentElement?.getAttribute("data-seq-index");
-        if (startIdx && endIdx) {
-          setSelection({
-            start: parseInt(startIdx),
-            end: parseInt(endIdx),
-            direction: startIdx < endIdx ? "forward" : "reverse",
-          });
-        }
+  const internalCharClassName =
+    charClassName ||
+    (({ type }) => {
+      if (type == "sequence") {
+        return "dark:text-brand-300 text-brand-600";
       }
-    },
-    [range]
-  );
+      if (type == "complement") {
+        return "dark:text-brand-100 text-brand-400/80 select-none";
+      } else {
+        throw new Error(`Unknown char type ${type}`);
+      }
+    });
   return (
     <>
       <div
-        className="font-mono content-stretch text-md grid h-full overflow-y-scroll bg-white pt-4 text-center tracking-widest dark:bg-noir-800 md:mx-4"
-        ref={selectionRef}
+        className={classNames(
+          "font-mono flex h-full flex-row flex-wrap overflow-y-scroll text-center",
+          containerClassName
+        )}
       >
-        <div className="mx-1 flex flex-row flex-wrap space-x-1">
-          {sequence.map(({ base, complement, annotations, index }) => {
-            return (
-              <div key={`sequence-viewer-base-${index}`} data-seq-index={index}>
-                <CharComponent type="sequence" char={base} index={index} />
-                <SelectionMarker
-                  index={index}
-                  selection={selection}
-                  sequenceLength={sequence.length}
-                />
-                <CharComponent
-                  type="complement"
-                  char={complement}
-                  index={index}
-                />
-                <SequenceAnnotation
-                  annotations={annotations}
-                  maxAnnotationStack={5}
-                  index={index}
-                />
-              </div>
-            );
-          })}
-        </div>
+        {sequence.map(({ base, complement, annotations, index }) => {
+          return (
+            <div key={`sequence-viewer-base-${index}`} data-seq-index={index}>
+              <CharComponent
+                type="sequence"
+                char={base}
+                index={index}
+                charClassName={charClassName || internalCharClassName}
+              />
+              <SelectionMarker
+                index={index}
+                selection={selection}
+                sequenceLength={sequence.length}
+              />
+              <CharComponent
+                type="complement"
+                char={complement}
+                index={index}
+                charClassName={charClassName || internalCharClassName}
+              />
+              <SequenceAnnotation
+                annotations={annotations}
+                maxAnnotationStack={5}
+                index={index}
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );
@@ -134,35 +132,16 @@ const SequenceAnnotation = ({
   );
 };
 
-const charStyles = cva("whitespace-pre-wrap appearance-none", {
-  variants: {
-    type: {
-      sequence: "dark:text-brand-300 text-brand-600",
-      midline_bar: "text-noir-400",
-      midline_x: "text-red-400",
-      complement: "dark:text-brand-100 text-brand-400/80 select-none",
-    },
-  },
-  defaultVariants: {
-    type: "sequence",
-  },
-});
-
-interface IntermediateCharProps {
+interface CharProps {
   char: string;
   index: number;
+  type: CharType;
+  charClassName: ({ char, type }: { char: string; type: CharType }) => string;
 }
 
-interface CharProps
-  extends VariantProps<typeof charStyles>,
-    IntermediateCharProps {}
-
 /* data-seq-index is used to get indices for selection */
-const CharComponent = ({ index, char, type }: CharProps) => (
-  <div
-    data-seq-index={index}
-    className={charStyles({ type: type || "sequence" })}
-  >
+const CharComponent = ({ index, char, type, charClassName }: CharProps) => (
+  <div data-seq-index={index} className={charClassName({ char, type })}>
     {char}
   </div>
 );
