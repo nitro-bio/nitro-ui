@@ -301,12 +301,23 @@ const LinearAnnotation = ({
   const annotationRectangleWidth =
     ((annotation.end - annotation.start) / sequence.length) * 100;
 
+  const xPerc = (annotation.start / sequence.length) * 100;
+  const yPerc = 20 + 5 * (stackIdx + 1);
+  const leftTriangle = (
+    <polygon
+      points={`${xPerc},${yPerc - 7} ${xPerc},${yPerc + 7} ${
+        xPerc - 8
+      },${yPerc}`}
+      stroke="currentColor"
+    />
+  );
+
   return (
     <g
       key={`annotation-${annotation.start}-${annotation.end}`}
       className={classNames(
         annotation.className,
-        "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100"
+        "opacity-40 transition-opacity duration-200 ease-in-out hover:opacity-100 fill-transparent hover:fill-red-500 group"
       )}
       onClick={() => {
         if ("onClick" in annotation) {
@@ -315,13 +326,13 @@ const LinearAnnotation = ({
       }}
     >
       <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
+      {leftTriangle}
       <rect
-        x={`${(annotation.start / sequence.length) * 100}%`}
-        y={`${20 + 5 * (stackIdx + 1)}%`}
+        x={`${xPerc}%`}
+        y={`${yPerc}%`}
         width={`${annotationRectangleWidth}%`}
         height={15}
         stroke="currentColor"
-        fill="transparent"
       ></rect>
 
       <foreignObject
@@ -330,7 +341,7 @@ const LinearAnnotation = ({
         width={`${annotationRectangleWidth}%`}
         height={20}
       >
-        <span className="text-current-color pl-1 text-xs font-semibold">
+        <span className="text-current-color pl-1 text-xs font-semibold group-hover:text-white">
           {annotation.text}
         </span>
       </foreignObject>
