@@ -317,20 +317,23 @@ const LinearAnnotation = ({
       <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
       <rect
         x={`${(annotation.start / sequence.length) * 100}%`}
-        y={`${20 + 10 * (stackIdx + 1)}%`}
+        y={`${20 + 5 * (stackIdx + 1)}%`}
         width={`${annotationRectangleWidth}%`}
-        height={10}
-        fill="currentColor"
+        height={15}
+        stroke="currentColor"
+        fill="transparent"
       ></rect>
-      <text
+
+      <foreignObject
         x={`${(annotation.start / sequence.length) * 100}%`}
-        y={`${19 + 10 * (stackIdx + 1)}%`}
-        fontFamily="Verdana"
-        fontSize="15"
-        fill="currentColor"
+        y={`${18.7 + 5 * (stackIdx + 1)}%`}
+        width={`${annotationRectangleWidth}%`}
+        height={20}
       >
-        {annotation.text}
-      </text>
+        <span className="text-current-color pl-1 font-semibold text-xs">
+          {annotation.text}
+        </span>
+      </foreignObject>
     </g>
   );
 };
