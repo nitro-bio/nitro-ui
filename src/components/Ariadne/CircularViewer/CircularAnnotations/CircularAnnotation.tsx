@@ -31,8 +31,8 @@ export const CircularAnnotation = ({
   });
 
   return (
-    <svg className={classNames("fill-current", annotation.className)}>
-      <path d={arcPath} fill="currentColor" stroke="currentColor">
+    <svg className={classNames(annotation.className)}>
+      <path d={arcPath}>
         <text>Annotation</text>
       </path>
     </svg>

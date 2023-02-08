@@ -315,17 +315,12 @@ const LinearAnnotation = ({
       : `${xStartLoc},${yLoc} ${xStartLoc},${yLoc + 15} ${xStartLoc - 8},${
           yLoc + 7.5
         }`;
-  const cap = (
-    <polygon points={points} stroke="currentColor" strokeLinejoin="round" />
-  );
+  const cap = <polygon points={points} strokeLinejoin="round" />;
 
   return (
     <g
       key={`annotation-${annotation.start}-${annotation.end}`}
-      className={classNames(
-        annotation.className,
-        "group fill-transparent opacity-40 transition-opacity duration-200 ease-in-out hover:fill-red-500 hover:opacity-100"
-      )}
+      className={classNames(annotation.className, "group")}
       onClick={() => {
         if ("onClick" in annotation) {
           annotation.onClick(annotation);
@@ -339,7 +334,6 @@ const LinearAnnotation = ({
         y={`${yPerc}%`}
         width={`${annotationRectangleWidth}%`}
         height={15}
-        stroke="currentColor"
       ></rect>
 
       <foreignObject
