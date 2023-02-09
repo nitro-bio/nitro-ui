@@ -12,6 +12,7 @@ import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { LinearViewer } from ".";
+import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export default {
   title: "Ariadne/LinearViewer",
@@ -53,18 +54,23 @@ const Template: ComponentStory<any> = ({
   );
 
   return (
-    <div className="grid h-screen content-center">
-      <Card className="w-full max-w-xl">
-        <LinearViewer
-          sequence={annotatedSequence}
-          annotations={stackedAnnotations}
-          selection={selection}
-          setSelection={setSelection}
-          selectionClassName={selectionClassName}
-          cursorClassName="text-blue-200"
-        />
-      </Card>
-    </div>
+    <Card className="w-full max-w-xl">
+      <LinearViewer
+        containerClassName="text-brand-400"
+        sequence={annotatedSequence}
+        annotations={stackedAnnotations}
+        selection={selection}
+        setSelection={setSelection}
+        selectionClassName={selectionClassName}
+        cursorClassName="text-blue-200"
+      />
+
+      <LinearAnnotationGutter
+        containerClassName="-mt-8"
+        stackedAnnotations={stackedAnnotations}
+        sequence={annotatedSequence}
+      />
+    </Card>
   );
 };
 

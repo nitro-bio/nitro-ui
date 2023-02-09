@@ -1,9 +1,8 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
 import { classNames } from "@utils/stringUtils";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnnotatedSequence,
-  Annotation,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
@@ -16,19 +15,21 @@ export interface Props {
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
   cursorClassName?: string;
+  containerClassName?: string;
 }
 
-const SVG_SIZE = 500;
+export const SVG_WIDTH = 500;
+export const SVG_HEIGHT = 100;
 
 export const LinearViewer = (props: Props) => {
   const {
     sequence,
-    annotations,
     selection,
     setSelection,
     onDoubleClick,
     selectionClassName,
     cursorClassName,
+    containerClassName,
   } = props;
 
   const selectionRef = useRef<SVGSVGElement>(null);
@@ -37,32 +38,28 @@ export const LinearViewer = (props: Props) => {
   const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
-    <div
-      className="font-mono grid h-full  w-full select-none content-center overflow-hidden p-6 font-thin text-brand-400"
+    <svg
+      ref={selectionRef}
+      className={classNames(containerClassName || "", "select-none font-thin")}
       onDoubleClick={onDoubleClick}
+      viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <svg
-        ref={selectionRef}
-        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full stroke-current"
-      >
+      <g>
         <line
-          x1="0"
-          y1="20%"
-          x2="100%"
-          y2="20%"
+          x1={"0%"}
+          y1={"50%"}
+          x2={"100%"}
+          y2={"50%"}
+          strokeWidth={5}
           stroke="currentColor"
-          strokeWidth={10}
         />
         <Ticks
           basesPerTick={basesPerTick}
           numberOfTicks={numberOfTicks}
           totalBases={sequence.length}
-        />
-        <LinearAnnotationGutter
-          stackedAnnotations={annotations}
-          sequence={sequence}
         />
         <LinearSelection
           selectionClassName={selectionClassName}
@@ -76,8 +73,8 @@ export const LinearViewer = (props: Props) => {
           selectionRef={selectionRef}
           cursorClassName={cursorClassName}
         />
-      </svg>
-    </div>
+      </g>
+    </svg>
   );
 };
 const LinearCursor = ({
@@ -131,14 +128,14 @@ const LinearCursor = ({
   );
 
   return (
-    <g className={classNames(cursorClassName || "text-noir-800")}>
+    <g className={classNames(cursorClassName || "stroke-noir-800")}>
       <line
         x1={`${xPerc}%`}
-        y1="20%"
+        y1={`${50}%`}
         x2={`${xPerc + 1}%`}
-        y2="20%"
+        y2={`${50}%`}
+        strokeWidth={5}
         stroke="currentColor"
-        strokeWidth={10}
       />
     </g>
   );
@@ -222,130 +219,23 @@ const LinearSelection = ({
       <rect
         x={`${firstRectStart}%`}
         width={`${firstRectWidth}%`}
-        y="16%"
-        height="8%"
+        y={`30%`}
+        height={`40%`}
         fill="currentColor"
         fillOpacity={0.2}
+        strokeWidth={1.5}
       />
-
-      <rect
-        x={`${secondRectStart}%`}
-        width={`${secondRectWidth}%`}
-        y="16%"
-        height="8%"
-        fill="currentColor"
-        fillOpacity={0.2}
-      />
-    </g>
-  );
-};
-
-const LinearAnnotationGutter = ({
-  stackedAnnotations,
-  sequence,
-}: {
-  stackedAnnotations: StackedAnnotation[];
-  sequence: AnnotatedSequence;
-}) => {
-  const stacks: StackedAnnotation[][] = [];
-  stackedAnnotations.forEach((ann) => {
-    stacks[ann.stack] = stacks[ann.stack] || [];
-    stacks[ann.stack].push(ann);
-  });
-
-  return (
-    <g>
-      <line x1="0" y1="20%" x2="100%" y2="20%" stroke="currentColor" />
-      {stacks.map((annotations, stackIdx) => (
-        <Fragment key={`annotation-stack-${stackIdx}`}>
-          {annotations.map((annotation) => (
-            <LinearAnnotation
-              key={`annotation-${annotation.start}-${annotation.end}`}
-              annotation={annotation}
-              sequence={sequence}
-              stackIdx={stackIdx}
-            />
-          ))}
-        </Fragment>
-      ))}
-    </g>
-  );
-};
-const LinearAnnotation = ({
-  annotation,
-  sequence,
-  stackIdx,
-}: {
-  annotation: Annotation;
-  sequence: AnnotatedSequence;
-  stackIdx: number;
-}) => {
-  /* if the annotation spans the seam, we draw two lines from the beginning to end, and from start to end */
-  const annotationSpansSeam = annotation.end < annotation.start;
-  if (annotationSpansSeam) {
-    return (
-      <Fragment>
-        <LinearAnnotation
-          annotation={{ ...annotation, end: sequence.length }}
-          sequence={sequence}
-          stackIdx={stackIdx}
+      {secondRectStart && secondRectWidth && (
+        <rect
+          x={`${secondRectStart}%`}
+          width={`${secondRectWidth}%`}
+          y={`30%`}
+          height={`40%`}
+          fill="currentColor"
+          fillOpacity={0.2}
+          strokeWidth={1.5}
         />
-        <LinearAnnotation
-          annotation={{ ...annotation, start: 0 }}
-          sequence={sequence}
-          stackIdx={stackIdx}
-        />
-      </Fragment>
-    );
-  }
-  const annotationRectangleWidth =
-    ((annotation.end - annotation.start) / sequence.length) * 100;
-
-  const xPerc = (annotation.start / sequence.length) * 100;
-  const xStartLoc = xPerc * 0.01 * SVG_SIZE;
-  const xEndLoc = (xPerc + annotationRectangleWidth) * 0.01 * SVG_SIZE;
-  const yPerc = 20 + 5 * (stackIdx + 1);
-  const yLoc = yPerc * 0.01 * SVG_SIZE;
-
-  const points =
-    annotation.direction === "forward"
-      ? `${xEndLoc},${yLoc} ${xEndLoc},${yLoc + 15} ${xEndLoc + 8},${
-          yLoc + 7.5
-        }`
-      : `${xStartLoc},${yLoc} ${xStartLoc},${yLoc + 15} ${xStartLoc - 8},${
-          yLoc + 7.5
-        }`;
-  const cap = <polygon points={points} strokeLinejoin="round" />;
-
-  return (
-    <g
-      key={`annotation-${annotation.start}-${annotation.end}`}
-      className={classNames(annotation.className, "group")}
-      onClick={() => {
-        if ("onClick" in annotation) {
-          annotation.onClick(annotation);
-        }
-      }}
-    >
-      <title>{`${annotation.text} | pos: ${annotation.start} : ${annotation.end} | ${annotation.type}`}</title>
-      {cap}
-      <rect
-        x={`${xPerc}%`}
-        y={`${yPerc}%`}
-        width={`${annotationRectangleWidth}%`}
-        height={15}
-      ></rect>
-
-      <foreignObject
-        x={`${(annotation.start / sequence.length) * 100}%`}
-        y={`${18.7 + 5 * (stackIdx + 1)}%`}
-        width={`${annotationRectangleWidth}%`}
-        height={20}
-      >
-        <span className="text-current-color pl-1 text-xs font-semibold group-hover:text-white">
-          {annotation.text}
-        </span>
-      </foreignObject>
+      )}
     </g>
   );
 };
@@ -360,36 +250,30 @@ const Ticks = ({
   numberOfTicks: number;
 }) => {
   return (
-    <svg>
+    <g>
       {[...Array(numberOfTicks).keys()].map((i) => {
         const { x1, x2 } = {
-          x1: ((i * basesPerTick) / totalBases) * SVG_SIZE,
-          x2: ((i * basesPerTick) / totalBases) * SVG_SIZE,
+          x1: ((i * basesPerTick) / totalBases) * 100,
+          x2: ((i * basesPerTick) / totalBases) * 100,
         };
-        const { y1, y2 } = { y1: "20%", y2: "15%" };
+        const { y1, y2 } = { y1: 50, y2: 25 };
         return (
-          <g key={`tick-${i}`} className="fill-current text-brand-400/50">
+          <g key={`tick-${i}`} className="fill-current text-current">
             <line
               id={`tick-${i}`}
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
+              x1={`${x1}%`}
+              y1={`${y1}%`}
+              x2={`${x2}%`}
+              y2={`${y2}%`}
               stroke="currentColor"
-              strokeWidth={1}
+              strokeWidth={0.5}
             />
-            <text
-              x={x2}
-              y={y2}
-              textAnchor="start"
-              fontSize=".8rem"
-              fill="currentColor"
-            >
+            <text x={`${x2}%`} y={`${y2}%`} textAnchor="start" fontSize="1rem">
               {i * basesPerTick}
             </text>
           </g>
         );
       })}
-    </svg>
+    </g>
   );
 };

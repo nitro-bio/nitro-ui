@@ -2,14 +2,14 @@ import { getRndInteger } from "../..";
 import { Annotation, annotationTypes } from "./types";
 
 const classNames = [
-  "cursor-pointer text-white bg-red-600 fill-red-600 stroke-red-600",
-  "cursor-pointer text-white bg-blue-600 fill-blue-600 stroke-blue-600 ",
-  "cursor-pointer text-white bg-green-600 fill-green-600 stroke-green-600 ",
-  "cursor-pointer text-white bg-yellow-600 fill-yellow-600 stroke-yellow-600 ",
-  "cursor-pointer text-white bg-orange-600 fill-orange-600 stroke-orange-600 ",
-  "cursor-pointer text-white bg-purple-600 fill-purple-600 stroke-purple-600 ",
-  "cursor-pointer text-white bg-sky-600 fill-sky-600 stroke-sky-600 ",
-  "cursor-pointer text-white bg-teal-600 fill-teal-600 stroke-teal-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-red-600 fill-red-600 stroke-red-600",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-blue-600 fill-blue-600 stroke-blue-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-green-600 fill-green-600 stroke-green-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-yellow-600 fill-yellow-600 stroke-yellow-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-orange-600 fill-orange-600 stroke-orange-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-purple-600 fill-purple-600 stroke-purple-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-sky-600 fill-sky-600 stroke-sky-600 ",
+  "cursor-pointer text-white opacity-50 hover:opacity-100 bg-teal-600 fill-teal-600 stroke-teal-600 ",
 ];
 
 export const generateRandomAnnotations = (

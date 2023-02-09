@@ -3,7 +3,7 @@ import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from "./CircularViewer";
-import { LinearViewer } from "./LinearViewer";
+import { LinearAnnotationGutter, LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomAnnotations } from "./storyUtils";
 import { AA, AriadneSelection, Nucl } from "./types";
@@ -54,10 +54,19 @@ const Template: ComponentStory<any> = ({
       </div>
       <div className="row-span-1 grid shrink-0 content-center">
         <LinearViewer
+          containerClassName="text-brand-400"
           sequence={annotatedSequence}
           annotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
+          selectionClassName={() => "text-brand-400"}
+          cursorClassName="text-brand-200"
+        />
+
+        <LinearAnnotationGutter
+          containerClassName="-mt-8"
+          stackedAnnotations={stackedAnnotations}
+          sequence={annotatedSequence}
         />
       </div>
     </Card>
