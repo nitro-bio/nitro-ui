@@ -268,7 +268,7 @@ const Ticks = ({
               stroke="currentColor"
               strokeWidth={0.5}
             />
-            <text x={`${x2}%`} y={`${y2}%`} textAnchor="start" fontSize="1rem">
+            <text x={`${x2}%`} y={`${y2}%`} textAnchor="start" fontSize="0.5em">
               {i * basesPerTick}
             </text>
           </g>

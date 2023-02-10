@@ -77,13 +77,16 @@ const LinearAnnotation = ({
         marginLeft: `${xPerc}%`,
         width: `${annotationRectangleWidthPerc}%`,
       }}
+      onClick={() => {
+        annotation.onClick?.(annotation);
+      }}
     >
       <div className={classNames("truncate pl-1", annotation.className)}>
         {annotation.text}
       </div>
       <div
         className={classNames(
-          "px-1 text-sm rounded-md absolute left-1/2 -translate-x-1/2 translate-y-4 hidden group-hover:flex flex-col  z-10 opacity-100",
+          "px-2 py-1 text-sm rounded-md absolute left-1/2 -translate-x-1/2 translate-y-4 hidden group-hover:flex flex-col  z-10 opacity-100",
           annotation.className
         )}
       >
