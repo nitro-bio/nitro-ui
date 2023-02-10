@@ -19,12 +19,12 @@ export const LinearAnnotationGutter = ({
   return (
     <div
       className={classNames(
-        "block overflow-hidden grid grid-cols-1 grid-rows-auto",
+        "block grid grid-cols-1 grid-rows-auto gap-1",
         containerClassName
       )}
     >
       {stacks.map((annotations, stackIdx) => (
-        <div className="h-full" key={`annotation-stack-${stackIdx}`}>
+        <div key={`annotation-stack-${stackIdx}`} className="relative h-8">
           {annotations.map((annotation) => (
             <LinearAnnotation
               key={`annotation-${annotation.start}-${annotation.end}`}
@@ -72,13 +72,28 @@ const LinearAnnotation = ({
 
   return (
     <div
-      className={classNames("truncate pl-1", annotation.className)}
+      className="absolute group"
       style={{
         marginLeft: `${xPerc}%`,
         width: `${annotationRectangleWidthPerc}%`,
       }}
     >
-      {annotation.text}
+      <div className={classNames("truncate pl-1", annotation.className)}>
+        {annotation.text}
+      </div>
+      <div
+        className={classNames(
+          "px-1 text-sm rounded-md absolute left-1/2 -translate-x-1/2 translate-y-4 hidden group-hover:flex flex-col  z-10 opacity-100",
+          annotation.className
+        )}
+      >
+        <strong>Type: </strong>
+        <span>{annotation.type}</span>
+        <strong>Pos: </strong>
+        <span>
+          {annotation.start}-{annotation.end}
+        </span>
+      </div>
     </div>
   );
 };
