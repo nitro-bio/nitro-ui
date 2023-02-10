@@ -54,9 +54,9 @@ const Template: ComponentStory<any> = ({
   );
 
   return (
-    <Card className="w-full max-w-xl">
+    <Card className="w-full max-w-3xl px-8">
       <LinearViewer
-        containerClassName="text-brand-400"
+        containerClassName="text-brand-400 "
         sequence={annotatedSequence}
         annotations={stackedAnnotations}
         selection={selection}
@@ -66,7 +66,7 @@ const Template: ComponentStory<any> = ({
       />
 
       <LinearAnnotationGutter
-        containerClassName="-mt-8"
+        containerClassName=""
         stackedAnnotations={stackedAnnotations}
         sequence={annotatedSequence}
       />
