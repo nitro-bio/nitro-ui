@@ -85,7 +85,7 @@ const LinearAnnotation = ({
     >
       <div
         className={classNames(
-          "truncate px-2",
+          "px-2",
           annotation.direction === "forward" ? "text-left" : "text-right",
           annotation.className
         )}
@@ -104,12 +104,11 @@ const LinearAnnotation = ({
           annotation.className
         )}
       >
+        <strong>Name: </strong>
+        <span>{annotation.text}</span>
+
         <strong>Type: </strong>
         <span>{annotation.type}</span>
-        <strong>Pos: </strong>
-        <span>
-          {annotation.start}-{annotation.end}
-        </span>
       </div>
     </div>
   );
