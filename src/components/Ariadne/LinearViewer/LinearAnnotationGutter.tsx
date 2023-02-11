@@ -19,7 +19,7 @@ export const LinearAnnotationGutter = ({
   return (
     <div
       className={classNames(
-        "block grid grid-cols-1 grid-rows-auto gap-1",
+        "grid-rows-auto block grid grid-cols-1 gap-1",
         containerClassName
       )}
     >
@@ -69,10 +69,12 @@ const LinearAnnotation = ({
     ((annotation.end - annotation.start) / sequence.length) * 100;
 
   const xPerc = (annotation.start / sequence.length) * 100;
-
+  // clip path to create rectangle with a point at one end
+  const forwardClipPath = "polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%)";
+  const reverseClipPath = "polygon(0 50%, 10% 0, 100% 0, 100% 100%, 10% 100%)";
   return (
     <div
-      className="absolute group"
+      className="group absolute"
       style={{
         marginLeft: `${xPerc}%`,
         width: `${annotationRectangleWidthPerc}%`,
@@ -81,12 +83,24 @@ const LinearAnnotation = ({
         annotation.onClick?.(annotation);
       }}
     >
-      <div className={classNames("truncate pl-1", annotation.className)}>
+      <div
+        className={classNames(
+          "truncate px-2",
+          annotation.direction === "forward" ? "text-left" : "text-right",
+          annotation.className
+        )}
+        style={{
+          clipPath:
+            annotation.direction === "forward"
+              ? forwardClipPath
+              : reverseClipPath,
+        }}
+      >
         {annotation.text}
       </div>
       <div
         className={classNames(
-          "px-2 py-1 text-sm rounded-md absolute left-1/2 -translate-x-1/2 translate-y-4 hidden group-hover:flex flex-col  z-10 opacity-100",
+          "absolute left-1/2 z-10 hidden -translate-x-1/2 translate-y-4 flex-col rounded-md px-2 py-1 text-sm  opacity-100 group-hover:flex",
           annotation.className
         )}
       >
