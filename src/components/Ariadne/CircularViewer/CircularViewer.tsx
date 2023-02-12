@@ -43,7 +43,13 @@ export const CircularViewer = ({
         width={sizeX}
         height={sizeY}
       >
-        <CircularIndex cx={cx} cy={cy} radius={radius} sequence={sequence} />
+        <CircularIndex
+          cx={cx}
+          cy={cy}
+          radius={radius}
+          sequence={sequence}
+          ticks={8}
+        />
         <CircularAnnotationGutter
           sequence={sequence}
           annotations={annotations}

@@ -7,13 +7,15 @@ export const CircularIndex = ({
   cx,
   cy,
   radius,
+  ticks,
 }: {
   sequence: AnnotatedSequence;
   cx: number;
   cy: number;
   radius: number;
+  ticks: number;
 }) => {
-  const basesPerTick = Math.floor(20 * Math.log10(sequence.length));
+  const basesPerTick = Math.floor(sequence.length / ticks);
 
   if (sequence.length > 80) {
     return (

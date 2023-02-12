@@ -31,7 +31,13 @@ export const CircularAnnotation = ({
   });
 
   return (
-    <svg className={classNames(annotation.className)}>
+    <svg
+      className={classNames(annotation.className)}
+      onClick={() => {
+        console.log("clicked annotation", annotation);
+        annotation.onClick(annotation);
+      }}
+    >
       <path d={arcPath}>
         <text>Annotation</text>
       </path>
