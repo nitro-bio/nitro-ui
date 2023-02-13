@@ -11,15 +11,19 @@ export type CharType = "sequence" | "complement";
 
 export interface Props {
   sequence: AnnotatedSequence;
+  secondarySequence?: AnnotatedSequence;
   selection: AriadneSelection | null;
   containerClassName?: string;
   charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
+  selectionClassName?: string;
 }
 export const SequenceViewer = ({
   sequence,
+  secondarySequence,
   selection,
   containerClassName,
   charClassName,
+  selectionClassName,
 }: Props) => {
   const internalCharClassName =
     charClassName ||
@@ -33,6 +37,7 @@ export const SequenceViewer = ({
         throw new Error(`Unknown char type ${type}`);
       }
     });
+
   return (
     <>
       <div
@@ -54,10 +59,13 @@ export const SequenceViewer = ({
                 index={index}
                 selection={selection}
                 sequenceLength={sequence.length}
+                className={selectionClassName}
               />
               <CharComponent
                 type="complement"
-                char={complement}
+                char={
+                  secondarySequence ? secondarySequence[index].base : complement
+                }
                 index={index}
                 charClassName={charClassName || internalCharClassName}
               />
@@ -78,10 +86,12 @@ const SelectionMarker = ({
   index,
   selection,
   sequenceLength,
+  className,
 }: {
   index: number;
   selection: AriadneSelection | null;
   sequenceLength: number;
+  className?: string;
 }) => {
   return (
     <div
@@ -90,7 +100,7 @@ const SelectionMarker = ({
         "h-1",
         selection &&
           baseInSelection(index, selection, sequenceLength) &&
-          "-mx-1 bg-brand-300"
+          ["-mx-1", className].join(" ")
       )}
     />
   );

@@ -18,11 +18,13 @@ export default {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({
   sequence,
+  secondarySequence,
   initialSelection,
   containerClassName,
   charClassName,
 }: {
   sequence: string;
+  secondarySequence?: string;
   initialSelection?: AriadneSelection;
   containerClassName?: string;
   charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
@@ -44,11 +46,27 @@ const Template: ComponentStory<any> = ({
   const [selection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
+
+  const secondaryAnnotatedSequence = useMemo(() => {
+    if (!secondarySequence || secondarySequence.length === 0) {
+      return undefined;
+    }
+
+    const secondaryValidatedSequence = secondarySequence
+      .replace(/[^ACGT]/g, "")
+      .split("") as Nucl[];
+    const res = getAnnotatedSequence(secondaryValidatedSequence, []);
+    console.table(res);
+    return res;
+  }, [secondarySequence]);
+
   return (
     <div className="grid h-screen content-center">
       <Card className="h-[400px] max-w-xl">
         <SequenceViewer
+          selectionClassName="bg-brand-400"
           sequence={annotatedSequence}
+          secondarySequence={secondaryAnnotatedSequence}
           selection={selection}
           charClassName={charClassName}
           containerClassName={containerClassName}
@@ -116,5 +134,18 @@ SequenceViewerStoryCustomClassNames.args = {
         return "dark:text-fuchsia-300 text-fuchsia-600";
       }
     }
+  },
+};
+
+export const SequenceViewerStorySecondSequence = Template.bind({});
+SequenceViewerStorySecondSequence.args = {
+  sequence:
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  secondarySequence:
+    "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+  initialSelection: {
+    start: 5,
+    end: 10,
+    direction: "reverse",
   },
 };
