@@ -25,6 +25,10 @@ export const SequenceViewer = ({
   charClassName,
   selectionClassName,
 }: Props) => {
+  if (secondarySequence && sequence.length != secondarySequence?.length) {
+    throw new Error("Sequence and secondary sequence must be the same length");
+  }
+
   const internalCharClassName =
     charClassName ||
     (({ type }) => {
@@ -37,7 +41,6 @@ export const SequenceViewer = ({
         throw new Error(`Unknown char type ${type}`);
       }
     });
-
   return (
     <>
       <div
@@ -64,7 +67,9 @@ export const SequenceViewer = ({
               <CharComponent
                 type="complement"
                 char={
-                  secondarySequence ? secondarySequence[index].base : complement
+                  secondarySequence?.at(index)?.base
+                    ? secondarySequence[index].base
+                    : complement
                 }
                 index={index}
                 charClassName={charClassName || internalCharClassName}

@@ -56,7 +56,6 @@ const Template: ComponentStory<any> = ({
       .replace(/[^ACGT]/g, "")
       .split("") as Nucl[];
     const res = getAnnotatedSequence(secondaryValidatedSequence, []);
-    console.table(res);
     return res;
   }, [secondarySequence]);
 
