@@ -120,13 +120,13 @@ export const getStackedAnnotations = (
 };
 export const baseInSelection = (
   baseIndex: number,
-  selection: AriadneSelection,
+  selection: AriadneSelection | null,
   sequenceLength: number
 ) => {
-  const { start, end, direction } = selection;
-  if (start === null || end === null) {
+  if (!selection) {
     return false;
   }
+  const { start, end, direction } = selection;
   if (direction === "forward")
     if (start > end) {
       const betweenStartAndSequenceEnd =

@@ -42,7 +42,12 @@ const Template: ComponentStory<any> = ({
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
       <div className="row-span-2 grid shrink-0 content-center py-12">
-        <SequenceViewer sequence={annotatedSequence} selection={selection} />
+        <SequenceViewer
+          sequences={[annotatedSequence]}
+          selection={selection}
+          charClassName={() => "text-brand-500 dark:text-brand-400"}
+          selectionClassName="bg-brand-400/20"
+        />
       </div>
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer

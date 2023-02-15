@@ -1,5 +1,6 @@
 import { baseInSelection } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
+import { Fragment } from "react";
 
 import type {
   AnnotatedSequence,
@@ -7,107 +8,79 @@ import type {
   StackedAnnotation,
 } from "../types";
 
-export type CharType = "sequence" | "complement";
-
 export interface Props {
-  sequence: AnnotatedSequence;
-  secondarySequence?: AnnotatedSequence;
+  sequences: AnnotatedSequence[];
   selection: AriadneSelection | null;
   containerClassName?: string;
-  charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
+  charClassName: ({
+    char,
+    sequenceIdx,
+  }: {
+    char: string;
+    sequenceIdx: number;
+  }) => string;
   selectionClassName?: string;
 }
 export const SequenceViewer = ({
-  sequence,
-  secondarySequence,
+  sequences,
   selection,
   containerClassName,
   charClassName,
   selectionClassName,
 }: Props) => {
-  if (secondarySequence && sequence.length != secondarySequence?.length) {
-    throw new Error("Sequence and secondary sequence must be the same length");
+  // check if all sequences are the same length
+  const sequenceLength = sequences[0].length;
+  const allSequencesSameLength = sequences.every(
+    (seq) => seq.length === sequenceLength
+  );
+  if (!allSequencesSameLength) {
+    throw new Error("All sequences must be the same length");
   }
-
-  const internalCharClassName =
-    charClassName ||
-    (({ type }) => {
-      if (type == "sequence") {
-        return "dark:text-brand-300 text-brand-600";
-      }
-      if (type == "complement") {
-        return "dark:text-brand-100 text-brand-400/80 select-none";
-      } else {
-        throw new Error(`Unknown char type ${type}`);
-      }
-    });
+  const seqLength = sequences[0].length;
+  const baseIdxArray = Array.from({ length: seqLength }, (_, i) => i);
   return (
     <>
       <div
-        className={classNames(
-          "font-mono flex h-full flex-row flex-wrap overflow-y-scroll text-center",
-          containerClassName
-        )}
+        className={classNames("font-mono flex flex-wrap ", containerClassName)}
       >
-        {sequence.map(({ base, complement, annotations, index }) => {
+        {baseIdxArray.map((baseIdx: number) => {
           return (
-            <div key={`sequence-viewer-base-${index}`} data-seq-index={index}>
-              <CharComponent
-                type="sequence"
-                char={base}
-                index={index}
-                charClassName={charClassName || internalCharClassName}
-              />
-              <SelectionMarker
-                index={index}
-                selection={selection}
-                sequenceLength={sequence.length}
-                className={selectionClassName}
-              />
-              <CharComponent
-                type="complement"
-                char={
-                  secondarySequence?.at(index)?.base
-                    ? secondarySequence[index].base
-                    : complement
-                }
-                index={index}
-                charClassName={charClassName || internalCharClassName}
-              />
-              <SequenceAnnotation
-                annotations={annotations}
-                maxAnnotationStack={5}
-                index={index}
-              />
+            <div
+              className={classNames(
+                "my-2 flex flex-col justify-start",
+                baseInSelection(baseIdx, selection, seqLength) &&
+                  selectionClassName
+              )}
+              key={`base-${baseIdx}`}
+            >
+              {sequences.map((sequence, sequenceIdx) => {
+                const { base, annotations } = sequence[baseIdx];
+                return (
+                  <div
+                    key={`sequence-${sequenceIdx}-base-${baseIdx}`}
+                    className="text-center"
+                  >
+                    <CharComponent
+                      char={base}
+                      index={baseIdx}
+                      charClassName={charClassName({
+                        char: base,
+                        sequenceIdx,
+                      })}
+                    />
+                    <SequenceAnnotation
+                      annotations={annotations}
+                      maxAnnotationStack={5}
+                      index={baseIdx}
+                    />
+                  </div>
+                );
+              })}
             </div>
           );
         })}
       </div>
     </>
-  );
-};
-
-const SelectionMarker = ({
-  index,
-  selection,
-  sequenceLength,
-  className,
-}: {
-  index: number;
-  selection: AriadneSelection | null;
-  sequenceLength: number;
-  className?: string;
-}) => {
-  return (
-    <div
-      key={`sequence-viewer-base-${index}`}
-      className={classNames(
-        "h-1",
-        selection &&
-          baseInSelection(index, selection, sequenceLength) &&
-          ["-mx-1", className].join(" ")
-      )}
-    />
   );
 };
 
@@ -122,13 +95,13 @@ const SequenceAnnotation = ({
 }) => {
   const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
   return (
-    <>
+    <Fragment key={`annotation-${index}`}>
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
           return (
             <div
-              key={`${annotation.start}-${annotation.end}`}
+              key={`annotation-${index}-${i}`}
               className={classNames("h-1", annotation.className)}
               data-seq-index={index}
             />
@@ -136,27 +109,23 @@ const SequenceAnnotation = ({
         } else {
           return (
             <div
-              key={`placeholder-${i}`}
+              key={`placeholder-${index}-${i}`}
               className={"h-1"}
               data-seq-index={index}
             />
           );
         }
       })}
-    </>
+    </Fragment>
   );
 };
 
 interface CharProps {
   char: string;
   index: number;
-  type: CharType;
-  charClassName: ({ char, type }: { char: string; type: CharType }) => string;
+  charClassName: string;
 }
 
-/* data-seq-index is used to get indices for selection */
-const CharComponent = ({ index, char, type, charClassName }: CharProps) => (
-  <div data-seq-index={index} className={charClassName({ char, type })}>
-    {char}
-  </div>
+const CharComponent = ({ index, char, charClassName }: CharProps) => (
+  <div className={classNames(charClassName, "")}>{char}</div>
 );

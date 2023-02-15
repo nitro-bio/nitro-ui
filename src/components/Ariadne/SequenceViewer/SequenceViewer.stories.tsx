@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
-import { SequenceViewer, CharType } from ".";
+import { SequenceViewer } from ".";
 import type { AA, AriadneSelection, Nucl } from "../types";
 
 export default {
@@ -17,57 +17,58 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({
-  sequence,
-  secondarySequence,
+  sequences,
   initialSelection,
   containerClassName,
   charClassName,
 }: {
-  sequence: string;
-  secondarySequence?: string;
+  sequences: string[];
   initialSelection?: AriadneSelection;
   containerClassName?: string;
-  charClassName?: ({ char, type }: { char: string; type: CharType }) => string;
+  charClassName?: ({
+    char,
+    sequenceIdx,
+  }: {
+    char: string;
+    sequenceIdx: number;
+  }) => string;
 }) => {
-  const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 5),
-    [sequence]
+  const annotationsPerSequence = useMemo(
+    () => sequences.map((sequence) => generateRandomAnnotations(sequence, 5)),
+    [sequences]
   );
-  const stackedAnnotations = getStackedAnnotations(annotations);
+  const stackedAnnotationsPerSequence = annotationsPerSequence.map(
+    (annotations) => getStackedAnnotations(annotations)
+  );
 
-  const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as
-    | Nucl[]
-    | AA[];
-
-  const annotatedSequence = getAnnotatedSequence(
-    validatedSequence,
-    stackedAnnotations
+  const validatedSequences = sequences.map((sequence) =>
+    sequence.replace(/[^ACGT]/g, "").split("")
+  ) as Nucl[][] | AA[][];
+  const zippedSequencesAndAnnotations = validatedSequences.map(
+    (sequence, sequenceIdx) => {
+      const annotations = stackedAnnotationsPerSequence[sequenceIdx];
+      return [sequence, annotations] as const;
+    }
+  );
+  const annotatedSequences = zippedSequencesAndAnnotations.map(
+    ([sequence, annotations]) => getAnnotatedSequence(sequence, annotations)
   );
   const [selection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
 
-  const secondaryAnnotatedSequence = useMemo(() => {
-    if (!secondarySequence || secondarySequence.length === 0) {
-      return undefined;
-    }
-
-    const secondaryValidatedSequence = secondarySequence
-      .replace(/[^ACGT]/g, "")
-      .split("") as Nucl[];
-    const res = getAnnotatedSequence(secondaryValidatedSequence, []);
-    return res;
-  }, [secondarySequence]);
+  const defaultCharClassName = ({ char }: { char: string }) => {
+    return "dark:text-brand-300 text-brand-600";
+  };
 
   return (
     <div className="grid h-screen content-center">
-      <Card className="h-[400px] max-w-xl">
+      <Card className="h-[400px] max-w-xl overflow-y-scroll">
         <SequenceViewer
-          selectionClassName="bg-brand-400"
-          sequence={annotatedSequence}
-          secondarySequence={secondaryAnnotatedSequence}
+          selectionClassName="bg-brand-400/20"
+          sequences={annotatedSequences}
           selection={selection}
-          charClassName={charClassName}
+          charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
         />
       </Card>
@@ -77,13 +78,11 @@ const Template: ComponentStory<any> = ({
 
 export const SequenceViewerStory = Template.bind({});
 SequenceViewerStory.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
 };
 export const SequenceViewerStoryForwardSelectionOverSeam = Template.bind({});
 SequenceViewerStoryForwardSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
   initialSelection: {
     start: 10,
     end: 5,
@@ -93,8 +92,7 @@ SequenceViewerStoryForwardSelectionOverSeam.args = {
 
 export const SequenceViewerStoryReverseSelection = Template.bind({});
 SequenceViewerStoryReverseSelection.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
   initialSelection: {
     start: 10,
     end: 5,
@@ -104,8 +102,7 @@ SequenceViewerStoryReverseSelection.args = {
 
 export const SequenceViewerStoryReverseSelectionOverSeam = Template.bind({});
 SequenceViewerStoryReverseSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
   initialSelection: {
     start: 5,
     end: 10,
@@ -115,33 +112,14 @@ SequenceViewerStoryReverseSelectionOverSeam.args = {
 
 export const SequenceViewerStoryCustomClassNames = Template.bind({});
 SequenceViewerStoryCustomClassNames.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
   containerClassName: "text-xl bg-noir-800 skew-y-3",
-  charClassName: ({ char, type }: { char: string; type: CharType }) => {
-    if (type == "sequence") {
-      if (char == "A" || char == "T") {
-        return "dark:text-emerald-300 text-emerald-600";
-      } else {
-        return "dark:text-amber-300 text-amber-600";
-      }
-    }
-    if (type == "complement") {
-      if (char == "A" || char == "T") {
-        return "dark:text-sky-300 text-sky-600";
-      } else {
-        return "dark:text-fuchsia-300 text-fuchsia-600";
-      }
-    }
-  },
 };
 
 export const SequenceViewerStorySecondSequence = Template.bind({});
 SequenceViewerStorySecondSequence.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
-  secondarySequence:
-    "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
+
   initialSelection: {
     start: 5,
     end: 10,

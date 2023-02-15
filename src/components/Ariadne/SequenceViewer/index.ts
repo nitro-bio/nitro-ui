@@ -1,3 +1,2 @@
-import { SequenceViewer, CharType } from "./SequenceViewer";
+import { SequenceViewer } from "./SequenceViewer";
 export { SequenceViewer };
-export type { CharType };

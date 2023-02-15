@@ -60,14 +60,12 @@ export type AA =
 // TODO: want to make a generic that paramaterizes over AA or Nucl
 export interface AnnotatedNucl {
   base: Nucl;
-  complement: Nucl;
   annotations: StackedAnnotation[];
   index: number;
 }
 
 export interface AnnotatedAA {
   base: AA;
-  complement: AA;
   annotations: StackedAnnotation[];
   index: number;
 }
