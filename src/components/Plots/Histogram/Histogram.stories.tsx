@@ -17,6 +17,9 @@ export const HistogramStory = Template.bind({});
 HistogramStory.args = {
   data: generateRandomHistogramData(1000),
   initialBins: 50,
+  colClassName: () =>
+    "opacity-30 hover:opacity-100 transition-opacity duration-50 ease-in-out bg-brand-500",
+  containerClassName: "h-[200px]",
 };
 
 export const HistogramWithWeightsStory = Template.bind({});
@@ -29,6 +32,6 @@ HistogramWithWeightsStory.args = {
   maxBins: 1000,
   weightFunc: (d) => d.x,
   colClassName: () =>
-    "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out",
+    "opacity-30 hover:opacity-100 transition-opacity duration-50 ease-in-out bg-brand-500",
   containerClassName: "h-[200px]",
 };
