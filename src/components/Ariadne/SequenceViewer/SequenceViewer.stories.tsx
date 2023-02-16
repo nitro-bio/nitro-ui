@@ -5,7 +5,13 @@ import Card from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
-import type { AA, AriadneSelection, Nucl } from "../types";
+import type {
+  AA,
+  AnnotatedAA,
+  AnnotatedNucl,
+  AriadneSelection,
+  Nucl,
+} from "../types";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -26,10 +32,10 @@ const Template: ComponentStory<any> = ({
   initialSelection?: AriadneSelection;
   containerClassName?: string;
   charClassName?: ({
-    char,
+    base,
     sequenceIdx,
   }: {
-    char: string;
+    base: AnnotatedAA | AnnotatedNucl;
     sequenceIdx: number;
   }) => string;
 }) => {
@@ -57,7 +63,7 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
 
-  const defaultCharClassName = ({ char }: { char: string }) => {
+  const defaultCharClassName = () => {
     return "dark:text-brand-300 text-brand-600";
   };
 

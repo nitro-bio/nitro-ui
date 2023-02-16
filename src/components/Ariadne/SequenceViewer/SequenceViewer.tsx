@@ -3,6 +3,8 @@ import { classNames } from "@utils/stringUtils";
 import { Fragment } from "react";
 
 import type {
+  AnnotatedAA,
+  AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
   StackedAnnotation,
@@ -13,10 +15,10 @@ export interface Props {
   selection: AriadneSelection | null;
   containerClassName?: string;
   charClassName: ({
-    char,
+    base,
     sequenceIdx,
   }: {
-    char: string;
+    base: AnnotatedAA | AnnotatedNucl;
     sequenceIdx: number;
   }) => string;
   selectionClassName?: string;
@@ -54,22 +56,22 @@ export const SequenceViewer = ({
               key={`base-${baseIdx}`}
             >
               {sequences.map((sequence, sequenceIdx) => {
-                const { base, annotations } = sequence[itrIdx];
+                const base = sequence[itrIdx];
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
                     className="text-center"
                   >
                     <CharComponent
-                      char={base}
+                      char={base.base}
                       index={baseIdx}
                       charClassName={charClassName({
-                        char: base,
+                        base,
                         sequenceIdx,
                       })}
                     />
                     <SequenceAnnotation
-                      annotations={annotations}
+                      annotations={base.annotations}
                       maxAnnotationStack={5}
                       index={baseIdx}
                     />
