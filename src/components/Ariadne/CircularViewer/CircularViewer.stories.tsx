@@ -1,5 +1,10 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { AriadneSelection, ValidatedSequence } from "@Ariadne/types";
+import {
+  AnnotatedAA,
+  Annotation,
+  AriadneSelection,
+  ValidatedSequence,
+} from "@Ariadne/types";
 import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
@@ -23,18 +28,25 @@ const Template: ComponentStory<any> = ({
   sequence: string;
   initialSelection?: AriadneSelection;
 }) => {
+  const [selection, setSelection] = useState<AriadneSelection | null>(
+    initialSelection ?? null
+  );
+
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
     [sequence]
-  );
+  ).map((annotation) => ({
+    ...annotation,
+    onClick: (ann: Annotation) => {
+      setSelection(ann);
+    },
+  }));
+
   const stackedAnnotations = getStackedAnnotations(annotations);
   const validatedSequence = sequence.split("") as ValidatedSequence;
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
     stackedAnnotations
-  );
-  const [selection, setSelection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
   );
   return (
     <div className="grid h-screen content-center">

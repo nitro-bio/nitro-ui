@@ -6,7 +6,7 @@ import { CircularViewer } from "./CircularViewer";
 import { LinearAnnotationGutter, LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomAnnotations } from "./storyUtils";
-import { AA, AriadneSelection, Nucl } from "./types";
+import { AA, Annotation, AriadneSelection, Nucl } from "./types";
 import { getAnnotatedSequence, getStackedAnnotations } from "./utils";
 
 export default {
@@ -24,10 +24,27 @@ const Template: ComponentStory<any> = ({
   sequence: string;
   initialSelection?: AriadneSelection;
 }) => {
-  const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 5),
-    [sequence]
+  const [selection, setSelection] = useState<AriadneSelection | null>(
+    initialSelection ?? null
   );
+
+  const annotations = useMemo(
+    () => generateRandomAnnotations(sequence, 10),
+    [sequence]
+  ).map((annotation) => ({
+    ...annotation,
+    onClick: (ann: Annotation) => {
+      if (ann.direction === "forward") {
+        setSelection(ann);
+      } else {
+        setSelection({
+          start: ann.end,
+          end: ann.start,
+          direction: "reverse",
+        });
+      }
+    },
+  }));
   const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as
     | Nucl[]
     | AA[];
@@ -35,9 +52,6 @@ const Template: ComponentStory<any> = ({
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
     stackedAnnotations
-  );
-  const [selection, setSelection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
   );
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">

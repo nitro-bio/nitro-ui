@@ -15,18 +15,15 @@ export const CircularAnnotation = ({
   center: Coor;
 }) => {
   const { x: cx, y: cy } = center;
-  const annotationSpansSeam = annotation.end < annotation.start;
-  const offset = annotationSpansSeam
-    ? annotation.start
-    : sequence.length - annotation.end;
+
   const arcPath = genArc({
     innerRadius: radius,
     outerRadius: radius + 5,
     largeArc: false,
     length: annotation.end - annotation.start,
-    direction: "forward" /* TODO: use annotation direction */,
+    direction: annotation.direction,
     seqLength: sequence.length,
-    offset,
+    offset: annotation.start,
     center: { x: cx, y: cy },
   });
 
