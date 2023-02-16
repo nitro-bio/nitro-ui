@@ -37,13 +37,13 @@ export const SequenceViewer = ({
     throw new Error("All sequences must be the same length");
   }
   const seqLength = sequences[0].length;
-  const baseIdxArray = Array.from({ length: seqLength }, (_, i) => i);
+
   return (
     <>
       <div
         className={classNames("font-mono flex flex-wrap ", containerClassName)}
       >
-        {baseIdxArray.map((baseIdx: number) => {
+        {sequences[0].map(({ index: baseIdx }, itrIdx) => {
           return (
             <div
               className={classNames(
@@ -54,7 +54,7 @@ export const SequenceViewer = ({
               key={`base-${baseIdx}`}
             >
               {sequences.map((sequence, sequenceIdx) => {
-                const { base, annotations } = sequence[baseIdx];
+                const { base, annotations } = sequence[itrIdx];
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
