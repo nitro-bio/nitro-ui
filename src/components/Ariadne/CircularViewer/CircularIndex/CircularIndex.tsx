@@ -19,9 +19,7 @@ export const CircularIndex = ({
 
   if (sequence.length > 80) {
     return (
-      <svg
-        className={`bg-brand-800 fill-current text-brand-800 dark:text-brand-600`}
-      >
+      <svg className={`bg-brand-800 fill-current`}>
         <g>
           <circle
             cx={cx}
@@ -43,7 +41,7 @@ export const CircularIndex = ({
     );
   }
   return (
-    <text className="text-brand-800">
+    <text>
       {sequence.map(({ base: letter }, index) => {
         const { x, y } = findCoor({
           index,

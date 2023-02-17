@@ -52,6 +52,7 @@ const Template: ComponentStory<any> = ({
     <div className="grid h-screen content-center">
       <Card className="max-w-xl">
         <CircularViewer
+          containerClassName="text-brand-400"
           sequence={annotatedSequence}
           annotations={annotations}
           selection={selection}

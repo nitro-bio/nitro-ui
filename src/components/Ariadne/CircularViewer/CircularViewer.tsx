@@ -1,4 +1,5 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
+import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
 import CircularAnnotationGutter from "./CircularAnnotations";
@@ -10,6 +11,7 @@ export interface Props {
   annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
+  containerClassName?: string;
 }
 
 const SVG_SIZE = 300;
@@ -19,6 +21,7 @@ export const CircularViewer = ({
   annotations,
   selection,
   setSelection,
+  containerClassName,
 }: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
     cx: SVG_SIZE / 2,
@@ -31,7 +34,12 @@ export const CircularViewer = ({
   const selectionRef = useRef<SVGSVGElement>(null);
 
   return (
-    <div className="font-mono flex select-none items-center justify-center font-thin text-brand-800 dark:text-brand-600">
+    <div
+      className={classNames(
+        "font-mono flex select-none items-center justify-center font-thin",
+        containerClassName
+      )}
+    >
       <svg
         ref={selectionRef}
         viewBox={`0 0 ${sizeX} ${sizeY}`}

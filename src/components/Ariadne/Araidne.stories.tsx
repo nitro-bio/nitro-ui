@@ -57,6 +57,7 @@ const Template: ComponentStory<any> = ({
       </div>
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
+          containerClassName="text-brand-400"
           sequence={annotatedSequence}
           annotations={annotations}
           selection={selection}
