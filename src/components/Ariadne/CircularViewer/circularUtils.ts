@@ -27,43 +27,32 @@ export const genArc = ({
   seqLength: number;
   direction: "forward" | "reverse";
 }): string => {
-  let leftBottom = findCoor({
+  const leftBottom = findCoor({
     index: offset,
     radius: innerRadius,
     center,
     seqLength,
   });
-  let leftTop = findCoor({
+  const leftTop = findCoor({
     index: offset,
     radius: outerRadius,
     center,
     seqLength,
   });
-  let rightBottom = findCoor({
+  const rightBottom = findCoor({
     index: length + offset,
     radius: innerRadius,
     center,
     seqLength,
   });
-  let rightTop = findCoor({
+  const rightTop = findCoor({
     index: length + offset,
     radius: outerRadius,
     center,
     seqLength,
   });
-  let sFlagF = 1;
-  let sFlagR = 0;
-
-  if (direction === "reverse") {
-    [leftBottom, leftTop, rightBottom, rightTop] = [
-      rightBottom,
-      rightTop,
-      leftBottom,
-      leftTop,
-    ];
-    sFlagF = 0;
-    sFlagR = 1;
-  }
+  const sFlagF = 1;
+  const sFlagR = 0;
 
   const lArc = largeArc ? 1 : 0;
 

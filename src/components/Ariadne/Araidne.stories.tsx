@@ -31,18 +31,10 @@ const Template: ComponentStory<any> = ({
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 10),
     [sequence]
-  ).map((annotation) => ({
+  ).map((annotation: Annotation) => ({
     ...annotation,
     onClick: (ann: Annotation) => {
-      if (ann.direction === "forward") {
-        setSelection(ann);
-      } else {
-        setSelection({
-          start: ann.end,
-          end: ann.start,
-          direction: "reverse",
-        });
-      }
+      setSelection(ann);
     },
   }));
   const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as

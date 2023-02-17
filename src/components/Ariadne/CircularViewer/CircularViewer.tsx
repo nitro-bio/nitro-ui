@@ -142,10 +142,12 @@ const CircularSelection = ({
 
           return;
         }
+        const direction =
+          internalDirection === "clockwise" ? "forward" : "reverse";
         setSelection({
           start,
           end,
-          direction: internalDirection === "clockwise" ? "forward" : "reverse",
+          direction,
         });
       }
     },
@@ -185,7 +187,7 @@ const CircularSelection = ({
   const arc = genArc({
     center,
     innerRadius,
-    largeArc: length > seqLength / 2 ? true : false,
+    largeArc: length > seqLength / 2,
     length,
     offset,
     outerRadius,

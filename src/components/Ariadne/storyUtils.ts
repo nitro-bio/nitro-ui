@@ -17,7 +17,7 @@ export const generateRandomAnnotations = (
   maxAnnotations: number
 ) => {
   const annotations: Annotation[] = [];
-  const max_annotation_length = sequence.length / 3;
+  const max_annotation_length = sequence.length;
   const min_annotation_length = 1;
 
   for (let i = 0; i < sequence.length; i++) {
@@ -34,6 +34,7 @@ export const generateRandomAnnotations = (
       start,
       end,
       direction: getRndInteger(0, 2) === 0 ? "forward" : "reverse",
+
       className: randomClassName,
       text: `${annType} ${i}`,
       onClick: () => console.debug("Clicked on annotation ${i}"),
