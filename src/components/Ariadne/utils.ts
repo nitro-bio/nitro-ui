@@ -120,32 +120,24 @@ export const getStackedAnnotations = (
 };
 export const baseInSelection = (
   baseIndex: number,
-  selection: AriadneSelection | null,
-  sequenceLength: number
+  selection: AriadneSelection | null
 ) => {
   if (!selection) {
     return false;
   }
-  const { start, end, direction } = selection;
-  if (direction === "forward")
-    if (start > end) {
-      const betweenStartAndSequenceEnd =
-        baseIndex >= start && baseIndex <= sequenceLength;
-      const betweenSequenceEndandEnd = baseIndex >= 0 && baseIndex <= end;
-      return betweenStartAndSequenceEnd || betweenSequenceEndandEnd;
-    } else {
-      return baseIndex >= start && baseIndex <= end;
-    }
-  if (direction === "reverse") {
-    if (end > start) {
-      const betweenStartAndSequenceStart = baseIndex <= start && baseIndex >= 0;
-      const betweenSequenceEndAndEnd =
-        baseIndex <= sequenceLength && baseIndex >= end;
-      return betweenStartAndSequenceStart || betweenSequenceEndAndEnd;
-    } else {
-      return baseIndex <= start && baseIndex >= end;
-    }
+  let { start, end } = selection;
+  start = selection.direction === "forward" ? start : end;
+  end = selection.direction === "forward" ? end : start;
+  let res = false;
+  if (start > end) {
+    const afterStart = baseIndex >= start;
+    const beforeEnd = baseIndex <= end;
+    res = afterStart || beforeEnd;
+  } else {
+    res = baseIndex >= start && baseIndex <= end;
   }
+
+  return res;
 };
 
 export const inRange = (value: number, min: number, max: number) => {
