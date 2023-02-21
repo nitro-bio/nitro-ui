@@ -95,16 +95,27 @@ const SequenceAnnotation = ({
 }) => {
   const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
   return (
-    <Fragment key={`annotation-${index}`}>
+    <div className="group relative " key={`annotation-${index}`}>
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
           return (
             <div
               key={`annotation-${index}-${i}`}
-              className={classNames("h-1", annotation.className)}
+              className={classNames("h-1 ", annotation.className)}
               data-seq-index={index}
-            />
+            >
+              <div
+                className={classNames(
+                  "absolute z-10 top-4 hidden items-start flex-col rounded-md px-2 py-1 text-sm group-hover:flex",
+                  annotation.className
+                )}
+              >
+                <span>Pos: {index}</span>
+                <span>{annotation.text}</span>
+                <span>{annotation.type}</span>
+              </div>
+            </div>
           );
         } else {
           return (
@@ -116,7 +127,7 @@ const SequenceAnnotation = ({
           );
         }
       })}
-    </Fragment>
+    </div>
   );
 };
 

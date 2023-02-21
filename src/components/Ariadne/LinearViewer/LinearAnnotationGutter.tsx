@@ -100,7 +100,7 @@ const LinearAnnotation = ({
       </div>
       <div
         className={classNames(
-          "absolute left-1/2 z-10 hidden -translate-x-1/2 translate-y-4 flex-col rounded-md px-2 py-1 text-sm  opacity-100 group-hover:flex",
+          "absolute left-1/2 z-10 hidden -translate-x-1/2 translate-y-4 flex-col rounded-md px-2 py-1 text-sm group-hover:flex",
           annotation.className
         )}
       >
