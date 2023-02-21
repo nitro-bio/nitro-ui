@@ -104,10 +104,7 @@ const LinearAnnotation = ({
           annotation.className
         )}
       >
-        <strong>Name: </strong>
         <span>{annotation.text}</span>
-
-        <strong>Type: </strong>
         <span>{annotation.type}</span>
       </div>
     </div>
