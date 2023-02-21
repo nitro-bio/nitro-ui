@@ -38,7 +38,6 @@ export const SequenceViewer = ({
   if (!allSequencesSameLength) {
     throw new Error("All sequences must be the same length");
   }
-  const seqLength = sequences[0].length;
 
   return (
     <>
@@ -50,8 +49,7 @@ export const SequenceViewer = ({
             <div
               className={classNames(
                 "my-2 flex flex-col justify-start",
-                baseInSelection(baseIdx, selection, seqLength) &&
-                  selectionClassName
+                baseInSelection(baseIdx, selection) && selectionClassName
               )}
               key={`base-${baseIdx}`}
             >
