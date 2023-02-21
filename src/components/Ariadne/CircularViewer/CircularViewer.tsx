@@ -175,18 +175,10 @@ const CircularSelection = ({
   const innerRadius = radius;
   const outerRadius = radius + 10;
   let length = -1;
-  if (end > start) {
-    if (direction === "forward") {
-      length = end - start;
-    } else {
-      length = sequence.length - end + start;
-    }
+  if (start > end) {
+    length = sequence.length - start + end;
   } else {
-    if (direction === "forward") {
-      length = sequence.length - start + end;
-    } else {
-      length = start - end;
-    }
+    length = end - start;
   }
 
   const offset = direction === "forward" ? start : end;

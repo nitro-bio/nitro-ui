@@ -202,11 +202,11 @@ const LinearSelection = ({
     secondRectStart = (start / sequence.length) * 100;
     secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
-  if (direction === "reverse" && end > start) {
+  if (direction === "reverse" && start > end) {
     firstRectStart = 0;
-    firstRectWidth = (start / sequence.length) * 100;
-    secondRectStart = (end / sequence.length) * 100;
-    secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
+    firstRectWidth = (end / sequence.length) * 100;
+    secondRectStart = (start / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
 
   return (

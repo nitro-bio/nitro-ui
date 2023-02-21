@@ -53,12 +53,24 @@ const LinearAnnotation = ({
     return (
       <Fragment>
         <LinearAnnotation
-          annotation={{ ...annotation, end: sequence.length }}
+          annotation={{
+            ...annotation,
+            end: sequence.length,
+            onClick: () => {
+              annotation.onClick({ ...annotation });
+            },
+          }}
           sequence={sequence}
           stackIdx={stackIdx}
         />
         <LinearAnnotation
-          annotation={{ ...annotation, start: 0 }}
+          annotation={{
+            ...annotation,
+            start: 0,
+            onClick: () => {
+              annotation.onClick({ ...annotation });
+            },
+          }}
           sequence={sequence}
           stackIdx={stackIdx}
         />

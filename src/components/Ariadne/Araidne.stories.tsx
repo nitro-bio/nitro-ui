@@ -29,7 +29,7 @@ const Template: ComponentStory<any> = ({
   );
 
   const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 10),
+    () => generateRandomAnnotations(sequence, 4),
     [sequence]
   ).map((annotation: Annotation) => ({
     ...annotation,
