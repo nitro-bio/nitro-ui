@@ -145,20 +145,12 @@ export const inRange = (value: number, min: number, max: number) => {
 };
 
 export const getAnnotationLength = (
-  annotation: Annotation,
+  { start, end }: Annotation,
   sequenceLength: number
 ) => {
-  if (annotation.direction === "forward") {
-    if (annotation.start > annotation.end) {
-      return sequenceLength - annotation.start + annotation.end;
-    } else {
-      return annotation.end - annotation.start;
-    }
+  if (start < end) {
+    return end - start;
   } else {
-    if (annotation.start > annotation.end) {
-      return annotation.start - annotation.end;
-    } else {
-      return sequenceLength - annotation.end + annotation.start;
-    }
+    return sequenceLength - start + end;
   }
 };
