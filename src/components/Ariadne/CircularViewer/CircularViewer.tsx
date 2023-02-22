@@ -1,4 +1,5 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
+import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef } from "react";
 import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
@@ -131,14 +132,10 @@ const CircularSelection = ({
           angle: internalSelectionEnd,
           seqLength: sequence.length,
         });
-        let prevLength = selection
+        const prevLength = selection
           ? Math.abs(selection.end - selection.start)
           : 0;
-        let newLength = Math.abs(end - start);
-        if (internalDirection === "counterclockwise" && selection) {
-          prevLength = selection.end + sequence.length - selection.start;
-          newLength = end + sequence.length - start;
-        }
+        const newLength = getSubsequenceLength({ start, end }, sequence.length);
         const deltaLength = Math.abs(prevLength - newLength);
         const deltaThreshold = Math.max(0.7 * sequence.length, 10);
         if (deltaLength > deltaThreshold && selection) {
@@ -174,12 +171,7 @@ const CircularSelection = ({
   const center = { x: cx, y: cy };
   const innerRadius = radius;
   const outerRadius = radius + 10;
-  let length = -1;
-  if (start > end) {
-    length = sequence.length - start + end;
-  } else {
-    length = end - start;
-  }
+  const length = getSubsequenceLength(selection, sequence.length);
 
   const offset = direction === "forward" ? start : end;
   const seqLength = sequence.length;

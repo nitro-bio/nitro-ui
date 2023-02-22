@@ -144,10 +144,17 @@ export const inRange = (value: number, min: number, max: number) => {
   return value >= min && value <= max;
 };
 
-export const getAnnotationLength = (
-  { start, end }: Annotation,
+export const getSubsequenceLength = (
+  {
+    start,
+    end,
+    direction,
+  }: { start: number; end: number; direction: "forward" | "reverse" },
   sequenceLength: number
 ) => {
+  if (direction === "reverse") {
+    [start, end] = [end, start];
+  }
   if (start < end) {
     return end - start;
   } else {
