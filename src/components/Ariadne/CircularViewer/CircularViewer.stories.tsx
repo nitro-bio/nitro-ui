@@ -54,7 +54,7 @@ const Template: ComponentStory<any> = ({
         <CircularViewer
           containerClassName="text-brand-400"
           sequence={annotatedSequence}
-          annotations={annotations}
+          stackedAnnotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
         />

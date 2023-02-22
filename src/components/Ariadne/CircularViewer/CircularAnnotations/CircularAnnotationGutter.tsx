@@ -1,28 +1,32 @@
 import { Fragment } from "react";
 
-import type { AnnotatedSequence, Annotation } from "@Ariadne/types";
-import { stackElements } from "@Ariadne/utils";
+import type { AnnotatedSequence, StackedAnnotation } from "@Ariadne/types";
 import { CircularAnnotation } from "./CircularAnnotation";
 
 export const CircularAnnotationGutter = ({
-  annotations,
+  stackedAnnotations,
   cx,
   cy,
   radius,
   sequence,
 }: {
-  annotations: Annotation[];
+  stackedAnnotations: StackedAnnotation[];
   cx: number;
   cy: number;
   radius: number;
   sequence: AnnotatedSequence;
 }) => {
   const gutterRadius = radius * 0.3;
-  const stackedAnnotations = stackElements(annotations);
+  const stacks: StackedAnnotation[][] = [];
+  stackedAnnotations.forEach((ann) => {
+    stacks[ann.stack] = stacks[ann.stack] || [];
+    stacks[ann.stack].push(ann);
+  });
+
   return (
     <g>
       <circle cx={cx} cy={cy} r={gutterRadius} fill="none" strokeWidth={0.8} />;
-      {stackedAnnotations.map((annotations, stackIdx) => (
+      {stacks.map((annotations, stackIdx) => (
         <Fragment key={`annotation-stack-${stackIdx}`}>
           {annotations.map((annotation) => (
             <CircularAnnotation

@@ -2,14 +2,19 @@ import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
 import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef } from "react";
-import { AnnotatedSequence, Annotation, AriadneSelection } from "../types";
+import {
+  AnnotatedSequence,
+  Annotation,
+  AriadneSelection,
+  StackedAnnotation,
+} from "../types";
 import CircularAnnotationGutter from "./CircularAnnotations";
 import CircularIndex from "./CircularIndex";
 import { findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
   sequence: AnnotatedSequence;
-  annotations: Annotation[];
+  stackedAnnotations: StackedAnnotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
   containerClassName?: string;
@@ -19,7 +24,7 @@ const SVG_SIZE = 300;
 const SVG_PADDING = 30;
 export const CircularViewer = ({
   sequence,
-  annotations,
+  stackedAnnotations,
   selection,
   setSelection,
   containerClassName,
@@ -61,7 +66,7 @@ export const CircularViewer = ({
         />
         <CircularAnnotationGutter
           sequence={sequence}
-          annotations={annotations}
+          stackedAnnotations={stackedAnnotations}
           cx={cx}
           cy={cy}
           radius={radius}
