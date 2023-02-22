@@ -132,13 +132,20 @@ const CircularSelection = ({
           angle: internalSelectionEnd,
           seqLength: sequence.length,
         });
+        const direction =
+          internalDirection === "clockwise" ? "forward" : "reverse";
+
         const prevLength = selection
           ? Math.abs(selection.end - selection.start)
           : 0;
-        const newLength = getSubsequenceLength({ start, end }, sequence.length);
+        const newLength = getSubsequenceLength(
+          { start, end, direction },
+          sequence.length
+        );
         const deltaLength = Math.abs(prevLength - newLength);
         const deltaThreshold = Math.max(0.7 * sequence.length, 10);
         if (deltaLength > deltaThreshold && selection) {
+          // preserve initial direction
           setSelection({
             start,
             end,
@@ -147,8 +154,6 @@ const CircularSelection = ({
 
           return;
         }
-        const direction =
-          internalDirection === "clockwise" ? "forward" : "reverse";
         setSelection({
           start,
           end,

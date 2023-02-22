@@ -145,11 +145,7 @@ export const inRange = (value: number, min: number, max: number) => {
 };
 
 export const getSubsequenceLength = (
-  {
-    start,
-    end,
-    direction,
-  }: { start: number; end: number; direction: "forward" | "reverse" },
+  { start, end, direction }: AriadneSelection,
   sequenceLength: number
 ) => {
   if (direction === "reverse") {

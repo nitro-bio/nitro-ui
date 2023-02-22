@@ -36,7 +36,7 @@ const Template: ComponentStory<any> = ({
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
   const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 15),
+    () => generateRandomAnnotations(sequence, 5),
     [sequence]
   );
   const stackFn = customStackFn ? customStackFn : getStackedAnnotations;

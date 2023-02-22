@@ -2,4 +2,4 @@ import {
   useCircularSelectionRect,
   useLinearSelectionRect,
 } from "./useSelection";
-export { useCircularSelectionRect, useLinearSelectionRect, useTextSelection };
+export { useCircularSelectionRect, useLinearSelectionRect };

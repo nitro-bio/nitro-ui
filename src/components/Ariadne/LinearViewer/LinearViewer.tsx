@@ -1,4 +1,5 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
+import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -173,7 +174,13 @@ const LinearSelection = ({
         const end = Math.floor(
           (internalSelectionEnd.x / svgWidth) * sequence.length
         );
-        setSelection({ start, end, direction: internalDirection });
+
+        // skip the very first selection result as start === end because the user probably doesn't want the entire sequence to be highlighted every time they click
+        if (selection == null && start === end) {
+          return;
+        } else {
+          setSelection({ start, end, direction: internalDirection });
+        }
       }
     },
     [internalSelectionStart, internalSelectionEnd]
@@ -191,7 +198,8 @@ const LinearSelection = ({
 
   // basic case
   let firstRectStart = (Math.min(start, end) / sequence.length) * 100;
-  let firstRectWidth = (Math.abs(end - start) / sequence.length) * 100;
+  let firstRectWidth =
+    (getSubsequenceLength(selection, sequence.length) / sequence.length) * 100;
   let secondRectStart = null;
   let secondRectWidth = null;
 
@@ -202,7 +210,7 @@ const LinearSelection = ({
     secondRectStart = (start / sequence.length) * 100;
     secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
-  if (direction === "reverse" && start > end) {
+  if (direction === "reverse" && end > start) {
     firstRectStart = 0;
     firstRectWidth = (end / sequence.length) * 100;
     secondRectStart = (start / sequence.length) * 100;
