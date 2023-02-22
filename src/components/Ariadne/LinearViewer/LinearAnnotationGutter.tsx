@@ -1,3 +1,4 @@
+import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { Fragment } from "react";
 import { AnnotatedSequence, Annotation, StackedAnnotation } from "../types";
@@ -48,39 +49,74 @@ const LinearAnnotation = ({
   stackIdx: number;
 }) => {
   /* if the annotation spans the seam, we draw two lines from the beginning to end, and from start to end */
-  const annotationSpansSeam = annotation.end < annotation.start;
-  if (annotationSpansSeam) {
-    return (
-      <Fragment>
-        <LinearAnnotation
-          annotation={{
-            ...annotation,
-            end: sequence.length,
-            onClick: () => {
-              annotation.onClick({ ...annotation });
-            },
-          }}
-          sequence={sequence}
-          stackIdx={stackIdx}
-        />
-        <LinearAnnotation
-          annotation={{
-            ...annotation,
-            start: 0,
-            onClick: () => {
-              annotation.onClick({ ...annotation });
-            },
-          }}
-          sequence={sequence}
-          stackIdx={stackIdx}
-        />
-      </Fragment>
-    );
-  }
-  const annotationRectangleWidthPerc =
-    ((annotation.end - annotation.start) / sequence.length) * 100;
 
-  const xPerc = (annotation.start / sequence.length) * 100;
+  const annotationSpansSeam =
+    annotation.direction === "forward"
+      ? annotation.start > annotation.end
+      : annotation.end > annotation.start;
+  if (annotationSpansSeam) {
+    if (annotation.direction === "forward") {
+      return (
+        <Fragment>
+          <LinearAnnotation
+            annotation={{
+              ...annotation,
+              end: sequence.length,
+              onClick: () => {
+                annotation.onClick({ ...annotation });
+              },
+            }}
+            sequence={sequence}
+            stackIdx={stackIdx}
+          />
+          <LinearAnnotation
+            annotation={{
+              ...annotation,
+              start: 0,
+              onClick: () => {
+                annotation.onClick({ ...annotation });
+              },
+            }}
+            sequence={sequence}
+            stackIdx={stackIdx}
+          />
+        </Fragment>
+      );
+    } else {
+      return (
+        <Fragment>
+          <LinearAnnotation
+            annotation={{
+              ...annotation,
+              start: sequence.length,
+              onClick: () => {
+                annotation.onClick({ ...annotation });
+              },
+            }}
+            sequence={sequence}
+            stackIdx={stackIdx}
+          />
+          <LinearAnnotation
+            annotation={{
+              ...annotation,
+              end: 0,
+              onClick: () => {
+                annotation.onClick({ ...annotation });
+              },
+            }}
+            sequence={sequence}
+            stackIdx={stackIdx}
+          />
+        </Fragment>
+      );
+    }
+  }
+
+  const annotationRectangleWidthPerc =
+    (getSubsequenceLength(annotation, sequence.length) / sequence.length) * 100;
+
+  const xPerc =
+    (Math.min(annotation.start, annotation.end) / sequence.length) * 100;
   // clip path to create rectangle with a point at one end
   const forwardClipPath = "polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%)";
   const reverseClipPath = "polygon(0 50%, 10% 0, 100% 0, 100% 100%, 10% 100%)";
@@ -92,7 +128,7 @@ const LinearAnnotation = ({
         width: `${annotationRectangleWidthPerc}%`,
       }}
       onClick={() => {
-        annotation.onClick?.(annotation);
+        annotation.onClick(annotation);
       }}
     >
       <div

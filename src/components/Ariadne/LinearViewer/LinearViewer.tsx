@@ -192,9 +192,6 @@ const LinearSelection = ({
 
   /* Display selection data that has trickled down */
   const { start, end, direction } = selection;
-  if (start === null || end === null) {
-    return null;
-  }
 
   // basic case
   let firstRectStart = (Math.min(start, end) / sequence.length) * 100;
@@ -203,18 +200,26 @@ const LinearSelection = ({
   let secondRectStart = null;
   let secondRectWidth = null;
 
+  // TODO: abstract this and logic in LinearAnnotation into helper functions
+  const selectionSpansSeam =
+    selection.direction === "forward"
+      ? selection.start > selection.end
+      : selection.end > selection.start;
+
   /* if direction is backward and end > start we need to render two rectangles */
-  if (direction === "forward" && start > end) {
+  if (selectionSpansSeam) {
     firstRectStart = 0;
-    firstRectWidth = (end / sequence.length) * 100;
-    secondRectStart = (start / sequence.length) * 100;
-    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
-  }
-  if (direction === "reverse" && end > start) {
-    firstRectStart = 0;
-    firstRectWidth = (end / sequence.length) * 100;
-    secondRectStart = (start / sequence.length) * 100;
-    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
+
+    if (direction === "forward") {
+      firstRectWidth = (end / sequence.length) * 100;
+      secondRectStart = (start / sequence.length) * 100;
+      secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
+    }
+    if (direction === "reverse") {
+      firstRectWidth = (start / sequence.length) * 100;
+      secondRectStart = (end / sequence.length) * 100;
+      secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
+    }
   }
 
   return (

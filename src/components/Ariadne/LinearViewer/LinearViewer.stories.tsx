@@ -38,7 +38,12 @@ const Template: ComponentStory<any> = ({
   const annotations = useMemo(
     () => generateRandomAnnotations(sequence, 5),
     [sequence]
-  );
+  ).map((annotation: Annotation) => ({
+    ...annotation,
+    onClick: (ann: Annotation) => {
+      setSelection(ann);
+    },
+  }));
   const stackFn = customStackFn ? customStackFn : getStackedAnnotations;
   const stackedAnnotations = stackFn(annotations);
 

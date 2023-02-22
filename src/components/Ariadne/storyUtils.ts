@@ -33,16 +33,19 @@ export const generateRandomAnnotations = (
       type: annType,
       start,
       end,
-      direction: getRndInteger(0, 2) === 0 ? "forward" : "reverse",
-
+      direction: i % 2 === 0 ? "forward" : "reverse",
       className: randomClassName,
       text: `${annType} ${i}`,
-      onClick: () => console.debug("Clicked on annotation ${i}"),
+      onClick: () =>
+        console.debug(
+          `Clicked on annotation ${i}: ${annotation.start} - ${annotation.end}`
+        ),
     };
     annotations.push(annotation);
     if (annotations.length >= maxAnnotations) {
       break;
     }
   }
+
   return annotations;
 };
