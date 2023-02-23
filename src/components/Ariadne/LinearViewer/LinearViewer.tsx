@@ -9,7 +9,7 @@ import {
 } from "../types";
 
 export interface Props {
-  sequence: AnnotatedSequence;
+  sequences: AnnotatedSequence[];
   annotations: StackedAnnotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
@@ -24,7 +24,7 @@ export const SVG_HEIGHT = 100;
 
 export const LinearViewer = (props: Props) => {
   const {
-    sequence,
+    sequences,
     selection,
     setSelection,
     onDoubleClick,
@@ -33,10 +33,11 @@ export const LinearViewer = (props: Props) => {
     containerClassName,
   } = props;
 
+  const sequence = sequences[0];
   const selectionRef = useRef<SVGSVGElement>(null);
 
-  const numberOfTicks = 5;
-  const basesPerTick = Math.floor(sequence.length / numberOfTicks);
+  // const numberOfTicks = 5;
+  // const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
   return (
     <svg
@@ -49,19 +50,26 @@ export const LinearViewer = (props: Props) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>
-        <line
-          x1={"0%"}
-          y1={"50%"}
-          x2={"100%"}
-          y2={"50%"}
-          strokeWidth={5}
-          stroke="currentColor"
-        />
-        <Ticks
-          basesPerTick={basesPerTick}
-          numberOfTicks={numberOfTicks}
-          totalBases={sequence.length}
-        />
+        {sequences.map((sequence, i) => (
+          <g>
+            <SequenceLine
+              key={`Sequence-${i}`}
+              sequenceClassName={(sequence, i) => {
+                if (i % 2 == 0) {
+                  return "text-red-400";
+                } else {
+                  return "text-green-400";
+                }
+              }}
+              sequence={sequence}
+              otherSequences={[
+                ...sequences.slice(0, i),
+                ...sequences.slice(i + 1),
+              ]}
+              sequenceIdx={i}
+            />
+          </g>
+        ))}
         <LinearSelection
           selectionClassName={selectionClassName}
           selectionRef={selectionRef}
@@ -69,13 +77,45 @@ export const LinearViewer = (props: Props) => {
           setSelection={setSelection}
           sequence={sequence}
         />
-        <LinearCursor
-          selection={selection}
-          selectionRef={selectionRef}
-          cursorClassName={cursorClassName}
-        />
       </g>
     </svg>
+  );
+};
+
+const SequenceLine = ({
+  sequence,
+  sequenceIdx,
+  otherSequences,
+  sequenceClassName,
+}: {
+  sequence: AnnotatedSequence;
+  sequenceIdx: number;
+  otherSequences: AnnotatedSequence[];
+  sequenceClassName: (sequence: AnnotatedSequence, i: number) => string;
+}) => {
+  const start = sequence[0].index;
+  const end = sequence[sequence.length - 1].index;
+  let maxEnd = end;
+  otherSequences.forEach((otherSequence) => {
+    const otherEnd = otherSequence[otherSequence.length - 1].index;
+    if (otherEnd > maxEnd) {
+      maxEnd = otherEnd;
+    }
+  });
+  const startPerc = start / maxEnd;
+  const endPerc = end / maxEnd;
+  return (
+    <>
+      <line
+        className={classNames("", sequenceClassName(sequence, sequenceIdx))}
+        x1={`${startPerc * 100}%`}
+        y1={`${sequenceIdx * 20 + 10}`}
+        x2={`${endPerc * 100}%`}
+        y2={`${sequenceIdx * 20 + 10}`}
+        strokeWidth={5}
+        stroke="currentColor"
+      />
+    </>
   );
 };
 const LinearCursor = ({

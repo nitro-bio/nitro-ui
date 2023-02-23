@@ -1,4 +1,7 @@
-import { generateRandomAnnotations } from "@Ariadne/storyUtils";
+import {
+  generateRandomAnnotations,
+  generateRandomSequences,
+} from "@Ariadne/storyUtils";
 import {
   Annotation,
   AnnotationType,
@@ -18,41 +21,25 @@ export default {
   title: "Ariadne/LinearViewer",
   component: LinearViewer,
   argTypes: {
-    sequence: { type: "string" },
+    sequences: { type: "string" },
   },
 } as ComponentMeta<typeof LinearViewer>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({
-  sequence,
+  sequences,
   initialSelection,
   selectionClassName,
   customStackFn,
 }: {
-  sequence: string;
-
+  sequences: string[];
   initialSelection?: AriadneSelection;
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
-  const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 5),
-    [sequence]
-  ).map((annotation: Annotation) => ({
-    ...annotation,
-    onClick: (ann: Annotation) => {
-      setSelection(ann);
-    },
-  }));
-  const stackFn = customStackFn ? customStackFn : getStackedAnnotations;
-  const stackedAnnotations = stackFn(annotations);
-
-  const validatedSequence = sequence
-    .replace(/[^ACGT]/g, "")
-    .split("") as ValidatedSequence;
-  const annotatedSequence = getAnnotatedSequence(
-    validatedSequence,
-    stackedAnnotations
+  const annotatedSequences = useMemo(
+    () => generateRandomSequences({ maxLength: 100, maxSequences: 8 }),
+    []
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
@@ -62,8 +49,8 @@ const Template: ComponentStory<any> = ({
     <Card className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
-        sequence={annotatedSequence}
-        annotations={stackedAnnotations}
+        sequences={annotatedSequences}
+        annotations={[]}
         selection={selection}
         setSelection={setSelection}
         selectionClassName={selectionClassName}
@@ -72,22 +59,17 @@ const Template: ComponentStory<any> = ({
 
       <LinearAnnotationGutter
         containerClassName=""
-        stackedAnnotations={stackedAnnotations}
-        sequence={annotatedSequence}
+        stackedAnnotations={[]}
+        sequence={annotatedSequences[0]}
       />
     </Card>
   );
 };
 
 export const LinearViewerStory = Template.bind({});
-LinearViewerStory.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
-};
+LinearViewerStory.args = {};
 export const LinearViewerStoryForwardSelectionOverSeam = Template.bind({});
 LinearViewerStoryForwardSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 10,
     end: 5,
@@ -97,8 +79,6 @@ LinearViewerStoryForwardSelectionOverSeam.args = {
 
 export const LinearViewerStoryReverseSelection = Template.bind({});
 LinearViewerStoryReverseSelection.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 10,
     end: 5,
@@ -108,8 +88,6 @@ LinearViewerStoryReverseSelection.args = {
 
 export const LinearViewerStoryReverseSelectionOverSeam = Template.bind({});
 LinearViewerStoryReverseSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 5,
     end: 10,
@@ -119,8 +97,6 @@ LinearViewerStoryReverseSelectionOverSeam.args = {
 
 export const LinearViewerStorySelectionClassName = Template.bind({});
 LinearViewerStorySelectionClassName.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 5,
     end: 10,
@@ -137,8 +113,34 @@ LinearViewerStorySelectionClassName.args = {
 
 export const LinearViewerCustomStackFn = Template.bind({});
 LinearViewerCustomStackFn.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+  customStackFn: (annotations: Annotation[]): StackedAnnotation[] => {
+    // create a map of annotation type to list
+    const annotationMap = annotations.reduce((acc, annotation) => {
+      if (!acc[annotation.type]) {
+        acc[annotation.type] = [];
+      }
+      acc[annotation.type].push(annotation);
+      return acc;
+    }, {} as { [key: AnnotationType]: Annotation[] });
+
+    const stacks = Object.values(annotationMap)
+      .map((stack, stackIdx) => {
+        return stack.map((annotation: Annotation) => {
+          const res: StackedAnnotation = {
+            ...annotation,
+            stack: stackIdx,
+          };
+          return res;
+        });
+      })
+      .flat();
+
+    return stacks;
+  },
+};
+
+export const LinearViewerMultipleSequences = Template.bind({});
+LinearViewerMultipleSequences.args = {
   customStackFn: (annotations: Annotation[]): StackedAnnotation[] => {
     // create a map of annotation type to list
     const annotationMap = annotations.reduce((acc, annotation) => {

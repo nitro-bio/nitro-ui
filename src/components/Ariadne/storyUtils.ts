@@ -1,5 +1,14 @@
-import { getRndInteger } from "../..";
-import { Annotation, annotationTypes } from "./types";
+import {
+  getAnnotatedSequence,
+  getRndInteger,
+  getStackedAnnotations,
+} from "../..";
+import {
+  AnnotatedSequence,
+  Annotation,
+  annotationTypes,
+  ValidatedSequence,
+} from "./types";
 
 const classNames = [
   "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-red-600 fill-red-600 stroke-red-600",
@@ -48,4 +57,42 @@ export const generateRandomAnnotations = (
   }
 
   return annotations;
+};
+
+export const generateRandomSequences = ({
+  maxSequences,
+  maxLength,
+}: {
+  maxSequences: number;
+  maxLength: number;
+}): AnnotatedSequence[] => {
+  const bases = ["A", "C", "G", "T"];
+  // generate one sequence of max Length
+  const rootSequence = Array.from(
+    { length: maxLength },
+    () => bases[getRndInteger(0, bases.length)]
+  );
+  const annotations = generateRandomAnnotations(rootSequence.join(""), 5);
+  const rootAnnotatedSequence = getAnnotatedSequence(
+    rootSequence as ValidatedSequence,
+    getStackedAnnotations(annotations)
+  );
+  const sequences: AnnotatedSequence[] = [rootAnnotatedSequence];
+  // generate one sequence of max Length
+
+  Array.from({ length: maxSequences - 1 }, (_, genIdx) => {
+    const startIdx = getRndInteger(0, rootSequence.length);
+    const endIdx = getRndInteger(startIdx, rootSequence.length);
+    const sequence = Array.from(
+      { length: endIdx - startIdx },
+      () => bases[getRndInteger(0, bases.length)]
+    );
+
+    const annotatedSequence = getAnnotatedSequence(
+      sequence as ValidatedSequence,
+      []
+    ).map((x) => ({ ...x, index: x.index + startIdx }));
+    sequences.push(annotatedSequence);
+  });
+  return sequences;
 };
