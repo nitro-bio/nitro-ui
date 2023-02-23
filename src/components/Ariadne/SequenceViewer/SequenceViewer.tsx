@@ -38,32 +38,31 @@ export const SequenceViewer = ({
         {sequences[0].map(({ index: baseIdx }, itrIdx) => {
           return (
             <div
-              className={classNames("my-2 flex flex-col justify-start")}
+              className={classNames("my-2 flex flex-col justify-between")}
               key={`base-${baseIdx}`}
             >
               {sequences.map((sequence, sequenceIdx) => {
-                const base =
-                  sequence.find((base) => base.index === baseIdx) ||
-                  ({ base: " ", annotations: [], index: baseIdx } as unknown as
-                    | AnnotatedAA
-                    | AnnotatedNucl);
+                const base = sequence.find(
+                  (base) => base.index === baseIdx
+                ) || { base: " ", annotations: [], index: baseIdx };
 
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
-                    className="text-center"
+                    className="text-center whitespace-pre"
                   >
                     <CharComponent
                       char={base.base}
                       index={baseIdx}
-                      charClassName={
-                        (charClassName({
+                      charClassName={classNames(
+                        charClassName({
                           base,
                           sequenceIdx,
                         }),
                         baseInSelection(baseIdx, selection) &&
-                          selectionClassName)
-                      }
+                          base.base !== " " &&
+                          selectionClassName
+                      )}
                     />
                     <SequenceAnnotation
                       annotations={base.annotations}
