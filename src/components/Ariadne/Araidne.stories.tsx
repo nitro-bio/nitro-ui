@@ -33,13 +33,27 @@ const Template: ComponentStory<any> = ({
     []
   );
   const rootSequence = annotatedSequences[0];
+  const classNameBySequenceIdx = (sequenceIdx: number) => {
+    if (sequenceIdx === 0) {
+      return "dark:text-brand-300 text-brand-600";
+    } else if (sequenceIdx === 1) {
+      return "dark:text-indigo-300 text-indigo-600";
+    } else if (sequenceIdx === 2) {
+      return "dark:text-amber-300 text-amber-600";
+    } else {
+      return "dark:text-noir-300 text-noir-600";
+    }
+  };
+
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
       <div className="row-span-2 grid shrink-0 content-center py-12">
         <SequenceViewer
           sequences={annotatedSequences}
           selection={selection}
-          charClassName={() => "text-brand-500 dark:text-brand-400"}
+          charClassName={({ sequenceIdx }) =>
+            classNameBySequenceIdx(sequenceIdx)
+          }
           selectionClassName="bg-brand-400/20"
         />
       </div>
@@ -61,10 +75,10 @@ const Template: ComponentStory<any> = ({
           setSelection={setSelection}
           selectionClassName={() => "text-brand-400"}
           cursorClassName="text-brand-200"
+          sequenceClassName={classNameBySequenceIdx}
         />
 
         <LinearAnnotationGutter
-          containerClassName="-mt-8"
           stackedAnnotations={stackedAnnotations}
           sequence={rootSequence}
         />

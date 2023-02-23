@@ -38,10 +38,7 @@ export const SequenceViewer = ({
         {sequences[0].map(({ index: baseIdx }, itrIdx) => {
           return (
             <div
-              className={classNames(
-                "my-2 flex flex-col justify-start",
-                baseInSelection(baseIdx, selection) && selectionClassName
-              )}
+              className={classNames("my-2 flex flex-col justify-start")}
               key={`base-${baseIdx}`}
             >
               {sequences.map((sequence, sequenceIdx) => {
@@ -59,10 +56,14 @@ export const SequenceViewer = ({
                     <CharComponent
                       char={base.base}
                       index={baseIdx}
-                      charClassName={charClassName({
-                        base,
-                        sequenceIdx,
-                      })}
+                      charClassName={
+                        (charClassName({
+                          base,
+                          sequenceIdx,
+                        }),
+                        baseInSelection(baseIdx, selection) &&
+                          selectionClassName)
+                      }
                     />
                     <SequenceAnnotation
                       annotations={base.annotations}

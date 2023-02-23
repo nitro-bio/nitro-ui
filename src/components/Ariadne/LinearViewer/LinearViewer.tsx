@@ -17,6 +17,7 @@ export interface Props {
   selectionClassName?: (selection: AriadneSelection) => string;
   cursorClassName?: string;
   containerClassName?: string;
+  sequenceClassName: (sequenceIdx: number) => string;
 }
 
 export const SVG_WIDTH = 500;
@@ -31,10 +32,11 @@ export const LinearViewer = (props: Props) => {
     selectionClassName,
     cursorClassName,
     containerClassName,
+    sequenceClassName,
   } = props;
 
   const sequence = sequences[0];
-  console.table({ sequences });
+
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
@@ -54,13 +56,7 @@ export const LinearViewer = (props: Props) => {
         {sequences.map((sequence, i) => (
           <g key={`Sequence-${i}`}>
             <SequenceLine
-              sequenceClassName={(sequence, i) => {
-                if (i % 2 == 0) {
-                  return "text-red-400";
-                } else {
-                  return "text-green-400";
-                }
-              }}
+              sequenceClassName={sequenceClassName}
               sequence={sequence}
               otherSequences={[
                 ...sequences.slice(0, i),
@@ -70,14 +66,14 @@ export const LinearViewer = (props: Props) => {
             />
           </g>
         ))}
-        <LinearSelection
-          selectionClassName={selectionClassName}
-          selectionRef={selectionRef}
-          selection={selection}
-          setSelection={setSelection}
-          sequence={sequence}
-        />
       </g>
+      <LinearSelection
+        selectionClassName={selectionClassName}
+        selectionRef={selectionRef}
+        selection={selection}
+        setSelection={setSelection}
+        sequence={sequence}
+      />
     </svg>
   );
 };
@@ -91,9 +87,8 @@ const SequenceLine = ({
   sequence: AnnotatedSequence;
   sequenceIdx: number;
   otherSequences: AnnotatedSequence[];
-  sequenceClassName: (sequence: AnnotatedSequence, i: number) => string;
+  sequenceClassName: (sequenceIdx: number) => string;
 }) => {
-  console.log(sequence);
   const start = sequence[0].index;
   const end = sequence[sequence.length - 1].index;
   let maxEnd = end;
@@ -108,7 +103,7 @@ const SequenceLine = ({
   return (
     <>
       <line
-        className={classNames("", sequenceClassName(sequence, sequenceIdx))}
+        className={classNames("", sequenceClassName(sequenceIdx))}
         x1={`${startPerc * 100}%`}
         y1={`${sequenceIdx * 20 + 10}`}
         x2={`${endPerc * 100}%`}
@@ -273,8 +268,8 @@ const LinearSelection = ({
       <rect
         x={`${firstRectStart}%`}
         width={`${firstRectWidth}%`}
-        y={`30%`}
-        height={`40%`}
+        y={`0%`}
+        height={`100%`}
         fill="currentColor"
         fillOpacity={0.2}
         strokeWidth={1.5}
@@ -283,8 +278,8 @@ const LinearSelection = ({
         <rect
           x={`${secondRectStart}%`}
           width={`${secondRectWidth}%`}
-          y={`30%`}
-          height={`40%`}
+          y={`0%`}
+          height={`100%`}
           fill="currentColor"
           fillOpacity={0.2}
           strokeWidth={1.5}
