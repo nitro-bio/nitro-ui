@@ -37,7 +37,7 @@ const Template: ComponentStory<any> = ({
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
-  const annotatedSequences = useMemo(
+  const { annotatedSequences, stackedAnnotations } = useMemo(
     () => generateRandomSequences({ maxLength: 100, maxSequences: 8 }),
     []
   );
@@ -50,7 +50,7 @@ const Template: ComponentStory<any> = ({
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={annotatedSequences}
-        annotations={[]}
+        annotations={stackedAnnotations}
         selection={selection}
         setSelection={setSelection}
         selectionClassName={selectionClassName}

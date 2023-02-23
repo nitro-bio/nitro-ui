@@ -5,7 +5,10 @@ import { useMemo, useState } from "react";
 import { CircularViewer } from "./CircularViewer";
 import { LinearAnnotationGutter, LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
-import { generateRandomAnnotations } from "./storyUtils";
+import {
+  generateRandomAnnotations,
+  generateRandomSequences,
+} from "./storyUtils";
 import { AA, Annotation, AriadneSelection, Nucl } from "./types";
 import { getAnnotatedSequence, getStackedAnnotations } from "./utils";
 
@@ -18,38 +21,23 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({
-  sequence,
   initialSelection,
 }: {
-  sequence: string;
   initialSelection?: AriadneSelection;
 }) => {
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
-
-  const annotations = useMemo(
-    () => generateRandomAnnotations(sequence, 4),
-    [sequence]
-  ).map((annotation: Annotation) => ({
-    ...annotation,
-    onClick: (ann: Annotation) => {
-      setSelection(ann);
-    },
-  }));
-  const validatedSequence = sequence.replace(/[^ACGT]/g, "").split("") as
-    | Nucl[]
-    | AA[];
-  const stackedAnnotations = getStackedAnnotations(annotations);
-  const annotatedSequence = getAnnotatedSequence(
-    validatedSequence,
-    stackedAnnotations
+  const { annotatedSequences, stackedAnnotations } = useMemo(
+    () => generateRandomSequences({ maxLength: 500, maxSequences: 2 }),
+    []
   );
+  const rootSequence = annotatedSequences[0];
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
       <div className="row-span-2 grid shrink-0 content-center py-12">
         <SequenceViewer
-          sequences={[annotatedSequence]}
+          sequences={annotatedSequences}
           selection={selection}
           charClassName={() => "text-brand-500 dark:text-brand-400"}
           selectionClassName="bg-brand-400/20"
@@ -58,7 +46,7 @@ const Template: ComponentStory<any> = ({
       <div className="row-span-1 grid shrink-0 content-center ">
         <CircularViewer
           containerClassName="text-brand-400"
-          sequence={annotatedSequence}
+          sequence={rootSequence}
           stackedAnnotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
@@ -67,7 +55,7 @@ const Template: ComponentStory<any> = ({
       <div className="row-span-1 grid shrink-0 content-center">
         <LinearViewer
           containerClassName="text-brand-400"
-          sequence={annotatedSequence}
+          sequences={annotatedSequences}
           annotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
@@ -78,7 +66,7 @@ const Template: ComponentStory<any> = ({
         <LinearAnnotationGutter
           containerClassName="-mt-8"
           stackedAnnotations={stackedAnnotations}
-          sequence={annotatedSequence}
+          sequence={rootSequence}
         />
       </div>
     </Card>
@@ -86,14 +74,9 @@ const Template: ComponentStory<any> = ({
 };
 
 export const KitchenSinkViewerStory = Template.bind({});
-KitchenSinkViewerStory.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
-};
+KitchenSinkViewerStory.args = {};
 export const KitchenSinkViewerStoryForwardSelectionOverSeam = Template.bind({});
 KitchenSinkViewerStoryForwardSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 10,
     end: 5,
@@ -103,8 +86,6 @@ KitchenSinkViewerStoryForwardSelectionOverSeam.args = {
 
 export const KitchenSinkViewerStoryReverseSelection = Template.bind({});
 KitchenSinkViewerStoryReverseSelection.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 10,
     end: 5,
@@ -114,8 +95,6 @@ KitchenSinkViewerStoryReverseSelection.args = {
 
 export const KitchenSinkViewerStoryReverseSelectionOverSeam = Template.bind({});
 KitchenSinkViewerStoryReverseSelectionOverSeam.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
   initialSelection: {
     start: 5,
     end: 10,

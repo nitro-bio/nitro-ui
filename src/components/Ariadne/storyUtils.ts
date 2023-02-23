@@ -7,6 +7,7 @@ import {
   AnnotatedSequence,
   Annotation,
   annotationTypes,
+  StackedAnnotation,
   ValidatedSequence,
 } from "./types";
 
@@ -65,7 +66,10 @@ export const generateRandomSequences = ({
 }: {
   maxSequences: number;
   maxLength: number;
-}): AnnotatedSequence[] => {
+}): {
+  annotatedSequences: AnnotatedSequence[];
+  stackedAnnotations: StackedAnnotation[];
+} => {
   const bases = ["A", "C", "G", "T"];
   // generate one sequence of max Length
   const rootSequence = Array.from(
@@ -78,6 +82,7 @@ export const generateRandomSequences = ({
     getStackedAnnotations(annotations)
   );
   const sequences: AnnotatedSequence[] = [rootAnnotatedSequence];
+
   // generate one sequence of max Length
 
   Array.from({ length: maxSequences - 1 }, (_, genIdx) => {
@@ -94,5 +99,8 @@ export const generateRandomSequences = ({
     ).map((x) => ({ ...x, index: x.index + startIdx }));
     sequences.push(annotatedSequence);
   });
-  return sequences;
+  return {
+    annotatedSequences: sequences,
+    stackedAnnotations: getStackedAnnotations(annotations),
+  };
 };

@@ -34,6 +34,7 @@ export const LinearViewer = (props: Props) => {
   } = props;
 
   const sequence = sequences[0];
+  console.table({ sequences });
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
@@ -51,9 +52,8 @@ export const LinearViewer = (props: Props) => {
     >
       <g>
         {sequences.map((sequence, i) => (
-          <g>
+          <g key={`Sequence-${i}`}>
             <SequenceLine
-              key={`Sequence-${i}`}
               sequenceClassName={(sequence, i) => {
                 if (i % 2 == 0) {
                   return "text-red-400";
@@ -93,6 +93,7 @@ const SequenceLine = ({
   otherSequences: AnnotatedSequence[];
   sequenceClassName: (sequence: AnnotatedSequence, i: number) => string;
 }) => {
+  console.log(sequence);
   const start = sequence[0].index;
   const end = sequence[sequence.length - 1].index;
   let maxEnd = end;

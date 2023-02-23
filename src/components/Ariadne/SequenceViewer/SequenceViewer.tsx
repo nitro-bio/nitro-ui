@@ -30,15 +30,6 @@ export const SequenceViewer = ({
   charClassName,
   selectionClassName,
 }: Props) => {
-  // check if all sequences are the same length
-  const sequenceLength = sequences[0].length;
-  const allSequencesSameLength = sequences.every(
-    (seq) => seq.length === sequenceLength
-  );
-  if (!allSequencesSameLength) {
-    throw new Error("All sequences must be the same length");
-  }
-
   return (
     <>
       <div
@@ -54,7 +45,12 @@ export const SequenceViewer = ({
               key={`base-${baseIdx}`}
             >
               {sequences.map((sequence, sequenceIdx) => {
-                const base = sequence[itrIdx];
+                const base =
+                  sequence.find((base) => base.index === baseIdx) ||
+                  ({ base: " ", annotations: [], index: baseIdx } as unknown as
+                    | AnnotatedAA
+                    | AnnotatedNucl);
+
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
