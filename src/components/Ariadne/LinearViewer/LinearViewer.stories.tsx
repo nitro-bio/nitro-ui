@@ -1,15 +1,10 @@
-import {
-  generateRandomAnnotations,
-  generateRandomSequences,
-} from "@Ariadne/storyUtils";
+import { generateRandomSequences } from "@Ariadne/storyUtils";
 import {
   Annotation,
   AnnotationType,
   AriadneSelection,
   StackedAnnotation,
-  ValidatedSequence,
 } from "@Ariadne/types";
-import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Card from "@ui/Card";
 import { useMemo, useState } from "react";
@@ -44,6 +39,17 @@ const Template: ComponentStory<any> = ({
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
+  const classNameBySequenceIdx = (sequenceIdx: number) => {
+    if (sequenceIdx === 0) {
+      return "dark:text-brand-300 text-brand-600";
+    } else if (sequenceIdx === 1) {
+      return "dark:text-indigo-300 text-indigo-600";
+    } else if (sequenceIdx === 2) {
+      return "dark:text-amber-300 text-amber-600";
+    } else {
+      return "dark:text-brand-300/50 text-brand-600/50";
+    }
+  };
 
   return (
     <Card className="w-full max-w-3xl px-8">
@@ -55,6 +61,7 @@ const Template: ComponentStory<any> = ({
         setSelection={setSelection}
         selectionClassName={selectionClassName}
         cursorClassName="text-blue-200"
+        sequenceClassName={classNameBySequenceIdx}
       />
 
       <LinearAnnotationGutter
