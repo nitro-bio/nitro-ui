@@ -18,7 +18,7 @@ export const annotationTypes = [
   "rep_origin",
 ];
 
-export type AnnotationType = typeof annotationTypes[number];
+export type AnnotationType = (typeof annotationTypes)[number];
 
 export interface Annotation {
   type: AnnotationType;

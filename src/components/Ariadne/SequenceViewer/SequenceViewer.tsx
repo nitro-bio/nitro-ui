@@ -49,7 +49,7 @@ export const SequenceViewer = ({
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
-                    className="text-center whitespace-pre"
+                    className="whitespace-pre text-center"
                   >
                     <CharComponent
                       char={base.base}

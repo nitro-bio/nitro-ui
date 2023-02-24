@@ -29,7 +29,7 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
   const { annotatedSequences, stackedAnnotations } = useMemo(
-    () => generateRandomSequences({ maxLength: 500, maxSequences: 3 }),
+    () => generateRandomSequences({ maxLength: 200, maxSequences: 2 }),
     []
   );
   const rootSequence = annotatedSequences[0];
@@ -47,7 +47,7 @@ const Template: ComponentStory<any> = ({
 
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
-      <div className="row-span-2 grid shrink-0 content-start py-12 h-full max-w-xl overflow-y-scroll">
+      <div className="row-span-2 grid h-full max-w-xl shrink-0 content-start overflow-y-scroll py-12">
         <SequenceViewer
           sequences={annotatedSequences}
           selection={selection}

@@ -63,7 +63,7 @@ const Template: ComponentStory<any> = ({
     initialSelection ?? null
   );
 
-  const defaultCharClassName = ({ sequenceIdx }) => {
+  const defaultCharClassName = ({ sequenceIdx }: { sequenceIdx: number }) => {
     if (sequenceIdx === 0) {
       return "dark:text-brand-300 text-brand-600";
     } else if (sequenceIdx === 1) {

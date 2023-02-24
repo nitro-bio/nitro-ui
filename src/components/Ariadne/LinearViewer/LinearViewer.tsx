@@ -134,7 +134,7 @@ const SequenceLine = ({
         const xPerc = (base.index / maxEnd) * 100;
         return (
           <g
-            className={"stroke-noir-800 fill-noir-800"}
+            className={"fill-noir-800 stroke-noir-800"}
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line

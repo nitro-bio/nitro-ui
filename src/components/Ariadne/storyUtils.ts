@@ -88,10 +88,13 @@ export const generateRandomSequences = ({
   Array.from({ length: maxSequences - 1 }, (_, genIdx) => {
     const startIdx = getRndInteger(0, rootSequence.length);
     const endIdx = getRndInteger(startIdx + 1, rootSequence.length);
-    const sequence = Array.from(
-      { length: endIdx - startIdx },
-      () => bases[getRndInteger(0, bases.length)]
-    );
+    const sequence = Array.from({ length: endIdx - startIdx }).map((_, j) => {
+      if (getRndInteger(0, 100) < 10) {
+        return bases[getRndInteger(0, bases.length)];
+      } else {
+        return rootSequence[startIdx + j];
+      }
+    });
 
     const annotatedSequence = getAnnotatedSequence(
       sequence as ValidatedSequence,
