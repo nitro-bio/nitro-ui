@@ -33,7 +33,7 @@ const Template: ComponentStory<any> = ({
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
   const { annotatedSequences, stackedAnnotations } = useMemo(
-    () => generateRandomSequences({ maxLength: 100, maxSequences: 8 }),
+    () => generateRandomSequences({ maxLength: 100, maxSequences: 6 }),
     []
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(

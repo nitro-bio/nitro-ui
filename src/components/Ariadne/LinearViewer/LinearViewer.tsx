@@ -35,8 +35,8 @@ export const LinearViewer = (props: Props) => {
     sequenceClassName,
   } = props;
 
-  const sequence = sequences[0];
-
+  const rootSequence = sequences[0];
+  const otherSequences = sequences.slice(1);
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
@@ -60,6 +60,7 @@ export const LinearViewer = (props: Props) => {
               sequence={sequence}
               otherSequences={sequences.filter((_, j) => j !== i)}
               sequenceIdx={i}
+              rootSequence={rootSequence}
             />
           </g>
         ))}
@@ -69,18 +70,20 @@ export const LinearViewer = (props: Props) => {
         selectionRef={selectionRef}
         selection={selection}
         setSelection={setSelection}
-        sequence={sequence}
+        sequence={rootSequence}
       />
     </svg>
   );
 };
 
 const SequenceLine = ({
+  rootSequence,
   sequence,
   sequenceIdx,
   otherSequences,
   sequenceClassName,
 }: {
+  rootSequence: AnnotatedSequence;
   sequence: AnnotatedSequence;
   sequenceIdx: number;
   otherSequences: AnnotatedSequence[];
@@ -110,17 +113,40 @@ const SequenceLine = ({
   });
   const startPerc = start / maxEnd;
   const endPerc = end / maxEnd;
+
+  // mismatches
+  const mismatches = sequence.filter((base) => {
+    const rootBase = rootSequence.at(base.index);
+    return rootBase && rootBase.base !== base.base;
+  });
   return (
     <>
       <line
         className={classNames("", sequenceClassName(sequenceIdx))}
         x1={`${startPerc * 100}%`}
-        y1={`${sequenceIdx * 20 + 10}`}
+        y1={`${sequenceIdx * 10 + 10}`}
         x2={`${endPerc * 100}%`}
-        y2={`${sequenceIdx * 20 + 10}`}
+        y2={`${sequenceIdx * 10 + 10}`}
         strokeWidth={5}
         stroke="currentColor"
       />
+      {mismatches.map((base) => {
+        const xPerc = (base.index / maxEnd) * 100;
+        return (
+          <g
+            className={"stroke-noir-800 fill-noir-800"}
+            key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
+          >
+            <line
+              x1={`${xPerc}%`}
+              y1={`${sequenceIdx * 10 + 10}`}
+              x2={`${xPerc + 1}%`}
+              y2={`${sequenceIdx * 10 + 10}`}
+              strokeWidth={3}
+            />
+          </g>
+        );
+      })}
     </>
   );
 };
