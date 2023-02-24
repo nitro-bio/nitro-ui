@@ -98,7 +98,6 @@ const SequenceAnnotation = ({
             <div
               key={`annotation-${index}-${i}`}
               className={classNames("group h-1", annotation.className)}
-              data-seq-index={index}
             >
               <div
                 className={classNames(
@@ -113,13 +112,7 @@ const SequenceAnnotation = ({
             </div>
           );
         } else {
-          return (
-            <div
-              key={`placeholder-${index}-${i}`}
-              className={"h-1"}
-              data-seq-index={index}
-            />
-          );
+          return <div key={`placeholder-${index}-${i}`} className={"h-1"} />;
         }
       })}
     </div>

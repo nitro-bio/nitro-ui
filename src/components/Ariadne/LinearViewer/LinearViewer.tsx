@@ -139,9 +139,9 @@ const SequenceLine = ({
             <line
               x1={`${xPerc}%`}
               y1={`${sequenceIdx * 10 + 10}`}
-              x2={`${xPerc + 1}%`}
+              x2={`${xPerc + 0.25}%`}
               y2={`${sequenceIdx * 10 + 10}`}
-              strokeWidth={3}
+              strokeWidth={4}
             />
           </g>
         );

@@ -29,7 +29,7 @@ HistogramWithWeightsStory.args = {
     y: 0,
   })),
   initialBins: 8,
-  maxBins: 1000,
+
   weightFunc: (d) => d.x,
   colClassName: () =>
     "opacity-30 hover:opacity-100 transition-opacity duration-50 ease-in-out bg-brand-500",
