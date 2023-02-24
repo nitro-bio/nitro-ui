@@ -36,7 +36,6 @@ export const LinearViewer = (props: Props) => {
   } = props;
 
   const rootSequence = sequences[0];
-  const otherSequences = sequences.slice(1);
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;

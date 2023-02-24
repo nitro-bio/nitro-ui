@@ -5,12 +5,8 @@ import { useMemo, useState } from "react";
 import { CircularViewer } from "./CircularViewer";
 import { LinearAnnotationGutter, LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
-import {
-  generateRandomAnnotations,
-  generateRandomSequences,
-} from "./storyUtils";
-import { AA, Annotation, AriadneSelection, Nucl } from "./types";
-import { getAnnotatedSequence, getStackedAnnotations } from "./utils";
+import { generateRandomSequences } from "./storyUtils";
+import { AriadneSelection } from "./types";
 
 export default {
   title: "Ariadne/Ariadne",

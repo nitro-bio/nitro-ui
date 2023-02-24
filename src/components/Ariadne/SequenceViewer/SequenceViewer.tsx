@@ -1,6 +1,5 @@
 import { baseInSelection } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { Fragment } from "react";
 
 import type {
   AnnotatedAA,
@@ -35,7 +34,7 @@ export const SequenceViewer = ({
       <div
         className={classNames("font-mono flex flex-wrap ", containerClassName)}
       >
-        {sequences[0].map(({ index: baseIdx }, itrIdx) => {
+        {sequences[0].map(({ index: baseIdx }) => {
           return (
             <div
               className={classNames("my-2 flex flex-col justify-between")}

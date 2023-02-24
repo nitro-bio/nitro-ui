@@ -1,7 +1,3 @@
-import { useState } from "react";
-import Card from "@ui/Card";
-import { bin } from "d3";
-import { useDebounce } from "@hooks/useDebounce";
 import { classNames } from "@utils/stringUtils";
 
 type Point = {

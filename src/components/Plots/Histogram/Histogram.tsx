@@ -1,8 +1,7 @@
-import { useState } from "react";
-import Card from "@ui/Card";
-import { bin } from "d3";
 import { useDebounce } from "@hooks/useDebounce";
 import { classNames } from "@utils/stringUtils";
+import { bin } from "d3";
+import { useState } from "react";
 // NITRO UI
 type Point = {
   x: number;
@@ -13,7 +12,7 @@ export interface HistogramProps {
   data: Point[];
   weightFunc?: (d: Point) => number;
   initialBins?: number;
-  maxBins?: number;
+
   colClassName?: (b: Bin) => string;
   containerClassName?: string;
 }
@@ -21,11 +20,11 @@ export const Histogram = ({
   data,
   initialBins,
   weightFunc,
-  maxBins,
+
   colClassName,
   containerClassName,
 }: HistogramProps) => {
-  const [bins, setBins] = useState(initialBins ?? 10);
+  const [bins] = useState(initialBins ?? 10);
   const debouncedBins = useDebounce<number>({ value: bins, delay: 500 });
   const binnedData = binData(data, debouncedBins);
 
@@ -114,34 +113,3 @@ const binData = (data: Point[], bins: number): Bin[] => {
     return res;
   });
 };
-
-function HistogramInfo({
-  bins,
-  binnedData,
-  maxBins,
-  setBins,
-}: {
-  bins: number;
-  binnedData: Bin[];
-  maxBins: number | undefined;
-  setBins: (bins: number) => void;
-}) {
-  return (
-    <label
-      htmlFor="bins"
-      className="flex items-center gap-4 px-2 py-10 text-noir-700 dark:text-noir-200"
-    >
-      Bins Requested: {bins} Recieved: {binnedData.length}
-      <input
-        type="range"
-        min={2}
-        max={maxBins ?? 100}
-        value={bins}
-        onChange={(e) => {
-          const newBins = parseInt(e.target.value);
-          setBins(newBins);
-        }}
-      />
-    </label>
-  );
-}

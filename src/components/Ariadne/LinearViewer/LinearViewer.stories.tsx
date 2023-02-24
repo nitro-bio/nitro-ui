@@ -22,10 +22,8 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Template: ComponentStory<any> = ({
-  sequences,
   initialSelection,
   selectionClassName,
-  customStackFn,
 }: {
   sequences: string[];
   initialSelection?: AriadneSelection;
@@ -115,61 +113,5 @@ LinearViewerStorySelectionClassName.args = {
     } else {
       return "bg-blue-500 fill-blue-500 text-blue-500";
     }
-  },
-};
-
-export const LinearViewerCustomStackFn = Template.bind({});
-LinearViewerCustomStackFn.args = {
-  customStackFn: (annotations: Annotation[]): StackedAnnotation[] => {
-    // create a map of annotation type to list
-    const annotationMap = annotations.reduce((acc, annotation) => {
-      if (!acc[annotation.type]) {
-        acc[annotation.type] = [];
-      }
-      acc[annotation.type].push(annotation);
-      return acc;
-    }, {} as { [key: AnnotationType]: Annotation[] });
-
-    const stacks = Object.values(annotationMap)
-      .map((stack, stackIdx) => {
-        return stack.map((annotation: Annotation) => {
-          const res: StackedAnnotation = {
-            ...annotation,
-            stack: stackIdx,
-          };
-          return res;
-        });
-      })
-      .flat();
-
-    return stacks;
-  },
-};
-
-export const LinearViewerMultipleSequences = Template.bind({});
-LinearViewerMultipleSequences.args = {
-  customStackFn: (annotations: Annotation[]): StackedAnnotation[] => {
-    // create a map of annotation type to list
-    const annotationMap = annotations.reduce((acc, annotation) => {
-      if (!acc[annotation.type]) {
-        acc[annotation.type] = [];
-      }
-      acc[annotation.type].push(annotation);
-      return acc;
-    }, {} as { [key: AnnotationType]: Annotation[] });
-
-    const stacks = Object.values(annotationMap)
-      .map((stack, stackIdx) => {
-        return stack.map((annotation: Annotation) => {
-          const res: StackedAnnotation = {
-            ...annotation,
-            stack: stackIdx,
-          };
-          return res;
-        });
-      })
-      .flat();
-
-    return stacks;
   },
 };

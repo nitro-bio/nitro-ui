@@ -1,6 +1,5 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
 import {
-  AnnotatedAA,
   Annotation,
   AriadneSelection,
   ValidatedSequence,
