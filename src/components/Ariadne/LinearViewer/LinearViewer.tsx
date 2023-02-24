@@ -58,10 +58,7 @@ export const LinearViewer = (props: Props) => {
             <SequenceLine
               sequenceClassName={sequenceClassName}
               sequence={sequence}
-              otherSequences={[
-                ...sequences.slice(0, i),
-                ...sequences.slice(i + 1),
-              ]}
+              otherSequences={sequences.filter((_, j) => j !== i)}
               sequenceIdx={i}
             />
           </g>
@@ -89,11 +86,24 @@ const SequenceLine = ({
   otherSequences: AnnotatedSequence[];
   sequenceClassName: (sequenceIdx: number) => string;
 }) => {
-  const start = sequence[0].index;
-  const end = sequence[sequence.length - 1].index;
+  const start = sequence[0]?.index;
+  if (start === undefined) {
+    throw new Error(`Sequence must have at least one base ${sequence}`);
+  }
+  const end = sequence[sequence.length - 1]?.index;
+  if (end === undefined) {
+    throw new Error(`Sequence must have at least one base ${sequence}`);
+  }
+
   let maxEnd = end;
   otherSequences.forEach((otherSequence) => {
-    const otherEnd = otherSequence[otherSequence.length - 1].index;
+    const otherEnd = otherSequence.at(otherSequence.length - 1)?.index;
+    if (otherEnd === undefined) {
+      throw new Error(
+        `otherSequence must have at least one base ${otherSequence}`
+      );
+    }
+
     if (otherEnd > maxEnd) {
       maxEnd = otherEnd;
     }

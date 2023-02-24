@@ -87,7 +87,7 @@ export const generateRandomSequences = ({
 
   Array.from({ length: maxSequences - 1 }, (_, genIdx) => {
     const startIdx = getRndInteger(0, rootSequence.length);
-    const endIdx = getRndInteger(startIdx, rootSequence.length);
+    const endIdx = getRndInteger(startIdx + 1, rootSequence.length);
     const sequence = Array.from(
       { length: endIdx - startIdx },
       () => bases[getRndInteger(0, bases.length)]
