@@ -246,8 +246,13 @@ const LinearSelection = ({
           (internalSelectionEnd.x / svgWidth) * sequence.length
         );
 
-        // skip the very first selection result as start === end because the user probably doesn't want the entire sequence to be highlighted every time they click
+        // show a very small first selection result as start === end because the user probably doesn't want the entire sequence to be highlighted every time they click
         if (selection == null || start === end) {
+          setSelection({
+            start,
+            end: internalDirection === "forward" ? start + 1 : start - 1,
+            direction: internalDirection,
+          });
           return;
         } else {
           setSelection({ start, end, direction: internalDirection });
