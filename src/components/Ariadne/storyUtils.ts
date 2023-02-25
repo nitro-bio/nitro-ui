@@ -90,7 +90,8 @@ export const generateRandomSequences = ({
     const endIdx = getRndInteger(startIdx + 1, rootSequence.length);
     const sequence = Array.from({ length: endIdx - startIdx }).map((_, j) => {
       if (getRndInteger(0, 100) < 10) {
-        return bases[getRndInteger(0, bases.length)];
+        const basesPlusDeletion = ["A", "C", "G", "T", "-"];
+        return basesPlusDeletion[getRndInteger(0, basesPlusDeletion.length)];
       } else {
         return rootSequence[startIdx + j];
       }

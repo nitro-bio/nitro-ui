@@ -133,15 +133,19 @@ const SequenceLine = ({
         const xPerc = (base.index / maxEnd) * 100;
         return (
           <g
-            className={"fill-noir-800 stroke-noir-800"}
+            className={classNames(
+              (base.base as string) === "-"
+                ? "fill-noir-800 stroke-noir-800"
+                : "fill-red-600 stroke-red-600"
+            )}
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line
               x1={`${xPerc}%`}
               y1={`${sequenceIdx * 10 + 10}`}
-              x2={`${xPerc + 0.25}%`}
+              x2={`${xPerc + (1 / maxEnd) * 100}%`}
               y2={`${sequenceIdx * 10 + 10}`}
-              strokeWidth={4}
+              strokeWidth={5}
             />
           </g>
         );
