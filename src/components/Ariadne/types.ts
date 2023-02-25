@@ -18,7 +18,7 @@ export const annotationTypes = [
   "rep_origin",
 ];
 
-export type AnnotationType = (typeof annotationTypes)[number];
+export type AnnotationType = typeof annotationTypes[number];
 
 export interface Annotation {
   type: AnnotationType;
@@ -56,16 +56,19 @@ export type AA =
   | "V"
   | "W"
   | "Y";
+export type Gap = "-";
+export type Stop = "*";
+export type Space = " ";
 
 // TODO: want to make a generic that paramaterizes over AA or Nucl
 export interface AnnotatedNucl {
-  base: Nucl | " ";
+  base: Nucl | Gap | Space;
   annotations: StackedAnnotation[];
   index: number;
 }
 
 export interface AnnotatedAA {
-  base: AA | " ";
+  base: AA | Gap | Stop | Space;
   annotations: StackedAnnotation[];
   index: number;
 }

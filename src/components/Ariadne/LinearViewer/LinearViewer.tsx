@@ -3,6 +3,8 @@ import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef, useState } from "react";
 import {
+  AnnotatedAA,
+  AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
   StackedAnnotation,
@@ -18,6 +20,7 @@ export interface Props {
   cursorClassName?: string;
   containerClassName?: string;
   sequenceClassName: (sequenceIdx: number) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
 }
 
 export const SVG_WIDTH = 500;
@@ -31,6 +34,7 @@ export const LinearViewer = (props: Props) => {
     onDoubleClick,
     selectionClassName,
     cursorClassName,
+    mismatchClassName,
     containerClassName,
     sequenceClassName,
   } = props;
@@ -60,6 +64,7 @@ export const LinearViewer = (props: Props) => {
               otherSequences={sequences.filter((_, j) => j !== i)}
               sequenceIdx={i}
               rootSequence={rootSequence}
+              mismatchClassName={mismatchClassName}
             />
           </g>
         ))}
@@ -81,12 +86,14 @@ const SequenceLine = ({
   sequenceIdx,
   otherSequences,
   sequenceClassName,
+  mismatchClassName,
 }: {
   rootSequence: AnnotatedSequence;
   sequence: AnnotatedSequence;
   sequenceIdx: number;
   otherSequences: AnnotatedSequence[];
   sequenceClassName: (sequenceIdx: number) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
 }) => {
   const start = sequence[0]?.index;
   if (start === undefined) {
@@ -133,11 +140,7 @@ const SequenceLine = ({
         const xPerc = (base.index / maxEnd) * 100;
         return (
           <g
-            className={classNames(
-              (base.base as string) === "-"
-                ? "fill-noir-800 stroke-noir-800"
-                : "fill-red-600 stroke-red-600"
-            )}
+            className={classNames(mismatchClassName?.(base) || "")}
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line

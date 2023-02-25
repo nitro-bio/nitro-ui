@@ -60,6 +60,13 @@ const Template: ComponentStory<any> = ({
         selectionClassName={selectionClassName}
         cursorClassName="text-blue-200"
         sequenceClassName={classNameBySequenceIdx}
+        mismatchClassName={(mismatch) => {
+          if (mismatch.base === "-") {
+            return "fill-red-600 stroke-red-600";
+          } else {
+            return "fill-noir-800 stroke-noir-800";
+          }
+        }}
       />
 
       <LinearAnnotationGutter
