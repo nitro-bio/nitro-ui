@@ -126,6 +126,15 @@ export const baseInSelection = (
     return false;
   }
   let { start, end, direction } = selection;
+  if (start === end) {
+    if (direction === "forward") {
+      // we're selecting a single base
+      return baseIndex === start;
+    } else {
+      // we're selecting everything but a single base
+      return baseIndex !== start;
+    }
+  }
   if (direction === "reverse") {
     [start, end] = [end, start];
     direction = "forward";
