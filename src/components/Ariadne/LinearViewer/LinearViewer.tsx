@@ -144,9 +144,9 @@ const SequenceLine = ({
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line
-              x1={`${xPerc}%`}
+              x1={`${xPerc - 0.25}%`}
               y1={`${sequenceIdx * 10 + 10}`}
-              x2={`${xPerc + (1 / maxEnd) * 100}%`}
+              x2={`${xPerc + 0.25}%`}
               y2={`${sequenceIdx * 10 + 10}`}
               strokeWidth={5}
             />

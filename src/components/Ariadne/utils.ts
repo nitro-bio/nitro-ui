@@ -125,19 +125,16 @@ export const baseInSelection = (
   if (!selection) {
     return false;
   }
-  let { start, end } = selection;
-  start = selection.direction === "forward" ? start : end;
-  end = selection.direction === "forward" ? end : start;
-  let res = false;
-  if (start > end) {
-    const afterStart = baseIndex >= start;
-    const beforeEnd = baseIndex <= end;
-    res = afterStart || beforeEnd;
-  } else {
-    res = baseIndex >= start && baseIndex <= end;
+  let { start, end, direction } = selection;
+  if (direction === "reverse") {
+    [start, end] = [end, start];
+    direction = "forward";
   }
-
-  return res;
+  if (start < end) {
+    return baseIndex >= start && baseIndex <= end;
+  } else {
+    return baseIndex >= start || baseIndex <= end;
+  }
 };
 
 export const inRange = (value: number, min: number, max: number) => {
