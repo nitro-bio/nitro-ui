@@ -1,2 +1,3 @@
 import Histogram from "./Histogram";
-export { Histogram };
+import Volcano from "./Volcano";
+export { Histogram, Volcano };
