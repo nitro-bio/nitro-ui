@@ -17,6 +17,6 @@ export const VolcanoStory = Template.bind({});
 VolcanoStory.args = {
   data: generateRandomVolcanoData(100),
   pointClassName: () =>
-    "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out",
+    "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-brand-500 h-2 w-2 rounded-full",
   containerClassName: "h-[200px]",
 };

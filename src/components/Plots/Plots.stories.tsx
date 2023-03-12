@@ -28,7 +28,7 @@ const Template: ComponentStory<any> = () => {
         <Volcano
           data={volcanoData}
           pointClassName={() =>
-            "opacity-50 hover:opacity-100 hover:scale-[200%] transition-opacity duration-300 ease-in-out bg-brand-500"
+            "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-brand-500 h-2 w-2 rounded-full hover:scale-[200%] transform origin-center"
           }
           containerClassName={""}
         />
