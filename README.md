@@ -4,7 +4,7 @@
 
 ## React Component Library for Life Science
 
-[Try before you buy!](storybook.nitro.bio) (...though this library is free)
+[Try before you buy!](https://storybook.nitro.bio) (...though this library is free)
 
 ### Quickstart
 
