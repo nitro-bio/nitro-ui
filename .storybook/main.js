@@ -34,6 +34,10 @@ module.exports = {
             replacement: path.resolve(__dirname, "../src/components/Ariadne"),
           },
           {
+            find: "@Mimir",
+            replacement: path.resolve(__dirname, "../src/components/Mimir"),
+          },
+          {
             find: "@hooks",
             replacement: path.resolve(__dirname, "../src/hooks"),
           },
