@@ -1,3 +1,3 @@
-import MetabolicNetwork from "./MetabolicNetwork";
+import { MetabolicNetwork } from "./MetabolicNetwork";
 
-export default MetabolicNetwork;
+export { MetabolicNetwork };

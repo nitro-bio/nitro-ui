@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
-import Histogram, { generateRandomHistogramData } from "./Histogram";
+import { Card } from "@ui/Card";
+import { Histogram, generateRandomHistogramData } from "./Histogram";
 import { generateRandomVolcanoData } from "./Volcano/utils";
 import { Volcano } from "./Volcano/Volcano";
 

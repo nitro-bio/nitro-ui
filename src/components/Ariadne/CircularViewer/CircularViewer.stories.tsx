@@ -6,7 +6,7 @@ import {
 } from "@Ariadne/types";
 import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from ".";

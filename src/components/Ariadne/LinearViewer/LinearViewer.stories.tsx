@@ -6,7 +6,7 @@ import {
   StackedAnnotation,
 } from "@Ariadne/types";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { LinearViewer } from ".";

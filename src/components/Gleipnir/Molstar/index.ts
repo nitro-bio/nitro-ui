@@ -1,3 +1,3 @@
-import Molstar from "./Molstar";
+import { Molstar } from "./Molstar";
 
-export default Molstar;
+export { Molstar };

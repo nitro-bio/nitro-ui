@@ -1,5 +1,5 @@
 import { generateResults } from "@Blast/blastUtils";
-import ResultCard from "@Blast/ResultCard";
+import { ResultCard } from "@Blast/ResultCard";
 
 import React from "react";
 import ReactDOM from "react-dom/client";

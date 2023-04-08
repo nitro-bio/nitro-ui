@@ -1,7 +1,7 @@
 import { StarIcon } from "@heroicons/react/20/solid";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { classNames } from "@utils/stringUtils";
-import TextAlignmentViz from "@Blast/TextAlignmentViz";
+import { TextAlignmentViz } from "@Blast/TextAlignmentViz";
 import { BlastResponseDatum, SequenceBase } from "../types";
 
 export function ResultCard(props: {

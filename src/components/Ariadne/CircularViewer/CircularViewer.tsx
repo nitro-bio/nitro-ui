@@ -8,8 +8,8 @@ import {
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
-import CircularAnnotationGutter from "./CircularAnnotations";
-import CircularIndex from "./CircularIndex";
+import { CircularAnnotationGutter } from "./CircularAnnotations";
+import { CircularIndex } from "./CircularIndex";
 import { findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {

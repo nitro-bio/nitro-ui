@@ -1,6 +1,6 @@
-import GlobalAlignmentViz from "@Blast/GlobalAlignmentViz";
-import ResultCard from "@Blast/ResultCard";
-import SequenceCard from "@Blast/SequenceCard";
+import { GlobalAlignmentViz } from "@Blast/GlobalAlignmentViz";
+import { ResultCard } from "@Blast/ResultCard";
+import { SequenceCard } from "@Blast/SequenceCard";
 import { ComponentStory } from "@storybook/react";
 import { generateResults } from "./blastUtils";
 export default {

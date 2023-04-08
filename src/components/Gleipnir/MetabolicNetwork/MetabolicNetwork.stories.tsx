@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { useState } from "react";
 import { GENES, REACTIONS } from "../storyUtils";
 import { Gene } from "../types";
-import MetabolicNetwork from "./MetabolicNetwork";
+import { MetabolicNetwork } from "./MetabolicNetwork";
 
 export default {
   title: "Gleipnir/MetabolicNetwork",

@@ -1,6 +1,6 @@
-import ChatBox from "@Mimir/ChatBox";
+import { ChatBox } from "@Mimir/ChatBox";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { useState } from "react";
 
 export default {
@@ -13,7 +13,7 @@ const Template: ComponentStory<any> = () => {
   const [chatEndpoint, setChatEndpoint] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
   return (
-    <Card className="content-between w-full grid grid-cols-2 grid bg-white dark:bg-noir-800 gap-8 border">
+    <Card className="grid grid w-full grid-cols-2 content-between gap-8 border bg-white dark:bg-noir-800">
       <label className="flex gap-8">
         API URL:
         <input

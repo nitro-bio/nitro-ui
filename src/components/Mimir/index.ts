@@ -1,2 +1,2 @@
-import ChatBox from "./ChatBox";
+import { ChatBox } from "./ChatBox";
 export { ChatBox };

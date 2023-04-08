@@ -1,6 +1,6 @@
-import Card from "@ui/Card";
-import Combobox from "@ui/Combobox";
-import Molstar from "../Molstar";
+import { Card } from "@ui/Card";
+import { Combobox } from "@ui/Combobox";
+import { Molstar } from "../Molstar";
 import { Gene, Protein } from "../types";
 
 export const GeneDetails = ({

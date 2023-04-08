@@ -91,4 +91,4 @@ const Molstar = ({
   );
 };
 
-export default Molstar;
+export { Molstar };

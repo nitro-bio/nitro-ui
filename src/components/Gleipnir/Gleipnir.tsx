@@ -1,8 +1,8 @@
 import { useState } from "react";
-import MetabolicNetwork from "./MetabolicNetwork";
+import { MetabolicNetwork } from "./MetabolicNetwork";
 import { Gene, Protein, Reaction } from "./types";
 
-import GeneDetails from "./GeneDetails";
+import { GeneDetails } from "./GeneDetails";
 
 export const Gleipnir = ({
   genes,

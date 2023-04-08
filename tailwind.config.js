@@ -39,4 +39,8 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("daisyui"),
   ],
+  daisyui: {
+    logs: false,
+    theme: false,
+  },
 };

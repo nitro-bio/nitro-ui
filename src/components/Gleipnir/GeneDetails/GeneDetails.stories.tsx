@@ -1,8 +1,8 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 
 import { useState } from "react";
-import GeneDetails from ".";
+import { GeneDetails } from ".";
 import { GENES, PROTEINS } from "../storyUtils";
 import { Gene } from "../types";
 

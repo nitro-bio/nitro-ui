@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 import { generateResults } from "../blastUtils";
 import { TextAlignmentViz } from "./TextAlignmentViz";
 

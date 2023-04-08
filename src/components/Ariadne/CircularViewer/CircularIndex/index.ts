@@ -1,2 +1,2 @@
 import { CircularIndex } from "./CircularIndex";
-export default CircularIndex;
+export { CircularIndex };

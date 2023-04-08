@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Card from "@ui/Card";
+import { Card } from "@ui/Card";
 
-import Molstar from "./Molstar";
+import { Molstar } from "./Molstar";
 
 export default {
   title: "Gleipnir/Molstar",

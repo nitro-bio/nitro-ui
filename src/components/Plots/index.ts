@@ -1,3 +1,3 @@
-import Histogram from "./Histogram";
-import Volcano from "./Volcano";
+import { Histogram } from "./Histogram";
+import { Volcano } from "./Volcano";
 export { Histogram, Volcano };

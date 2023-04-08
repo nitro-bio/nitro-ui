@@ -152,4 +152,4 @@ const MetabolicNetwork = (props: MetabolicNetworkProps) => {
   );
 };
 
-export default MetabolicNetwork;
+export { MetabolicNetwork };
