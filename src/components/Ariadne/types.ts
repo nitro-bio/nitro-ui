@@ -59,16 +59,17 @@ export type AA =
 export type Gap = "-";
 export type Stop = "*";
 export type Space = " ";
+export type Unknown = "?";
 
 // TODO: want to make a generic that paramaterizes over AA or Nucl
 export interface AnnotatedNucl {
-  base: Nucl | Gap | Space;
+  base: Nucl | Gap | Space | Unknown;
   annotations: StackedAnnotation[];
   index: number;
 }
 
 export interface AnnotatedAA {
-  base: AA | Gap | Stop | Space;
+  base: AA | Gap | Stop | Space | Unknown;
   annotations: StackedAnnotation[];
   index: number;
 }

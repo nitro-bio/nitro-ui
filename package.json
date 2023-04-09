@@ -12,7 +12,8 @@
     "format:fix": "prettier --check --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "prepublishOnly": "yarn lint && yarn format && yarn build"
+    "prepublishOnly": "yarn lint && yarn format && yarn build",
+    "watch": "nodemon --watch src --ext js,jsx,ts,tsx,json,css,scss,html --exec yarn build"
   },
   "dependencies": {
     "3dmol": "^1.8.0",
@@ -55,6 +56,7 @@
     "eslint": "^8.27.0",
     "eslint-plugin-react": "^7.31.10",
     "json": "^11.0.0",
+    "nodemon": "^2.0.22",
     "postcss": "^8.4.19",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.7",

@@ -70,7 +70,6 @@ const Template: ComponentStory<any> = ({
           selection={selection}
           setSelection={setSelection}
           selectionClassName={() => "text-brand-400"}
-          cursorClassName="text-brand-200"
           sequenceClassName={classNameBySequenceIdx}
         />
 

@@ -17,7 +17,6 @@ export interface Props {
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
-  cursorClassName?: string;
   containerClassName?: string;
   sequenceClassName: (sequenceIdx: number) => string;
   mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
@@ -33,7 +32,6 @@ export const LinearViewer = (props: Props) => {
     setSelection,
     onDoubleClick,
     selectionClassName,
-    cursorClassName,
     mismatchClassName,
     containerClassName,
     sequenceClassName,
@@ -125,6 +123,7 @@ const SequenceLine = ({
     const rootBase = rootSequence.at(base.index);
     return rootBase && rootBase.base !== base.base;
   });
+
   return (
     <>
       <line
@@ -159,11 +158,9 @@ const SequenceLine = ({
 const LinearCursor = ({
   selection,
   selectionRef,
-  cursorClassName,
 }: {
   selection: AriadneSelection | null;
   selectionRef: React.RefObject<SVGSVGElement>;
-  cursorClassName?: string;
 }) => {
   const [xPerc, setXPerc] = useState(0);
 
@@ -207,7 +204,7 @@ const LinearCursor = ({
   );
 
   return (
-    <g className={classNames(cursorClassName || "stroke-noir-800")}>
+    <g className={classNames("stroke-noir-800")}>
       <line
         x1={`${xPerc}%`}
         y1={`${50}%`}
