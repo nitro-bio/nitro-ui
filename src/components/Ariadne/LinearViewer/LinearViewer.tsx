@@ -137,15 +137,16 @@ const SequenceLine = ({
       />
       {mismatches.map((base) => {
         const xPerc = (base.index / maxEnd) * 100;
+        const width = (1 / sequence.length) * 100;
         return (
           <g
             className={classNames(mismatchClassName?.(base) || "")}
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line
-              x1={`${xPerc - 0.25}%`}
+              x1={`${xPerc - width / 2}%`}
               y1={`${sequenceIdx * 10 + 10}`}
-              x2={`${xPerc + 0.25}%`}
+              x2={`${xPerc + width / 2}%`}
               y2={`${sequenceIdx * 10 + 10}`}
               strokeWidth={5}
             />
