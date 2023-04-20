@@ -137,7 +137,8 @@ const SequenceLine = ({
       />
       {mismatches.map((base) => {
         const xPerc = (base.index / maxEnd) * 100;
-        const width = (1 / sequence.length) * 100;
+        const width = Math.max((1 / sequence.length) * 100, 0.25);
+
         return (
           <g
             className={classNames(mismatchClassName?.(base) || "")}
