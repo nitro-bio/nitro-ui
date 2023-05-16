@@ -32,7 +32,7 @@ const people = repeatArray(
     { label: "Tanya Fox" },
     { label: "Hellen Schmidt" },
   ],
-  10000
+  1000
 ).map((p, i) => ({ ...p, id: i.toString() }));
 
 export const ComboboxStory = Template.bind({});
