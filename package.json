@@ -30,6 +30,7 @@
     "molstar": "^3.26.0",
     "react-hook-form": "^7.43.9",
     "react-markdown": "^8.0.3",
+    "react-render-if-visible": "^2.1.1",
     "reactflow": "^11.3.3",
     "remark-gfm": "^3.0.1",
     "zod": "^3.21.4"

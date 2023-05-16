@@ -15,14 +15,25 @@ const Template: ComponentStory<typeof Combobox> = (args) => {
   );
 };
 
-const people = [
-  { id: "1", label: "Wade Cooper" },
-  { id: "2", label: "Arlene Mccoy" },
-  { id: "3", label: "Devon Webb" },
-  { id: "4", label: "Tom Cook" },
-  { id: "5", label: "Tanya Fox" },
-  { id: "6", label: "Hellen Schmidt" },
-];
+const repeatArray = (arr: any[], n: number) => {
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    result.push(...arr);
+  }
+  return result;
+};
+
+const people = repeatArray(
+  [
+    { label: "Wade Cooper" },
+    { label: "Arlene Mccoy" },
+    { label: "Devon Webb" },
+    { label: "Tom Cook" },
+    { label: "Tanya Fox" },
+    { label: "Hellen Schmidt" },
+  ],
+  10000
+).map((p, i) => ({ ...p, id: i.toString() }));
 
 export const ComboboxStory = Template.bind({});
 ComboboxStory.args = {

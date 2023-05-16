@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Combobox as HeadlessCombobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { classNames } from "@utils/stringUtils";
+import RenderIfVisible from "react-render-if-visible";
 
 interface Props {
   options: ComboboxOption[];
@@ -85,44 +86,45 @@ export function Combobox({
               </div>
             ) : (
               filteredOptions.map((opt) => (
-                <HeadlessCombobox.Option
-                  key={opt.id}
-                  className={({ active }) =>
-                    classNames(
-                      "relative cursor-default select-none py-2 pl-10 pr-4",
-                      active
-                        ? "bg-brand-600 text-white dark:text-noir-100"
-                        : "text-noir-900 dark:text-noir-100"
-                    )
-                  }
-                  value={opt}
-                  onSelect={() => setSelected(opt)}
-                >
-                  {({ selected, active }) => (
-                    <>
-                      <span
-                        className={classNames(
-                          "block truncate",
-                          selected ? "font-medium" : "font-normal"
-                        )}
-                      >
-                        {opt.label}
-                      </span>
-                      {selected ? (
+                <RenderIfVisible key={opt.id} defaultHeight={36}>
+                  <HeadlessCombobox.Option
+                    className={({ active }) =>
+                      classNames(
+                        "relative cursor-default select-none py-2 pl-10 pr-4",
+                        active
+                          ? "bg-brand-600 text-white dark:text-noir-100"
+                          : "text-noir-900 dark:text-noir-100"
+                      )
+                    }
+                    value={opt}
+                    onSelect={() => setSelected(opt)}
+                  >
+                    {({ selected, active }) => (
+                      <>
                         <span
                           className={classNames(
-                            "absolute inset-y-0 left-0 flex items-center pl-3",
-                            active
-                              ? "text-white dark:text-noir-800"
-                              : "text-brand-600"
+                            "block truncate",
+                            selected ? "font-medium" : "font-normal"
                           )}
                         >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          {opt.label}
                         </span>
-                      ) : null}
-                    </>
-                  )}
-                </HeadlessCombobox.Option>
+                        {selected ? (
+                          <span
+                            className={classNames(
+                              "absolute inset-y-0 left-0 flex items-center pl-3",
+                              active
+                                ? "text-white dark:text-noir-800"
+                                : "text-brand-600"
+                            )}
+                          >
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null}
+                      </>
+                    )}
+                  </HeadlessCombobox.Option>
+                </RenderIfVisible>
               ))
             )}
           </HeadlessCombobox.Options>
