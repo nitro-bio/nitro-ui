@@ -9,6 +9,7 @@ interface Props {
   options: ComboboxOption[];
   onSelect: (option: ComboboxOption) => void;
   selectedOptionIdx: number;
+  optionsContainerClassName?: string;
 }
 
 const comboboxStyles = cva();
@@ -25,6 +26,7 @@ export function Combobox({
   options,
   selectedOptionIdx,
   onSelect,
+  optionsContainerClassName,
 }: ComboboxProps) {
   const [selected, setSelected] = useState(options[0]);
   useEffect(
@@ -59,9 +61,15 @@ export function Combobox({
       }}
     >
       <div className="relative mt-1">
-        <div className="focus-visible:ring-brand-300 relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 dark:border dark:border-brand-300 sm:text-sm">
+        <div
+          className={classNames(
+            "focus-visible:ring-brand-300 relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 dark:border dark:border-brand-300 sm:text-sm"
+          )}
+        >
           <HeadlessCombobox.Input
-            className="w-full border-none bg-white py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-brand-100"
+            className={classNames(
+              "w-full border-none bg-white py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-brand-100"
+            )}
             displayValue={(opt: ComboboxOption) => opt.label}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -79,7 +87,12 @@ export function Combobox({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <HeadlessCombobox.Options className="ring-brand-300 absolute z-10 mt-1 max-h-60 w-full  overflow-auto rounded-md bg-white bg-white py-1 text-base shadow-2xl ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm">
+          <HeadlessCombobox.Options
+            className={classNames(
+              "ring-brand-300 absolute z-10 mt-1 w-full  overflow-auto rounded-md bg-white bg-white py-1 text-base shadow-2xl ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm",
+              optionsContainerClassName
+            )}
+          >
             {filteredOptions.length === 0 && query !== "" ? (
               <div className="relative cursor-default select-none py-2 px-4 text-noir-700">
                 Nothing found.

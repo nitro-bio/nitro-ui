@@ -32,10 +32,16 @@ const people = repeatArray(
     { label: "Tanya Fox" },
     { label: "Hellen Schmidt" },
   ],
-  1000
+  100
 ).map((p, i) => ({ ...p, id: i.toString() }));
 
 export const ComboboxStory = Template.bind({});
 ComboboxStory.args = {
   options: people,
+};
+
+export const OptionsContainerClassnameComboboxStory = Template.bind({});
+OptionsContainerClassnameComboboxStory.args = {
+  options: people,
+  optionsContainerClassName: "mt-32 ml-32 !min-w-[600px]",
 };
