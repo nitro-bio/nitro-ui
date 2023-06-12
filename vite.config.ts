@@ -43,7 +43,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "MyLib",
+      name: "Nitro UI",
       formats: ["es", "umd"],
       fileName: (format) => `nitro-ui.${format}.js`,
     },

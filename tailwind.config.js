@@ -8,7 +8,7 @@ const noirColor = colors.zinc;
 module.exports = {
   darkMode: "class",
 
-  content: ["./src/components/**/*.{js,ts,jsx,tsx}"],
+  content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}"],
   safelist: [
     /* For user-defined ariadne colors */
     {
