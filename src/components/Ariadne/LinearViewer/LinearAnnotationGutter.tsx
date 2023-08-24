@@ -28,7 +28,7 @@ export const LinearAnnotationGutter = ({
         <div key={`annotation-stack-${stackIdx}`} className="relative h-8">
           {annotations.map((annotation) => (
             <LinearAnnotation
-              key={`annotation-${annotation.start}-${annotation.end}`}
+              key={`annotation-${annotation.text}-${annotation.start}-${annotation.end}-${annotation.direction}`}
               annotation={annotation}
               sequence={sequence}
               stackIdx={stackIdx}
