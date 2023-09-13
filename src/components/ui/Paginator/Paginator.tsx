@@ -20,12 +20,12 @@ export const Paginator = ({
       className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
       aria-label="Pagination"
     >
-      <div className="hidden sm:block text-sm text-gray-700">
+      <div className="hidden text-sm text-gray-700 sm:block">
         Showing <span className="font-medium">{resultStartIdx}</span> to{" "}
         <span className="font-medium">{resultEndIdx}</span> of{" "}
         <span className="font-medium">{totalResults}</span> results
       </div>
-      <div className="flex flex-1 justify-between sm:justify-end gap-4">
+      <div className="flex flex-1 justify-between gap-4 sm:justify-end">
         <button
           onClick={prevPage}
           disabled={currentPage === 1}

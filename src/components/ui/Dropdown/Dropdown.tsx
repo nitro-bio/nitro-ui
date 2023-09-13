@@ -79,7 +79,7 @@ export const Dropdown = ({ intent }: MenuContainerProps) => (
       <Menu.Button className={menuDropdownButtonStyles({ intent })}>
         Click Me
         <ChevronDownIcon
-          className="ml-2 -mr-1 h-5 w-5 text-brand-200 hover:text-brand-100"
+          className="-mr-1 ml-2 h-5 w-5 text-brand-200 hover:text-brand-100"
           aria-hidden="true"
         />
       </Menu.Button>

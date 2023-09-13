@@ -30,7 +30,7 @@ export const Table = ({
   }
 
   return (
-    <div className="rounded-xl border border-brand-800 bg-noir-50 p-1 overflow-x-auto">
+    <div className="overflow-x-auto rounded-xl border border-brand-800 bg-noir-50 p-1">
       <table
         className="min-w-full border-separate"
         style={{ borderSpacing: 0 }}

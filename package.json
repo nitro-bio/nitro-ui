@@ -8,7 +8,7 @@
     "dev": "pnpm storybook dev -p 6006",
     "build-storybook": "pnpm build && storybook build",
     "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "format:fix": "prettier --check --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepublishOnly": "pnpm lint && pnpm format && pnpm build",
@@ -94,5 +94,10 @@
     "ui",
     "components"
   ],
-  "author": "Nishant Jha"
+  "author": "Nishant Jha",
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  }
 }
