@@ -11,7 +11,7 @@
 #### Install
 
 ```bash
-npm i @ninjha01/nitro-ui 
+npm i @ninjha01/nitro-ui
 # or yarn add @ninjha01/nitro-ui
 # or pnpm i @ninjha01/nitro-ui
 ```

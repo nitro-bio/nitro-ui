@@ -1,4 +1,3 @@
-import { ComponentProps } from "react";
 import { Table } from ".";
 
 export default {
@@ -42,9 +41,9 @@ const generateBioData = (n: number): BioData[] => {
     molecularWeight: parseFloat((10 + Math.random() * 90).toFixed(2)),
   }));
 };
-const Template = (args: ComponentProps<typeof Table>) => <Table {...args} />;
-export const TableStory = Template.bind({});
-TableStory.args = {
-  data: generateBioData(10000),
-  resultsPerPage: 10,
+
+export const Default = () => {
+  const data = generateBioData(10000);
+  const resultsPerPage = 100;
+  return <Table data={data} resultsPerPage={resultsPerPage} />;
 };

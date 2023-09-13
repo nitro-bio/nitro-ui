@@ -1,6 +1,5 @@
 import { usePaginator } from "@hooks/usePaginator";
 import { Paginator } from "@ui/Paginator";
-import { z } from "zod";
 
 export const Table = ({
   data,
@@ -14,14 +13,6 @@ export const Table = ({
       data,
       resultsPerPage,
     });
-  console.table({
-    currentPage,
-    totalPages,
-    nextPage,
-    prevPage,
-    currentDataSlice,
-    resultsPerPage,
-  });
 
   if (data.length === 0) {
     return (
@@ -29,7 +20,7 @@ export const Table = ({
         <div className="mt-8 flex flex-col items-center">
           h{" "}
           <div className="inline-block py-2 align-middle">
-            <div className="ring-black shadow-sm ring-1 ring-opacity-5">
+            <div className="ring-black ring-1 ring-opacity-5">
               No results found.
             </div>
           </div>
@@ -39,7 +30,7 @@ export const Table = ({
   }
 
   return (
-    <div className="rounded-xl border border-brand-800 bg-noir-50 p-1 shadow-xl overflow-x-auto">
+    <div className="rounded-xl border border-brand-800 bg-noir-50 p-1 overflow-x-auto">
       <table
         className="min-w-full border-separate"
         style={{ borderSpacing: 0 }}
@@ -47,7 +38,7 @@ export const Table = ({
         <TableHeaders data={data} />
         <tbody className="bg-white">
           {currentDataSlice.map((datum, index) => (
-            <TableRow datum={datum} index={index} />
+            <TableRow key={`table-row-${index}`} datum={datum} index={index} />
           ))}
         </tbody>
       </table>
@@ -64,7 +55,6 @@ export const Table = ({
     </div>
   );
 };
-
 const TableHeaders = ({ data }: { data: object[] }) => (
   <thead>
     <tr>
@@ -72,7 +62,7 @@ const TableHeaders = ({ data }: { data: object[] }) => (
         <th
           key={column}
           scope="col"
-          className="sticky top-0 z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-noir-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 shadow-md"
+          className="relative z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-noir-900 sm:pl-6 lg:pl-8"
         >
           {column.replace("_", " ")}
         </th>
@@ -103,7 +93,7 @@ const ValueRenderer = ({ value }: { value: any }) => {
     return (
       <ul>
         {value.map((item, i) => (
-          <li key={i}>{item}</li>
+          <li key={`list-item-${i}`}>{item}</li>
         ))}
       </ul>
     );

@@ -6,10 +6,10 @@ import alias from "@rollup/plugin-alias";
 
 export default defineConfig({
   plugins: [
-    react(),
     dts({
       insertTypesEntry: true,
     }),
+    react(),
     alias({
       entries: [
         {

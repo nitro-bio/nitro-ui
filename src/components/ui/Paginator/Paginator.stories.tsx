@@ -43,11 +43,12 @@ const generateBioData = (n: number): BioData[] => {
     molecularWeight: parseFloat((10 + Math.random() * 90).toFixed(2)),
   }));
 };
-const Template = (args: ComponentProps<typeof Paginator>) => {
+export const Default = (args: ComponentProps<typeof Paginator>) => {
   const data = generateBioData(10000);
+  const resultsPerPage = args.resultsPerPage || 100;
   const { currentPage, totalPages, nextPage, prevPage } = usePaginator({
     data,
-    resultsPerPage: args.resultsPerPage,
+    resultsPerPage,
   });
 
   return (
@@ -55,15 +56,11 @@ const Template = (args: ComponentProps<typeof Paginator>) => {
       <Paginator
         currentPage={currentPage}
         totalPages={totalPages}
-        resultsPerPage={args.resultsPerPage}
+        resultsPerPage={resultsPerPage}
         totalResults={data.length}
         nextPage={nextPage}
         prevPage={prevPage}
       />
     </>
   );
-};
-export const PaginatorStory = Template.bind({});
-PaginatorStory.args = {
-  resultsPerPage: 10,
 };
