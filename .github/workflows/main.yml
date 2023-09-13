@@ -13,15 +13,15 @@ jobs:
         with:
           node-version: 16.x
       - name: Install deps
-        run: yarn
+        run: npm i -g pnpm && pnpm i
       - name: Run Prettier
-        run: yarn run format
+        run: pnpm run format
       - name: Run ESLint
-        run: yarn run lint
+        run: pnpm run lint
       - name: Build component Library
-        run: yarn run build
+        run: pnpm run build
       - name: Build Storybook
-        run: yarn run build-storybook
+        run: pnpm run build-storybook
         env:
             NODE_OPTIONS: "--max_old_space_size=4096" # to get around JavaScript heap out of memory error
 

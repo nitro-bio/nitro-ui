@@ -5,10 +5,10 @@
       - id: eslint
         stages: [commit]
         name: eslint
-        entry: bash -c "yarn lint"
+        entry: bash -c "pnpm lint"
         language: node
       - id: prettier
         stages: [commit]
         name: prettier
-        entry: bash -c "yarn format:fix"
+        entry: bash -c "pnpm format:fix"
         language: node
