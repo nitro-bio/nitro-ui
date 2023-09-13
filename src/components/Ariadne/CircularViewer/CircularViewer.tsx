@@ -42,7 +42,7 @@ export const CircularViewer = ({
   return (
     <div
       className={classNames(
-        "font-mono flex select-none items-center justify-center font-thin",
+        " flex select-none items-center justify-center font-thin",
         containerClassName
       )}
     >

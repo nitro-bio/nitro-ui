@@ -43,7 +43,7 @@ export const GeneDetails = ({
           )}
         </div>
       </div>
-      <p className="font-serif text-start text-noir-600 dark:text-noir-100">
+      <p className="text-start font-serif text-noir-600 dark:text-noir-100">
         {currentGene?.description || "No description to show"}
       </p>
     </Card>

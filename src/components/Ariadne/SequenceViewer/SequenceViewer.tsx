@@ -31,9 +31,7 @@ export const SequenceViewer = ({
 }: Props) => {
   return (
     <>
-      <div
-        className={classNames("font-mono flex flex-wrap ", containerClassName)}
-      >
+      <div className={classNames(" flex flex-wrap ", containerClassName)}>
         {sequences[0].map(({ index: baseIdx }) => {
           return (
             <div
@@ -48,7 +46,7 @@ export const SequenceViewer = ({
                 return (
                   <div
                     key={`sequence-${sequenceIdx}-base-${baseIdx}`}
-                    className="whitespace-pre text-center"
+                    className=" whitespace-pre text-center"
                   >
                     <CharComponent
                       char={base.base}
@@ -126,5 +124,5 @@ interface CharProps {
 }
 
 const CharComponent = ({ index, char, charClassName }: CharProps) => (
-  <div className={classNames(charClassName, "")}>{char}</div>
+  <div className={classNames(charClassName, "mr-px font-mono")}>{char}</div>
 );

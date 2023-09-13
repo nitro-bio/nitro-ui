@@ -1,0 +1,42 @@
+import { AnnotatedAA, AnnotatedNucl, AnnotatedSequence } from "@Ariadne/types";
+import { classNames } from "@utils/stringUtils";
+
+export const ReferenceTicks = ({
+  sequence,
+  className,
+}: {
+  sequence: AnnotatedSequence;
+  className?: string;
+}) => {
+  return (
+    <div className={classNames("flex overflow-hidden text-white", className)}>
+      {sequence.map((nucl: AnnotatedNucl | AnnotatedAA, i: number) => {
+        const showTicks = nucl.base !== "-" && (nucl.index + 1) % 10 === 0; // we don't want to show ticks for gaps
+        return (
+          <div
+            className="relative flex h-12 flex-col items-end justify-end"
+            key={`base-${i}-index-wrapper`}
+          >
+            <div
+              className={classNames(
+                "font-mono ",
+                "absolute bottom-0 left-0 right-0",
+
+                showTicks ? "opacity-100" : "opacity-0",
+                nucl.base === "G" && "text-red-500",
+                nucl.base === "A" && "text-yellow-500",
+                nucl.base === "T" && "text-green-500",
+                nucl.base === "C" && "text-blue-50"
+              )}
+            >
+              <p className="text-xs"> {nucl.index + 1}</p>
+              <p className="mx-auto text-xs">|</p>
+            </div>
+
+            <div className={classNames("font-mono opacity-0")}>{nucl.base}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
