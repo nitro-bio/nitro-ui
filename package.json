@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.0.77",
+  "version": "0.0.78",
   "scripts": {
     "build": "pnpm lint && vite build && pnpm build-css",
     "build-css": "npx tailwindcss -o ./nitro.css --minify && mv ./nitro.css ./dist/nitro.css",
@@ -9,7 +9,7 @@
     "build-storybook": "pnpm build && storybook build",
     "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "tsc && eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepublishOnly": "pnpm lint && pnpm format && pnpm build",
     "watch": "nodemon --watch src --ext js,jsx,ts,tsx,json,css,scss,html --exec pnpm build"

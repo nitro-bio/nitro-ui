@@ -5,7 +5,6 @@ import {
 import {
   AnnotatedSequence,
   Annotation,
-  AnnotationType,
   AriadneSelection,
   StackedAnnotation,
   ValidatedSequence,

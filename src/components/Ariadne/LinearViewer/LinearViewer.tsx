@@ -1,7 +1,7 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
 import { getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   AnnotatedAA,
   AnnotatedNucl,
@@ -157,67 +157,6 @@ const SequenceLine = ({
     </>
   );
 };
-const LinearCursor = ({
-  selection,
-  selectionRef,
-}: {
-  selection: AriadneSelection | null;
-  selectionRef: React.RefObject<SVGSVGElement>;
-}) => {
-  const [xPerc, setXPerc] = useState(0);
-
-  useEffect(
-    function hideOnSelection() {
-      const selectionActive = selection && selection.start !== selection.end;
-      if (selectionActive) {
-        setXPerc(-1);
-      }
-    },
-    [selection]
-  );
-
-  useEffect(
-    function mountMouseMoveListener() {
-      const node = selectionRef.current;
-      const onMouseMove = (e: MouseEvent) => {
-        const selectionActive = selection && selection.start !== selection.end;
-        if (selectionRef.current && !selectionActive) {
-          const { clientX } = e;
-          const { left, right } =
-            selectionRef.current.getBoundingClientRect() || {
-              left: 0,
-              right: 0,
-            };
-          const xRelative = clientX - left;
-          const nodeWidth = right - left;
-          const xPerc = xRelative / nodeWidth;
-          setXPerc(xPerc * 100);
-        }
-      };
-
-      if (node) {
-        node.addEventListener("mousemove", onMouseMove);
-      }
-      return () => {
-        node?.removeEventListener("mousemove", onMouseMove);
-      };
-    },
-    [selectionRef, selection]
-  );
-
-  return (
-    <g className={classNames("stroke-noir-800")}>
-      <line
-        x1={`${xPerc}%`}
-        y1={`${50}%`}
-        x2={`${xPerc + 1}%`}
-        y2={`${50}%`}
-        strokeWidth={5}
-        stroke="currentColor"
-      />
-    </g>
-  );
-};
 
 const LinearSelection = ({
   selection,
@@ -331,44 +270,6 @@ const LinearSelection = ({
           strokeWidth={1.5}
         />
       )}
-    </g>
-  );
-};
-
-const Ticks = ({
-  basesPerTick,
-  totalBases,
-  numberOfTicks,
-}: {
-  basesPerTick: number;
-  totalBases: number;
-  numberOfTicks: number;
-}) => {
-  return (
-    <g>
-      {[...Array(numberOfTicks).keys()].map((i) => {
-        const { x1, x2 } = {
-          x1: ((i * basesPerTick) / totalBases) * 100,
-          x2: ((i * basesPerTick) / totalBases) * 100,
-        };
-        const { y1, y2 } = { y1: 50, y2: 25 };
-        return (
-          <g key={`tick-${i}`} className="fill-current text-current">
-            <line
-              id={`tick-${i}`}
-              x1={`${x1}%`}
-              y1={`${y1}%`}
-              x2={`${x2}%`}
-              y2={`${y2}%`}
-              stroke="currentColor"
-              strokeWidth={0.5}
-            />
-            <text x={`${x2}%`} y={`${y2}%`} textAnchor="start" fontSize="0.5em">
-              {i * basesPerTick}
-            </text>
-          </g>
-        );
-      })}
     </g>
   );
 };

@@ -23,7 +23,6 @@ export const CircularAnnotation = ({
     outerRadius: radius + 5,
     largeArc: annotationLength > sequence.length / 2,
     length: annotationLength,
-    direction: annotation.direction,
     seqLength: sequence.length,
     offset:
       annotation.direction === "forward" ? annotation.start : annotation.end,

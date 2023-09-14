@@ -1,27 +1,17 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
-
 import { Combobox } from "./Combobox";
 
 export default {
   title: "UIElements/Combobox",
   component: Combobox,
-} as ComponentMeta<typeof Combobox>;
-
-const Template: ComponentStory<typeof Combobox> = (args) => {
-  return (
-    <div className="fixed top-16 w-72">
-      <Combobox {...args} />
-    </div>
-  );
 };
 
-const repeatArray = (arr: any[], n: number) => {
+function repeatArray<T>(arr: T[], n: number): T[] {
   const result = [];
   for (let i = 0; i < n; i++) {
     result.push(...arr);
   }
   return result;
-};
+}
 
 const people = repeatArray(
   [
@@ -35,13 +25,27 @@ const people = repeatArray(
   100
 ).map((p, i) => ({ ...p, id: i.toString() }));
 
-export const ComboboxStory = Template.bind({});
-ComboboxStory.args = {
-  options: people,
+export const Default = () => {
+  return (
+    <div className="fixed top-16 w-72">
+      <Combobox
+        options={people}
+        onSelect={(option) => alert(option.label)}
+        selectedOptionIdx={0}
+      />
+    </div>
+  );
 };
 
-export const OptionsContainerClassnameComboboxStory = Template.bind({});
-OptionsContainerClassnameComboboxStory.args = {
-  options: people,
-  optionsContainerClassName: "mt-32 ml-32 !min-w-[600px]",
+export const ContainerClassname = () => {
+  return (
+    <div className="fixed top-16 w-72">
+      <Combobox
+        options={people}
+        onSelect={(option) => alert(option.label)}
+        selectedOptionIdx={0}
+        optionsContainerClassName="mt-32 ml-32 !min-w-[600px]"
+      />
+    </div>
+  );
 };

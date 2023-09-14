@@ -66,7 +66,7 @@ const Molstar = ({
       );
 
       const traj = await plugin.builders.structure.parseTrajectory(
-        data as any /* not sure how to cast to right type */,
+        data,
         "mmcif" /* why mmcif for cif? */
       );
       await plugin.builders.structure.hierarchy.applyPreset(traj, "default");

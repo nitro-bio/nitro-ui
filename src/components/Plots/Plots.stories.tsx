@@ -1,16 +1,14 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
-import { Histogram, generateRandomHistogramData } from "./Histogram";
+import { generateRandomHistogramData, Histogram } from "./Histogram";
 import { generateRandomVolcanoData } from "./Volcano/utils";
 import { Volcano } from "./Volcano/Volcano";
 
 export default {
   title: "Plots/Plots",
   argTypes: {},
-} as ComponentMeta<any>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = () => {
+export const Default = () => {
   const histoData = generateRandomHistogramData(1000);
   const volcanoData = generateRandomVolcanoData(1000);
   return (
@@ -36,6 +34,3 @@ const Template: ComponentStory<any> = () => {
     </div>
   );
 };
-
-export const KitchenSinkViewerStory = Template.bind({});
-KitchenSinkViewerStory.args = {};

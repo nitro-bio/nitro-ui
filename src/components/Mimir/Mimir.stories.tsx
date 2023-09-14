@@ -1,15 +1,14 @@
 import { ChatBox } from "@Mimir/ChatBox";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 import { useState } from "react";
 
 export default {
   title: "Mimir/Chatbox",
   argTypes: {},
-} as ComponentMeta<any>;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = () => {
+export const Default = () => {
   const [chatEndpoint, setChatEndpoint] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
   return (
@@ -36,6 +35,3 @@ const Template: ComponentStory<any> = () => {
     </Card>
   );
 };
-
-export const KitchenSinkViewerStory = Template.bind({});
-KitchenSinkViewerStory.args = {};

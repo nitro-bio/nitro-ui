@@ -34,11 +34,11 @@ function paginatorReducer(state: State, action: Action): State {
   }
 }
 
-export const usePaginator = ({
+export const usePaginator = <T>({
   data,
   resultsPerPage,
 }: {
-  data: any[];
+  data: T[];
   resultsPerPage: number;
 }) => {
   const totalPages = Math.ceil(data.length / resultsPerPage);

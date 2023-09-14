@@ -4,7 +4,6 @@ import { classNames } from "@utils/stringUtils";
 import { useEffect, useRef } from "react";
 import {
   AnnotatedSequence,
-  Annotation,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
@@ -194,7 +193,6 @@ const CircularSelection = ({
     offset,
     outerRadius,
     seqLength,
-    direction,
   });
   return (
     <g>

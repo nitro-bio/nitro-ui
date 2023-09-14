@@ -1,7 +1,7 @@
 // @ts-nocheck
 // From https://github.com/n3r4zzurr0/react-range-slider-input
 import "./RangeSlider.css";
-import React, { PureComponent, createRef } from "react";
+import React, { PureComponent, createRef, RefObject } from "react";
 import clsx from "clsx";
 import { classNames } from "@utils/stringUtils";
 
@@ -44,8 +44,33 @@ export interface RangeSliderProps {
   orientation?: string;
 }
 class RangeSlider extends PureComponent<RangeSliderProps> {
-  constructor() {
-    super();
+  private element: RefObject<HTMLDivElement>;
+  private input: [RefObject<HTMLInputElement>, RefObject<HTMLInputElement>];
+  private thumb: [RefObject<HTMLDivElement>, RefObject<HTMLDivElement>];
+  private range: RefObject<HTMLDivElement>;
+
+  private options: Record<string, unknown>;
+  private firstCall: boolean;
+  private isControlled: boolean;
+  private externalInput: boolean;
+  private isComponentMounted: boolean;
+  private lastValueProp: number[];
+  private index: number;
+  private isDragging: boolean;
+  private maxRangeWidth: number;
+  private pointerMoveEvent: EventListenerOrEventListenerObject;
+  private pointerUpEvent: EventListenerOrEventListenerObject;
+  private rangeLimits: { min: number; max: number };
+  private rangeWidth: number;
+  private resizeEvent: EventListenerOrEventListenerObject;
+  private sliderValue: [number, number];
+  private startPos: number;
+  private thumbDrag: boolean;
+  private thumbHeight: number;
+  private thumbWidth: number;
+  private value: [number, number];
+  constructor(props: RangeSliderProps) {
+    super(props);
 
     this.element = createRef();
     this.input = [createRef(), createRef()];
@@ -58,6 +83,20 @@ class RangeSlider extends PureComponent<RangeSliderProps> {
     this.externalInput = false;
     this.isComponentMounted = false;
     this.lastValueProp = [];
+    this.index = 0;
+    this.isDragging = false;
+    this.maxRangeWidth = 0;
+    this.pointerMoveEvent = () => {};
+    this.pointerUpEvent = () => {};
+    this.rangeLimits = { min: 0, max: 100 };
+    this.rangeWidth = 0;
+    this.resizeEvent = () => {};
+    this.sliderValue = [0, 0];
+    this.startPos = 0;
+    this.thumbDrag = false;
+    this.thumbHeight = 0;
+    this.thumbWidth = 0;
+    this.value = { min: 0, max: 0 };
   }
 
   componentDidMount() {

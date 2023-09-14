@@ -123,6 +123,6 @@ interface CharProps {
   charClassName: string;
 }
 
-const CharComponent = ({ index, char, charClassName }: CharProps) => (
+const CharComponent = ({ char, charClassName }: CharProps) => (
   <div className={classNames(charClassName, "mr-px font-mono")}>{char}</div>
 );

@@ -15,7 +15,6 @@ export const genArc = ({
   offset,
   outerRadius,
   seqLength,
-  direction,
 }: // sweepFWD,
 {
   center: Coor;
@@ -25,7 +24,6 @@ export const genArc = ({
   offset: number;
   outerRadius: number;
   seqLength: number;
-  direction: "forward" | "reverse";
 }): string => {
   const leftBottom = findCoor({
     index: offset,

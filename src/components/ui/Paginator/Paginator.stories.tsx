@@ -25,9 +25,9 @@ const generateBioData = (n: number): BioData[] => {
   const organisms = ["E. coli", "Human", "Mouse"];
   const expressionSystems = ["Mammalian", "Bacterial", "Yeast"];
 
-  const randomChoice = (arr: any[]) =>
-    arr[Math.floor(Math.random() * arr.length)];
-
+  function randomChoice<T>(arr: T[]) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
   const randomSequence = (length: number) => {
     const bases = ["A", "T", "C", "G"];
     return [...Array(length)].map(() => randomChoice(bases)).join("");

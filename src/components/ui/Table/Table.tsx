@@ -1,15 +1,16 @@
 import { usePaginator } from "@hooks/usePaginator";
 import { Paginator } from "@ui/Paginator";
+import { z } from "zod";
 
-export const Table = ({
+export const Table = <T extends object>({
   data,
   resultsPerPage,
 }: {
-  data: object[];
+  data: T[];
   resultsPerPage: number;
 }) => {
   const { currentPage, totalPages, nextPage, prevPage, currentDataSlice } =
-    usePaginator({
+    usePaginator<T>({
       data,
       resultsPerPage,
     });
@@ -84,7 +85,20 @@ const TableRow = ({ datum, index }: { datum: object; index: number }) => (
   </tr>
 );
 
-const ValueRenderer = ({ value }: { value: any }) => {
+const ValueSchema = z.union([
+  z.object({
+    url: z.string(),
+    title: z.string(),
+  }),
+  z.array(z.string()),
+  z
+    .string()
+    .nullable()
+    .transform((val: string | null) => val ?? "No Data"),
+  z.number(),
+]);
+export type TableValue = z.infer<typeof ValueSchema>;
+const ValueRenderer = ({ value }: { value: TableValue }) => {
   if (typeof value === "string" || value === null) {
     return <span className="text-zinc-800">{value ?? "No Data"}</span>;
   } else if (typeof value === "number") {
