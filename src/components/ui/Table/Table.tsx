@@ -19,7 +19,6 @@ export const Table = <T extends object>({
     return (
       <div className="flex items-start px-2">
         <div className="mt-8 flex flex-col items-center">
-          h{" "}
           <div className="inline-block py-2 align-middle">
             <div className="ring-black ring-1 ring-opacity-5">
               No results found.
@@ -31,18 +30,24 @@ export const Table = <T extends object>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-brand-800 bg-noir-50 p-1">
-      <table
-        className="min-w-full border-separate"
-        style={{ borderSpacing: 0 }}
-      >
-        <TableHeaders data={data} />
-        <tbody className="bg-white">
-          {currentDataSlice.map((datum, index) => (
-            <TableRow key={`table-row-${index}`} datum={datum} index={index} />
-          ))}
-        </tbody>
-      </table>
+    <div className="rounded-xl border border-brand-800 bg-noir-50 p-1">
+      <div className="overflow-x-auto">
+        <table
+          className="min-w-full border-separate"
+          style={{ borderSpacing: 0 }}
+        >
+          <TableHeaders data={data} />
+          <tbody className="bg-white">
+            {currentDataSlice.map((datum, index) => (
+              <TableRow
+                key={`table-row-${index}`}
+                datum={datum}
+                index={index}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="mt-4">
         <Paginator
           resultsPerPage={resultsPerPage}
@@ -56,6 +61,7 @@ export const Table = <T extends object>({
     </div>
   );
 };
+
 const TableHeaders = ({ data }: { data: object[] }) => (
   <thead>
     <tr>
