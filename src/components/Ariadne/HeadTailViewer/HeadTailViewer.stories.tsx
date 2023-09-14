@@ -1,10 +1,10 @@
 import { getABData } from "@Ariadne/ABViewer/ABViewer";
-import { AnnotatedAA, AnnotatedNucl, ValidatedSequence } from "@Ariadne/types";
-import { getAnnotatedSequence } from "@Ariadne/utils";
+import { AnnotatedAA, AnnotatedNucl } from "@Ariadne/types";
 import { Card } from "@ui/Card";
 import { useMemo } from "react";
 
 import { HeadTailViewer } from ".";
+import { annotatedSequences } from "./storyUtils";
 
 export default {
   title: "Ariadne/HeadTailViewer",
@@ -16,17 +16,10 @@ export default {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Default = () => {
-  const sequence1 =
-    "ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
-  const sequence2 =
-    "GGGGGGGTTTTTCCCCCAAAAAAGGGGGGGTTTTTCCCCCAAAAAAGGGGGGGTTTTTCC";
-  const validatedSequences = [sequence1, sequence2].map((seq) =>
-    seq.split("")
-  ) as ValidatedSequence[];
-  const annotatedSequences = validatedSequences.map((seq) =>
-    getAnnotatedSequence(seq, [])
+  const abData = useMemo(
+    () => getABData(annotatedSequences[0].map((b) => b.base).join("")),
+    [annotatedSequences]
   );
-  const abData = useMemo(() => getABData(sequence1), [sequence1]);
   const charClassName = ({
     base,
     sequenceIdx,
@@ -36,6 +29,10 @@ export const Default = () => {
   }): string => {
     const className = [""];
     if (sequenceIdx == 0) {
+      if ((base.index + 1) % 10 === 0) {
+        className.push("underline");
+      }
+
       if (base.base === "G") {
         className.push("text-rose-300");
       } else if (base.base === "A") {

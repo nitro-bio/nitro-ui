@@ -9,7 +9,7 @@ export const ReferenceTicks = ({
   className?: string;
 }) => {
   return (
-    <div className={classNames("flex overflow-hidden text-white", className)}>
+    <div className={classNames("overflow-hiddentext-white flex", className)}>
       {sequence.map((nucl: AnnotatedNucl | AnnotatedAA, i: number) => {
         const showTicks = nucl.base !== "-" && (nucl.index + 1) % 10 === 0; // we don't want to show ticks for gaps
         return (
@@ -26,14 +26,16 @@ export const ReferenceTicks = ({
                 nucl.base === "G" && "text-red-500",
                 nucl.base === "A" && "text-yellow-500",
                 nucl.base === "T" && "text-green-500",
-                nucl.base === "C" && "text-blue-50"
+                nucl.base === "C" && "text-blue-500"
               )}
             >
               <p className="text-xs"> {nucl.index + 1}</p>
               <p className="mx-auto text-xs">|</p>
             </div>
 
-            <div className={classNames("font-mono opacity-0")}>{nucl.base}</div>
+            <div className={classNames("mr-px font-mono opacity-0")}>
+              {nucl.base}
+            </div>
           </div>
         );
       })}
