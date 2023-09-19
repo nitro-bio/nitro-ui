@@ -71,7 +71,7 @@ const TableHeaders = ({ data }: { data: object[] }) => (
           scope="col"
           className="relative z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-noir-900 sm:pl-6 lg:pl-8"
         >
-          {column.replace("_", " ")}
+          {column.replaceAll("_", " ")}
         </th>
       ))}
     </tr>
@@ -85,7 +85,7 @@ const TableRow = ({ datum, index }: { datum: object; index: number }) => (
         key={`row-${index}-${column}`}
         className="border-b border-noir-200 py-3.5 pl-4 pr-3 text-xs font-medium sm:pl-6 lg:pl-8"
       >
-        <ValueRenderer value={value} />
+        <ValueRenderer rawValue={value} />
       </td>
     ))}
   </tr>
@@ -97,16 +97,25 @@ const ValueSchema = z.union([
     title: z.string(),
   }),
   z.array(z.string()),
-  z
-    .string()
-    .nullable()
-    .transform((val: string | null) => val ?? "No Data"),
+  z.string(),
+  z.null().transform(() => "N/A"),
   z.number(),
 ]);
 export type TableValue = z.infer<typeof ValueSchema>;
-const ValueRenderer = ({ value }: { value: TableValue }) => {
-  if (typeof value === "string" || value === null) {
-    return <span className="text-zinc-800">{value ?? "No Data"}</span>;
+const ValueRenderer = ({ rawValue }: { rawValue: unknown }) => {
+  const parsed = ValueSchema.safeParse(rawValue);
+  if (!parsed.success) {
+    console.error("Invalid value", rawValue);
+    console.error(parsed.error);
+    return (
+      <span className="text-red-500">
+        `Unexpected value type: ${typeof rawValue}`
+      </span>
+    );
+  }
+  const value = parsed.data;
+  if (typeof value === "string") {
+    return <span className="text-zinc-800">{value}</span>;
   } else if (typeof value === "number") {
     return <span className="text-zinc-800">{value}</span>;
   } else if (Array.isArray(value)) {
@@ -124,10 +133,6 @@ const ValueRenderer = ({ value }: { value: TableValue }) => {
       </a>
     );
   } else {
-    return (
-      <span className="text-red-500">
-        `Unexpected value type: ${typeof value}`
-      </span>
-    );
+    throw new Error(`Unexpected value type: ${typeof value}`);
   }
 };

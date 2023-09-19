@@ -9,28 +9,28 @@ export default {
 };
 
 type BioData = {
-  proteinName: string;
-  accession: string;
-  rnaSequence: string;
-  dnaSequence: string;
-  organism: string;
-  expressionSystem: string;
+  proteinName: string | null;
+  accession: string | null;
+  rnaSequence: string | null;
+  dnaSequence: string | null;
+  organism: string | null;
+  expressionSystem: string | null;
   molecularWeight: number;
-  secondaryStructure: string;
-  bioActivity: string;
+  secondaryStructure: string | null;
+  bioActivity: string | null;
   halfLife: number;
-  isoElectricPoint: number;
+  iso_electric_point: number;
   meltingPoint: number;
-  bindingSite: string;
-  modification: string;
+  bindingSite: string | null;
+  modification: string | null;
 };
 
 const generateBioData = (n: number): BioData[] => {
-  const proteins = ["ProteinA", "ProteinB", "ProteinC"];
-  const organisms = ["E. coli", "Human", "Mouse"];
-  const expressionSystems = ["Mammalian", "Bacterial", "Yeast"];
-  const secondaryStructures = ["Alpha helix", "Beta sheet", "Loop"];
-  const bioActivities = ["Enzymatic", "Structural", "Receptor"];
+  const proteins = ["ProteinA", "ProteinB", "ProteinC", null];
+  const organisms = ["E. coli", "Human", "Mouse", null];
+  const expressionSystems = ["Mammalian", "Bacterial", "Yeast", null];
+  const secondaryStructures = ["Alpha helix", "Beta sheet", "Loop", null];
+  const bioActivities = ["Enzymatic", "Structural", "Receptor", null];
 
   function randomChoice<T>(arr: T[]) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -52,7 +52,7 @@ const generateBioData = (n: number): BioData[] => {
     secondaryStructure: randomChoice(secondaryStructures),
     bioActivity: randomChoice(bioActivities),
     halfLife: parseFloat((1 + Math.random() * 48).toFixed(2)),
-    isoElectricPoint: parseFloat((4 + Math.random() * 6).toFixed(2)),
+    iso_electric_point: parseFloat((4 + Math.random() * 6).toFixed(2)),
     meltingPoint: parseFloat((40 + Math.random() * 60).toFixed(2)),
     bindingSite: randomChoice(proteins),
     modification: randomChoice(["Methylated", "Phosphorylated", "Acetylated"]),
