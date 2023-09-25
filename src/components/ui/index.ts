@@ -5,5 +5,15 @@ import { Toggle } from "./Toggle";
 import { Combobox } from "./Combobox";
 import { Table } from "./Table";
 import { Paginator } from "./Paginator";
+import { Checkboxes } from "./Checkboxes";
 
-export { Button, Card, Dropdown, Toggle, Combobox, Table, Paginator };
+export {
+  Button,
+  Card,
+  Dropdown,
+  Toggle,
+  Combobox,
+  Table,
+  Paginator,
+  Checkboxes,
+};
