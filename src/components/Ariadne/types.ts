@@ -16,6 +16,7 @@ export const annotationTypes = [
   "promoter",
   "protein_bind",
   "rep_origin",
+  "LTR",
 ];
 
 export type AnnotationType = (typeof annotationTypes)[number];
