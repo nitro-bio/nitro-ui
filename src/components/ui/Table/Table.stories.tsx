@@ -64,3 +64,12 @@ export const Default = () => {
   const resultsPerPage = 100;
   return <Table data={data} resultsPerPage={resultsPerPage} />;
 };
+
+export const Compact = () => {
+  const data = generateBioData(100);
+  const resultsPerPage = 10;
+  return <Table data={data} resultsPerPage={resultsPerPage} compact />;
+};
+export const NoResults = () => {
+  return <Table data={[]} resultsPerPage={10} />;
+};

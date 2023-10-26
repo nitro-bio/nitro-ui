@@ -1,14 +1,20 @@
 import { usePaginator } from "@hooks/usePaginator";
 import { Paginator } from "@ui/Paginator";
+import { classNames } from "@utils/stringUtils";
 import { z } from "zod";
 
 export const Table = <T extends object>({
   data,
   resultsPerPage,
+  className,
+  compact,
 }: {
   data: T[];
   resultsPerPage: number;
+  compact?: boolean;
+  className?: string;
 }) => {
+  const paddingClass = compact ? "" : "px-2 py-1";
   const { currentPage, totalPages, nextPage, prevPage, currentDataSlice } =
     usePaginator<T>({
       data,
@@ -17,32 +23,36 @@ export const Table = <T extends object>({
 
   if (data.length === 0) {
     return (
-      <div className="flex items-start px-2">
-        <div className="mt-8 flex flex-col items-center">
-          <div className="inline-block py-2 align-middle">
-            <div className="ring-black ring-1 ring-opacity-5">
-              No results found.
-            </div>
-          </div>
-        </div>
+      <div
+        className={classNames(
+          "mt-8 flex items-center justify-center rounded-xl border border-brand-800 bg-noir-50 text-sm font-medium text-noir-900",
+          paddingClass,
+          className
+        )}
+      >
+        No results found.
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-brand-800 bg-noir-50 p-1">
+    <div
+      className={classNames(
+        "overflow-hidden rounded-xl border border-brand-800 bg-noir-50",
+        paddingClass,
+        className
+      )}
+    >
       <div className="overflow-x-auto">
-        <table
-          className="min-w-full border-separate"
-          style={{ borderSpacing: 0 }}
-        >
-          <TableHeaders data={data} />
+        <table className="min-w-full border-separate">
+          <TableHeaders data={data} compact={compact} />
           <tbody className="bg-white">
             {currentDataSlice.map((datum, index) => (
               <TableRow
                 key={`table-row-${index}`}
                 datum={datum}
                 index={index}
+                compact={compact}
               />
             ))}
           </tbody>
@@ -62,34 +72,65 @@ export const Table = <T extends object>({
   );
 };
 
-const TableHeaders = ({ data }: { data: object[] }) => (
-  <thead>
-    <tr>
-      {Object.keys(data[0]).map((column) => (
-        <th
-          key={column}
-          scope="col"
-          className="relative z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-noir-900 sm:pl-6 lg:pl-8"
+const TableHeaders = ({
+  data,
+  compact,
+}: {
+  data: object[];
+  compact?: boolean;
+}) => {
+  const paddingClass = compact
+    ? "px-1 m:px-2 lg:px-4"
+    : "py-3.5 pl-4 pr-3 sm:pl-6 lg:pl-8";
+  return (
+    <thead>
+      <tr>
+        {Object.keys(data[0]).map((column) => (
+          <th
+            key={column}
+            scope="col"
+            className={classNames(
+              "relative z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75  text-left text-sm font-semibold text-noir-900 ",
+              paddingClass
+            )}
+          >
+            {column.replaceAll("_", " ")}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  );
+};
+
+const TableRow = ({
+  datum,
+  index,
+  compact,
+}: {
+  datum: object;
+  index: number;
+  compact?: boolean;
+}) => {
+  const paddingClass = compact
+    ? "px-1 m:px-2 py-1 lg:px-4"
+    : "py-3.5 pl-4 pr-3 sm:pl-6 lg:pl-8";
+
+  return (
+    <tr key={`row-${index}`}>
+      {Object.entries(datum).map(([column, value]) => (
+        <td
+          key={`row-${index}-${column}`}
+          className={classNames(
+            "border-b border-noir-200 text-xs font-medium",
+            paddingClass
+          )}
         >
-          {column.replaceAll("_", " ")}
-        </th>
+          <ValueRenderer rawValue={value} />
+        </td>
       ))}
     </tr>
-  </thead>
-);
-
-const TableRow = ({ datum, index }: { datum: object; index: number }) => (
-  <tr key={`row-${index}`}>
-    {Object.entries(datum).map(([column, value]) => (
-      <td
-        key={`row-${index}-${column}`}
-        className="border-b border-noir-200 py-3.5 pl-4 pr-3 text-xs font-medium sm:pl-6 lg:pl-8"
-      >
-        <ValueRenderer rawValue={value} />
-      </td>
-    ))}
-  </tr>
-);
+  );
+};
 
 const ValueSchema = z.union([
   z.object({
