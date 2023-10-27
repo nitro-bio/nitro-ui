@@ -1,6 +1,6 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { z } from "zod";
-import { annotationTypeSchema } from "./schemas";
+import { annotatedSequenceSchema, annotationTypeSchema } from "./schemas";
 import { Annotation, AnnotationType, StackedAnnotation } from "./types";
 import { anythingToAnnotatedSequences } from "./utils";
 
@@ -29,13 +29,20 @@ export const genbankToAnnotatedSequence = ({
     annotationOnClick,
   });
   const stackedAnnotations = stackAnnsByType(annotations);
-  const annotatedSequence = anythingToAnnotatedSequences({
+  const { successes, failures } = anythingToAnnotatedSequences({
     payload: genbank.sequence,
     payloadType: "raw",
     annotations: stackedAnnotations,
   });
+  if (failures.length > 0) {
+    throw new Error(`Failed to parse genbank: ${failures[0]}`);
+  }
+  if (successes.length !== 1 || successes[0].sequences.length !== 1) {
+    throw new Error(`Expected exactly one annotated sequence`);
+  }
+
   return {
-    annotatedSequence,
+    annotatedSequence: annotatedSequenceSchema.parse(successes[0].sequences[0]),
     annotations,
   };
 };
@@ -53,8 +60,6 @@ export const genbankFeaturesToAnnotations = ({
     if (direction === "reverse") {
       [start, end] = [feature.end, feature.start];
     }
-    const onClick = annotationOnClick ?? (() => {});
-
     return {
       type: feature.type,
       start,
@@ -63,7 +68,7 @@ export const genbankFeaturesToAnnotations = ({
       text: feature.name,
       direction: feature.strand === 1 ? "forward" : "reverse",
       className: getClassNameFromFeatureType(feature.type),
-      onClick,
+      onClick: annotationOnClick,
     };
   });
 };

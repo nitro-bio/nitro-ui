@@ -1,11 +1,6 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
-import { v4 as uuidv4 } from "uuid";
-import { z } from "zod";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import {
-  annotatedSequenceSchema,
-  validatedSequenceStringSchema,
-} from "./schemas";
+import { validatedSequenceStringSchema } from "./schemas";
 import type {
   AA,
   AnnotatedSequence,
@@ -200,7 +195,7 @@ type ParseError = {
 };
 type ParseSuccess = {
   source: AnythingSource;
-  sequences: AnnotatedSequence;
+  sequences: AnnotatedSequence[];
   annotations: Annotation[];
 };
 export const anythingToAnnotatedSequences = ({
@@ -209,12 +204,12 @@ export const anythingToAnnotatedSequences = ({
   annotations,
   annotationOnClick,
 }: AnythingSource): { successes: ParseSuccess[]; failures: ParseError[] } => {
-  let successes: ParseSuccess[] = [];
-  let failures: ParseError[] = [];
+  const successes: ParseSuccess[] = [];
+  const failures: ParseError[] = [];
   switch (payloadType) {
-    case "raw":
+    case "raw": {
       try {
-        const [sequences] = [
+        const sequences = [
           stringToAnnotatedSequence({
             sequence: payload,
             annotations: annotations ?? [],
@@ -242,14 +237,12 @@ export const anythingToAnnotatedSequences = ({
         });
       }
       break;
+    }
     case "parsed-genbank":
-    case "genbank":
-      let parsed: ParsedGenbank[];
-      if (payloadType === "parsed-genbank") {
-        parsed = [payload];
-      } else {
-        parsed = genbankParser(payload);
-      }
+    case "genbank": {
+      const parsed =
+        payloadType === "parsed-genbank" ? [payload] : genbankParser(payload);
+
       parsed.forEach((genbank) => {
         try {
           const sequence = genbankToAnnotatedSequence({
@@ -262,8 +255,8 @@ export const anythingToAnnotatedSequences = ({
               annotations,
               annotationOnClick,
               payloadType,
-            },
-            sequences: sequence,
+            } as AnythingSource,
+            sequences: [sequence],
             annotations: [],
           });
         } catch (e) {
@@ -273,13 +266,14 @@ export const anythingToAnnotatedSequences = ({
               annotations,
               annotationOnClick,
               payloadType,
-            },
+            } as AnythingSource,
             error: `Failed to parse genbank: ${e}`,
           });
         }
       });
       break;
-    case "fasta":
+    }
+    case "fasta": {
       let records: (FastaRecord | FastqRecord)[];
       if (payloadType === "fasta") {
         records = parseFasta(payload);
@@ -308,7 +302,8 @@ export const anythingToAnnotatedSequences = ({
         }
       });
       break;
-    default:
+    }
+    default: {
       failures.push({
         source: {
           payload,
@@ -319,6 +314,7 @@ export const anythingToAnnotatedSequences = ({
         error: `Unknown payload type: ${payloadType}`,
       });
       break;
+    }
   }
 
   return {
@@ -343,12 +339,6 @@ export const stringToAnnotatedSequence = ({
     stackedAnnotations
   );
   return annotatedSequence;
-};
-
-export const annotatedSequenceToAnnotations = (
-  annotatedSequence: AnnotatedSequence
-): Annotation[] => {
-  return [];
 };
 
 interface FastqRecord {
@@ -396,31 +386,3 @@ export function parseFasta(data: string): FastaRecord[] {
 
   return records;
 }
-
-export const fastaToSeqweaverSequences = ({ fasta }: { fasta: string }) => {};
-
-export const fastqToSeqweaverSequences = ({
-  fastq,
-}: {
-  fastq: string;
-}): AnnotatedSequence[] => {
-  const records = parseFastq(fastq);
-  const sequences = records.map((record) => {
-    const { successes, failures } = anythingToAnnotatedSequences({
-      payload: record.sequence,
-      payloadType: "raw",
-      name: record.id,
-    });
-    if (failures.length > 0) {
-      throw new Error("Failed to parse fasta");
-    }
-    if (successes.length != 1) {
-      throw new Error("Expected exactly one parse success");
-    }
-    if (successes[0].sequences.length != 1) {
-      throw new Error("Expected exactly one sequence");
-    }
-    return successes[0].sequences[0];
-  });
-  return z.array(annotatedSequenceSchema).parse(sequences);
-};

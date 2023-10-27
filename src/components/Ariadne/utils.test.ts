@@ -10,44 +10,46 @@ test("raw test", async () => {
       payloadType: "raw",
     })
   ).toEqual({
-    failures: [],
     successes: [
       {
-        annotations: [],
-        sequences: [
-          {
-            annotations: [],
-            base: "A",
-            complement: "T",
-            index: 0,
-          },
-          {
-            annotations: [],
-            base: "T",
-            complement: "A",
-            index: 1,
-          },
-          {
-            annotations: [],
-            base: "C",
-            complement: "G",
-            index: 2,
-          },
-          {
-            annotations: [],
-            base: "G",
-            complement: "C",
-            index: 3,
-          },
-        ],
         source: {
           annotationOnClick: undefined,
           annotations: undefined,
           payload: "ATCG",
           payloadType: "raw",
         },
+        annotations: [],
+        sequences: [
+          [
+            {
+              annotations: [],
+              base: "A",
+              complement: "T",
+              index: 0,
+            },
+            {
+              annotations: [],
+              base: "T",
+              complement: "A",
+              index: 1,
+            },
+            {
+              annotations: [],
+              base: "C",
+              complement: "G",
+              index: 2,
+            },
+            {
+              annotations: [],
+              base: "G",
+              complement: "C",
+              index: 3,
+            },
+          ],
+        ],
       },
     ],
+    failures: [],
   });
 });
 

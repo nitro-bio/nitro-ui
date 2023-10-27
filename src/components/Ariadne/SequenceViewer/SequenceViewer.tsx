@@ -3,13 +3,20 @@ import { classNames } from "@utils/stringUtils";
 
 import type {
   AnnotatedAA,
+  AnnotatedBase,
   AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
 
-export interface Props {
+export const SequenceViewer = ({
+  sequences,
+  selection,
+  containerClassName,
+  charClassName,
+  selectionClassName,
+}: {
   sequences: AnnotatedSequence[];
   selection: AriadneSelection | null;
   containerClassName?: string;
@@ -21,14 +28,7 @@ export interface Props {
     sequenceIdx: number;
   }) => string;
   selectionClassName?: string;
-}
-export const SequenceViewer = ({
-  sequences,
-  selection,
-  containerClassName,
-  charClassName,
-  selectionClassName,
-}: Props) => {
+}) => {
   return (
     <>
       <div className={classNames(" flex flex-wrap ", containerClassName)}>
@@ -38,9 +38,9 @@ export const SequenceViewer = ({
               className={classNames("my-2 flex flex-col justify-between")}
               key={`base-${baseIdx}`}
             >
-              {sequences.map((sequence, sequenceIdx) => {
+              {sequences.map((sequence: AnnotatedBase[], sequenceIdx) => {
                 const base = sequence.find(
-                  (base) => base.index === baseIdx
+                  (base: AnnotatedBase) => base.index === baseIdx
                 ) || { base: " ", annotations: [], index: baseIdx };
 
                 return (

@@ -63,7 +63,7 @@ const LinearAnnotation = ({
               ...annotation,
               end: sequence.length,
               onClick: () => {
-                annotation.onClick({ ...annotation });
+                annotation.onClick?.({ ...annotation });
               },
             }}
             sequence={sequence}
@@ -74,7 +74,7 @@ const LinearAnnotation = ({
               ...annotation,
               start: 0,
               onClick: () => {
-                annotation.onClick({ ...annotation });
+                annotation.onClick?.({ ...annotation });
               },
             }}
             sequence={sequence}
@@ -90,7 +90,7 @@ const LinearAnnotation = ({
               ...annotation,
               start: sequence.length,
               onClick: () => {
-                annotation.onClick({ ...annotation });
+                annotation.onClick?.({ ...annotation });
               },
             }}
             sequence={sequence}
@@ -101,7 +101,7 @@ const LinearAnnotation = ({
               ...annotation,
               end: 0,
               onClick: () => {
-                annotation.onClick({ ...annotation });
+                annotation.onClick?.({ ...annotation });
               },
             }}
             sequence={sequence}
@@ -128,7 +128,7 @@ const LinearAnnotation = ({
         width: `${annotationRectangleWidthPerc}%`,
       }}
       onClick={() => {
-        annotation.onClick(annotation);
+        annotation.onClick?.(annotation);
       }}
     >
       <div

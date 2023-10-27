@@ -30,7 +30,7 @@ export const annotationSchema = z.object({
   end: z.number(),
   className: z.string().optional(),
   text: z.string(),
-  onClick: z.function().optional(),
+  onClick: z.function().args(z.any()).optional(), // circular reference
 });
 export const stackedAnnotationSchema = annotationSchema.extend({
   stack: z.number(),
@@ -70,7 +70,14 @@ export const GapSchema = z.literal("-");
 export const StopSchema = z.literal("*");
 export const SpaceSchema = z.literal(" ");
 export const UnknownSchema = z.literal("?");
-
+export const validatedSequenceStringSchema = z.union([
+  z.array(
+    z.union([nuclSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema])
+  ),
+  z.array(
+    z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema])
+  ),
+]);
 export const annotatedNuclSchema = z.object({
   base: z.union([nuclSchema, GapSchema, SpaceSchema, UnknownSchema]),
   annotations: z.array(stackedAnnotationSchema),
@@ -78,7 +85,7 @@ export const annotatedNuclSchema = z.object({
 });
 
 export const annotatedAASchema = z.object({
-  base: aaSchema,
+  base: z.union([aaSchema, GapSchema, SpaceSchema, UnknownSchema]),
   annotations: z.array(stackedAnnotationSchema),
   index: z.number(),
 });
@@ -88,22 +95,7 @@ export const annotatedBaseSchema = z.union([
   annotatedAASchema,
 ]);
 
-export const validatedNuclSequenceSchema = z.array(
-  z.union([nuclSchema, GapSchema, SpaceSchema, UnknownSchema])
-);
-export const validatedAASequenceSchema = z.array(
-  z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema])
-);
-
-export const validatedSequenceStringSchema = z.union([
-  validatedNuclSequenceSchema,
-  validatedAASequenceSchema,
-]);
-
-export const annotatedSequenceSchema = z.union([
-  z.array(annotatedNuclSchema),
-  z.array(annotatedAASchema),
-]);
+export const annotatedSequenceSchema = z.array(annotatedBaseSchema);
 
 export const ariadneSelectionSchema = z.object({
   start: z.number(),

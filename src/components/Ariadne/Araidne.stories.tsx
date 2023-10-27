@@ -1,4 +1,3 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
@@ -10,13 +9,9 @@ import { AriadneSelection } from "./types";
 
 export default {
   title: "Ariadne/Ariadne",
-  argTypes: {
-    sequence: { type: "string" },
-  },
-} as ComponentMeta<typeof CircularViewer>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({
+const AriadneStory = ({
   initialSelection,
 }: {
   initialSelection?: AriadneSelection;
@@ -82,31 +77,33 @@ const Template: ComponentStory<any> = ({
   );
 };
 
-export const KitchenSinkViewerStory = Template.bind({});
-KitchenSinkViewerStory.args = {};
-export const KitchenSinkViewerStoryForwardSelectionOverSeam = Template.bind({});
-KitchenSinkViewerStoryForwardSelectionOverSeam.args = {
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "forward",
-  },
-};
+export const KitchenSinkViewerStory = () => <AriadneStory />;
+export const KitchenSinkViewerStoryForwardSelectionOverSeam = () => (
+  <AriadneStory
+    initialSelection={{
+      start: 10,
+      end: 5,
+      direction: "forward",
+    }}
+  />
+);
 
-export const KitchenSinkViewerStoryReverseSelection = Template.bind({});
-KitchenSinkViewerStoryReverseSelection.args = {
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "reverse",
-  },
-};
+export const KitchenSinkViewerStoryReverseSelection = () => (
+  <AriadneStory
+    initialSelection={{
+      start: 10,
+      end: 5,
+      direction: "reverse",
+    }}
+  />
+);
 
-export const KitchenSinkViewerStoryReverseSelectionOverSeam = Template.bind({});
-KitchenSinkViewerStoryReverseSelectionOverSeam.args = {
-  initialSelection: {
-    start: 5,
-    end: 10,
-    direction: "reverse",
-  },
-};
+export const KitchenSinkViewerStoryReverseSelectionOverSeam = () => (
+  <AriadneStory
+    initialSelection={{
+      start: 5,
+      end: 10,
+      direction: "reverse",
+    }}
+  />
+);

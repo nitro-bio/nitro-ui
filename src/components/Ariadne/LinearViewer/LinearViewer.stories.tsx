@@ -5,7 +5,7 @@ import {
   StackedAnnotation,
 } from "@Ariadne/types";
 import { Card } from "@ui/Card";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { LinearViewer } from ".";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
@@ -26,10 +26,14 @@ const LinearStory = ({
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
-  const { annotatedSequences, stackedAnnotations } = generateRandomSequences({
-    maxSequences: 4,
-    maxLength: 100,
-  });
+  const { annotatedSequences, stackedAnnotations } = useMemo(
+    () =>
+      generateRandomSequences({
+        maxSequences: 5,
+        maxLength: 100,
+      }),
+    []
+  );
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );

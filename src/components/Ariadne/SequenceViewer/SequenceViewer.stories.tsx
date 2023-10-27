@@ -1,6 +1,5 @@
 import { generateRandomAnnotations } from "@Ariadne/storyUtils";
 import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
@@ -16,13 +15,9 @@ import type {
 export default {
   title: "Ariadne/SequenceViewer",
   component: SequenceViewer,
-  argTypes: {
-    sequence: { type: "string" },
-  },
-} as ComponentMeta<typeof SequenceViewer>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({
+const SequenceStory = ({
   sequences,
   initialSelection,
   containerClassName,
@@ -90,53 +85,56 @@ const Template: ComponentStory<any> = ({
   );
 };
 
-export const SequenceViewerStory = Template.bind({});
-SequenceViewerStory.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-};
-export const SequenceViewerStoryForwardSelectionOverSeam = Template.bind({});
-SequenceViewerStoryForwardSelectionOverSeam.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "forward",
-  },
-};
+export const SequenceViewerStory = () => (
+  <SequenceStory sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))} />
+);
+export const SequenceViewerStoryForwardSelectionOverSeam = () => (
+  <SequenceStory
+    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    initialSelection={{
+      start: 10,
+      end: 5,
+      direction: "forward",
+    }}
+  />
+);
 
-export const SequenceViewerStoryReverseSelection = Template.bind({});
-SequenceViewerStoryReverseSelection.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "reverse",
-  },
-};
+export const SequenceViewerStoryReverseSelection = () => (
+  <SequenceStory
+    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    initialSelection={{
+      start: 10,
+      end: 5,
+      direction: "reverse",
+    }}
+  />
+);
 
-export const SequenceViewerStoryReverseSelectionOverSeam = Template.bind({});
-SequenceViewerStoryReverseSelectionOverSeam.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-  initialSelection: {
-    start: 5,
-    end: 10,
-    direction: "reverse",
-  },
-};
+export const SequenceViewerStoryReverseSelectionOverSeam = () => (
+  <SequenceStory
+    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    initialSelection={{
+      start: 5,
+      end: 10,
+      direction: "reverse",
+    }}
+  />
+);
 
-export const SequenceViewerStoryCustomClassNames = Template.bind({});
-SequenceViewerStoryCustomClassNames.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-  containerClassName: "text-xl bg-noir-800 skew-y-3",
-};
+export const SequenceViewerStoryCustomClassNames = () => (
+  <SequenceStory
+    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    containerClassName="text-xl bg-noir-800 skew-y-3"
+  />
+);
 
-export const SequenceViewerStorySecondSequence = Template.bind({});
-SequenceViewerStorySecondSequence.args = {
-  sequences: ["A", "T", "C", "G"].map((x) => x.repeat(400)),
-
-  initialSelection: {
-    start: 5,
-    end: 10,
-    direction: "reverse",
-  },
-};
+export const SequenceViewerStorySecondSequence = () => (
+  <SequenceStory
+    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    initialSelection={{
+      start: 5,
+      end: 10,
+      direction: "reverse",
+    }}
+  />
+);

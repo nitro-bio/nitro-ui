@@ -5,5 +5,7 @@ export * from "./ABViewer";
 export * from "./HeadTailViewer";
 export * from "./ReferenceTicks";
 export * from "./utils";
+export * from "./genbankUtils";
 export * from "./hooks";
+export * from "./schemas";
 export * from "./types";
