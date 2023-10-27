@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
@@ -56,6 +57,15 @@ export default defineConfig({
           "styled-components": "styled",
         },
       },
+    },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./setupTests.ts"],
+    env: {
+      mode: "test",
+      baseUrl: "http://localhost:6006",
     },
   },
 });

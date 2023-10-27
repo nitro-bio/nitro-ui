@@ -1,18 +1,11 @@
+import { generateRandomSequences } from "@Ariadne/storyUtils";
 import {
-  generateRandomAnnotations,
-  generateRandomSequences,
-} from "@Ariadne/storyUtils";
-import {
-  AnnotatedSequence,
   Annotation,
   AriadneSelection,
   StackedAnnotation,
-  ValidatedSequence,
 } from "@Ariadne/types";
-import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { LinearViewer } from ".";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
@@ -23,51 +16,20 @@ export default {
   argTypes: {
     sequences: { type: "string" },
   },
-} as ComponentMeta<typeof LinearViewer>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({
-  sequences,
+const LinearStory = ({
   initialSelection,
   selectionClassName,
 }: {
-  sequences?: string[];
   initialSelection?: AriadneSelection;
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
-  let annotatedSequences: AnnotatedSequence[] = [];
-  let stackedAnnotations: StackedAnnotation[] = [];
-  if (!sequences) {
-    const memoizedData = useMemo(
-      () => generateRandomSequences({ maxLength: 100, maxSequences: 6 }),
-      []
-    );
-    annotatedSequences = memoizedData.annotatedSequences;
-    stackedAnnotations = memoizedData.stackedAnnotations;
-  } else {
-    sequences.forEach((sequence) => {
-      const annotations = useMemo(
-        () => generateRandomAnnotations(sequence, 5),
-        [sequence]
-      ).map((annotation) => ({
-        ...annotation,
-        onClick: (ann: Annotation) => {
-          setSelection(ann);
-        },
-      }));
-
-      const stackedAnnotations = getStackedAnnotations(annotations);
-      const validatedSequence = sequence.split("") as ValidatedSequence;
-      const annotatedSequence = getAnnotatedSequence(
-        validatedSequence,
-        stackedAnnotations
-      );
-      annotatedSequences.push(annotatedSequence);
-      stackedAnnotations.push(...stackedAnnotations);
-    });
-  }
-
+  const { annotatedSequences, stackedAnnotations } = generateRandomSequences({
+    maxSequences: 4,
+    maxLength: 100,
+  });
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null
   );
@@ -111,58 +73,57 @@ const Template: ComponentStory<any> = ({
   );
 };
 
-export const LinearViewerStory = Template.bind({});
-LinearViewerStory.args = {};
-export const LinearViewerStoryForwardSelectionOverSeam = Template.bind({});
-LinearViewerStoryForwardSelectionOverSeam.args = {
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "forward",
-  },
+export const LinearViewerStory = () => {
+  return <LinearStory />;
 };
-
-export const LinearViewerStoryReverseSelection = Template.bind({});
-LinearViewerStoryReverseSelection.args = {
-  initialSelection: {
-    start: 10,
-    end: 5,
-    direction: "reverse",
-  },
+export const LinearViewerStoryForwardSelectionOverSeam = () => {
+  return (
+    <LinearStory
+      initialSelection={{
+        start: 10,
+        end: 5,
+        direction: "forward",
+      }}
+    />
+  );
 };
-
-export const LinearViewerStoryReverseSelectionOverSeam = Template.bind({});
-LinearViewerStoryReverseSelectionOverSeam.args = {
-  initialSelection: {
-    start: 5,
-    end: 10,
-    direction: "reverse",
-  },
+export const LinearViewerStoryReverseSelection = () => {
+  return (
+    <LinearStory
+      initialSelection={{
+        start: 10,
+        end: 5,
+        direction: "reverse",
+      }}
+    />
+  );
 };
-
-export const LinearViewerStorySelectionClassName = Template.bind({});
-LinearViewerStorySelectionClassName.args = {
-  initialSelection: {
-    start: 5,
-    end: 10,
-    direction: "reverse",
-  },
-  selectionClassName: (selection: AriadneSelection) => {
-    if (Math.abs(selection.end - selection.start) > 100) {
-      return "bg-red-500 fill-red-500 text-red-500";
-    } else {
-      return "bg-blue-500 fill-blue-500 text-blue-500";
-    }
-  },
+export const LinearViewerStoryReverseSelectionOverSeam = () => {
+  return (
+    <LinearStory
+      initialSelection={{
+        start: 5,
+        end: 10,
+        direction: "reverse",
+      }}
+    />
+  );
 };
-export const LinearViewerStoryLongerSecondSequence = Template.bind({});
-LinearViewerStoryLongerSecondSequence.args = {
-  sequences: ["A".repeat(50), "A".repeat(10) + "T".repeat(50)],
-  selectionClassName: (selection: AriadneSelection) => {
-    if (Math.abs(selection.end - selection.start) > 100) {
-      return "bg-red-500 fill-red-500 text-red-500";
-    } else {
-      return "bg-blue-500 fill-blue-500 text-blue-500";
-    }
-  },
+export const LinearViewerStorySelectionClassName = () => {
+  return (
+    <LinearStory
+      initialSelection={{
+        start: 5,
+        end: 10,
+        direction: "reverse",
+      }}
+      selectionClassName={(selection: AriadneSelection) => {
+        if (Math.abs(selection.end - selection.start) > 100) {
+          return "bg-red-500 fill-red-500 text-red-500";
+        } else {
+          return "bg-blue-500 fill-blue-500 text-blue-500";
+        }
+      }}
+    />
+  );
 };

@@ -6,11 +6,23 @@ import {
 import {
   AnnotatedSequence,
   Annotation,
-  annotationTypes,
   StackedAnnotation,
   ValidatedSequence,
 } from "./types";
 
+const annotationTypes = [
+  "CDS",
+  "enhancer",
+  "intron",
+  "misc_feature",
+  "polyA_signal",
+  "promoter",
+  "protein_bind",
+  "rep_origin",
+  "LTR",
+  "source",
+  "insertion",
+];
 const classNames = [
   "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-red-600 fill-red-600 stroke-red-600",
   "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-blue-600 fill-blue-600 stroke-blue-600 ",
@@ -101,7 +113,7 @@ export const generateRandomSequences = ({
       sequence as ValidatedSequence,
       []
     ).map((x) => ({ ...x, index: x.index + startIdx }));
-    sequences.push(annotatedSequence);
+    sequences.push(annotatedSequence as AnnotatedSequence);
   });
   return {
     annotatedSequences: sequences,

@@ -10,6 +10,9 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    options: {
+      showPanel: false,
+    },
   },
   globalTypes: {
     darkMode: {

@@ -1,10 +1,22 @@
+import genbankParser, { ParsedGenbank } from "genbank-parser";
+import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
+import { genbankToAnnotatedSequence } from "./genbankUtils";
+import {
+  annotatedSequenceSchema,
+  validatedSequenceStringSchema,
+} from "./schemas";
 import type {
   AA,
   AnnotatedSequence,
   Annotation,
   AriadneSelection,
+  Gap,
   Nucl,
+  Space,
   StackedAnnotation,
+  Stop,
+  Unknown,
   ValidatedSequence,
 } from "./types";
 
@@ -35,7 +47,10 @@ export const getAnnotatedSequence = (
   stackedAnnotations: StackedAnnotation[]
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
-  const mapFn = (base: Nucl | AA, idx: number) => {
+  const mapFn = (
+    base: Nucl | AA | Gap | Stop | Space | Unknown,
+    idx: number
+  ) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
       // if the annotation spans the seam of the plasmid
       if (annotation.start > annotation.end) {
@@ -162,4 +177,250 @@ export const getSubsequenceLength = (
   } else {
     return sequenceLength - start + end;
   }
+};
+
+interface StringSource {
+  payloadType: "genbank" | "fasta" | "raw";
+  payload: string;
+  annotations?: Annotation[];
+  annotationOnClick?: (annotation: Annotation) => void;
+}
+
+interface GenbankSource {
+  payloadType: "parsed-genbank";
+  payload: ParsedGenbank;
+  annotations?: undefined;
+  annotationOnClick?: (annotation: Annotation) => void;
+}
+type AnythingSource = StringSource | GenbankSource;
+
+type ParseError = {
+  source: AnythingSource;
+  error: string;
+};
+type ParseSuccess = {
+  source: AnythingSource;
+  sequences: AnnotatedSequence;
+  annotations: Annotation[];
+};
+export const anythingToAnnotatedSequences = ({
+  payload,
+  payloadType,
+  annotations,
+  annotationOnClick,
+}: AnythingSource): { successes: ParseSuccess[]; failures: ParseError[] } => {
+  let successes: ParseSuccess[] = [];
+  let failures: ParseError[] = [];
+  switch (payloadType) {
+    case "raw":
+      try {
+        const [sequences] = [
+          stringToAnnotatedSequence({
+            sequence: payload,
+            annotations: annotations ?? [],
+          }),
+        ];
+        successes.push({
+          source: {
+            payload,
+            annotations,
+            annotationOnClick,
+            payloadType,
+          },
+          sequences: sequences,
+          annotations: annotations ?? [],
+        });
+      } catch (e) {
+        failures.push({
+          source: {
+            payload,
+            annotations,
+            annotationOnClick,
+            payloadType,
+          },
+          error: `Failed to parse raw sequence: ${e}`,
+        });
+      }
+      break;
+    case "parsed-genbank":
+    case "genbank":
+      let parsed: ParsedGenbank[];
+      if (payloadType === "parsed-genbank") {
+        parsed = [payload];
+      } else {
+        parsed = genbankParser(payload);
+      }
+      parsed.forEach((genbank) => {
+        try {
+          const sequence = genbankToAnnotatedSequence({
+            genbank,
+            annotationOnClick,
+          }).annotatedSequence;
+          successes.push({
+            source: {
+              payload,
+              annotations,
+              annotationOnClick,
+              payloadType,
+            },
+            sequences: sequence,
+            annotations: [],
+          });
+        } catch (e) {
+          failures.push({
+            source: {
+              payload,
+              annotations,
+              annotationOnClick,
+              payloadType,
+            },
+            error: `Failed to parse genbank: ${e}`,
+          });
+        }
+      });
+      break;
+    case "fasta":
+      let records: (FastaRecord | FastqRecord)[];
+      if (payloadType === "fasta") {
+        records = parseFasta(payload);
+      } else {
+        // fastq
+        records = parseFastq(payload);
+      }
+      records.forEach((record) => {
+        try {
+          const res = anythingToAnnotatedSequences({
+            payload: record.sequence,
+            payloadType: "raw",
+          });
+          failures.push(...res.failures);
+          successes.push(...res.successes);
+        } catch (e) {
+          failures.push({
+            source: {
+              payload,
+              annotations,
+              annotationOnClick,
+              payloadType,
+            },
+            error: `Failed to parse ${payloadType}: ${e}`,
+          });
+        }
+      });
+      break;
+    default:
+      failures.push({
+        source: {
+          payload,
+          annotations,
+          annotationOnClick,
+          payloadType,
+        },
+        error: `Unknown payload type: ${payloadType}`,
+      });
+      break;
+  }
+
+  return {
+    successes,
+    failures,
+  };
+};
+
+export const stringToAnnotatedSequence = ({
+  sequence,
+  annotations,
+}: {
+  sequence: string;
+  annotations?: Annotation[];
+}): AnnotatedSequence => {
+  const validatedSequence = validatedSequenceStringSchema.parse(
+    sequence.split("")
+  );
+  const stackedAnnotations = getStackedAnnotations(annotations ?? []);
+  const annotatedSequence = getAnnotatedSequence(
+    validatedSequence,
+    stackedAnnotations
+  );
+  return annotatedSequence;
+};
+
+export const annotatedSequenceToAnnotations = (
+  annotatedSequence: AnnotatedSequence
+): Annotation[] => {
+  return [];
+};
+
+interface FastqRecord {
+  id: string;
+  sequence: string;
+  optionalId: string;
+  quality: string;
+}
+
+export function parseFastq(data: string): FastqRecord[] {
+  const lines = data.trim().split("\n");
+  const records: FastqRecord[] = [];
+
+  for (let i = 0; i < lines.length; i += 4) {
+    const record: FastqRecord = {
+      id: lines[i].substring(1),
+      sequence: lines[i + 1],
+      optionalId: lines[i + 2].substring(1),
+      quality: lines[i + 3],
+    };
+
+    records.push(record);
+  }
+
+  return records;
+}
+
+interface FastaRecord {
+  id: string;
+  sequence: string;
+}
+
+export function parseFasta(data: string): FastaRecord[] {
+  const lines = data.trim().split("\n");
+  const records: FastaRecord[] = [];
+
+  for (let i = 0; i < lines.length; i += 2) {
+    const record: FastaRecord = {
+      id: lines[i].substring(1),
+      sequence: lines[i + 1],
+    };
+
+    records.push(record);
+  }
+
+  return records;
+}
+
+export const fastaToSeqweaverSequences = ({ fasta }: { fasta: string }) => {};
+
+export const fastqToSeqweaverSequences = ({
+  fastq,
+}: {
+  fastq: string;
+}): AnnotatedSequence[] => {
+  const records = parseFastq(fastq);
+  const sequences = records.map((record) => {
+    const { successes, failures } = anythingToAnnotatedSequences({
+      payload: record.sequence,
+      payloadType: "raw",
+      name: record.id,
+    });
+    if (failures.length > 0) {
+      throw new Error("Failed to parse fasta");
+    }
+    if (successes.length != 1) {
+      throw new Error("Expected exactly one parse success");
+    }
+    if (successes[0].sequences.length != 1) {
+      throw new Error("Expected exactly one sequence");
+    }
+    return successes[0].sequences[0];
+  });
+  return z.array(annotatedSequenceSchema).parse(sequences);
 };

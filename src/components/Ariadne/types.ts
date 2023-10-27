@@ -1,84 +1,40 @@
-export interface Coor {
-  x: number;
-  y: number;
-}
-export interface Angle {
-  degrees: number;
-  center: Coor;
-}
+import { z } from "zod";
+import {
+  annotationTypeSchema,
+  angleSchema,
+  coorSchema,
+  annotationSchema,
+  stackedAnnotationSchema,
+  nuclSchema,
+  aaSchema,
+  GapSchema,
+  StopSchema,
+  SpaceSchema,
+  UnknownSchema,
+  annotatedNuclSchema,
+  annotatedAASchema,
+  annotatedSequenceSchema,
+  validatedSequenceStringSchema,
+  ariadneSelectionSchema,
+} from "./schemas";
 
-export const annotationTypes = [
-  "CDS",
-  "enhancer",
-  "intron",
-  "misc_feature",
-  "polyA_signal",
-  "promoter",
-  "protein_bind",
-  "rep_origin",
-  "LTR",
-];
+export type Coor = z.infer<typeof coorSchema>;
+export type Angle = z.infer<typeof angleSchema>;
+export type AnnotationType = z.infer<typeof annotationTypeSchema>;
+export type Annotation = z.infer<typeof annotationSchema>;
+export type StackedAnnotation = z.infer<typeof stackedAnnotationSchema>;
 
-export type AnnotationType = (typeof annotationTypes)[number];
+export type Nucl = z.infer<typeof nuclSchema>;
+export type AA = z.infer<typeof aaSchema>;
+export type Gap = z.infer<typeof GapSchema>;
+export type Stop = z.infer<typeof StopSchema>;
+export type Space = z.infer<typeof SpaceSchema>;
+export type Unknown = z.infer<typeof UnknownSchema>;
+export type AnnotatedNucl = z.infer<typeof annotatedNuclSchema>;
+export type AnnotatedAA = z.infer<typeof annotatedAASchema>;
+export type AnnotatedBase = z.infer<typeof annotatedAASchema>;
+export type AnnotatedSequence = z.infer<typeof annotatedSequenceSchema>;
 
-export interface Annotation {
-  type: AnnotationType;
-  direction: "forward" | "reverse";
-  start: number;
-  end: number;
-  className?: string;
-  text: string;
-  onClick: (ann: Annotation) => void;
-}
+export type ValidatedSequence = z.infer<typeof validatedSequenceStringSchema>;
 
-export interface StackedAnnotation extends Annotation {
-  stack: number;
-}
-
-export type Nucl = "A" | "C" | "G" | "T";
-export type AA =
-  | "A"
-  | "C"
-  | "D"
-  | "E"
-  | "F"
-  | "G"
-  | "H"
-  | "I"
-  | "K"
-  | "L"
-  | "M"
-  | "N"
-  | "P"
-  | "Q"
-  | "R"
-  | "S"
-  | "T"
-  | "V"
-  | "W"
-  | "Y";
-export type Gap = "-";
-export type Stop = "*";
-export type Space = " ";
-export type Unknown = "?";
-
-// TODO: want to make a generic that paramaterizes over AA or Nucl
-export interface AnnotatedNucl {
-  base: Nucl | Gap | Space | Unknown;
-  annotations: StackedAnnotation[];
-  index: number;
-}
-
-export interface AnnotatedAA {
-  base: AA | Gap | Stop | Space | Unknown;
-  annotations: StackedAnnotation[];
-  index: number;
-}
-export type AnnotatedSequence = AnnotatedNucl[] | AnnotatedAA[];
-export type ValidatedSequence = Nucl[] | AA[];
-
-export type AriadneSelection = {
-  start: number;
-  end: number;
-  direction: "forward" | "reverse";
-};
+export type AriadneSelection = z.infer<typeof ariadneSelectionSchema>;

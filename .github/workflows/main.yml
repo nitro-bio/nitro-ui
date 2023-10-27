@@ -18,10 +18,11 @@ jobs:
         run: pnpm run format
       - name: Run ESLint
         run: pnpm run lint
+      - name: Run Tests
+        run: pnpm run test
       - name: Build component Library
         run: pnpm run build
       - name: Build Storybook
         run: pnpm run build-storybook
         env:
             NODE_OPTIONS: "--max_old_space_size=4096" # to get around JavaScript heap out of memory error
-
