@@ -70,7 +70,7 @@ const LinearStory = ({
 
       <LinearAnnotationGutter
         containerClassName=""
-        stackedAnnotations={[]}
+        stackedAnnotations={stackedAnnotations}
         sequence={annotatedSequences[0]}
       />
     </Card>
