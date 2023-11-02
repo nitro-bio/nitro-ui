@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
 import { parseGenbank } from "./genbankUtils";
 import { testFastaString, testGenbankString } from "./testData";
-import { anythingToAnnotatedSequences } from "./utils";
+import { safeAnythingToAnnotatedSequences } from "./utils";
 
 test("raw test", async () => {
   expect(
-    anythingToAnnotatedSequences({
+    safeAnythingToAnnotatedSequences({
       payload: "ATCG",
       payloadType: "raw",
     })
@@ -54,7 +54,7 @@ test("raw test", async () => {
 });
 
 test("genbank test", async () => {
-  const res = anythingToAnnotatedSequences({
+  const res = safeAnythingToAnnotatedSequences({
     payload: testGenbankString,
     payloadType: "genbank",
   });
@@ -64,7 +64,7 @@ test("genbank test", async () => {
 
 test("parsed-genbank test", async () => {
   const genbank = parseGenbank(testGenbankString);
-  const res = anythingToAnnotatedSequences({
+  const res = safeAnythingToAnnotatedSequences({
     payload: genbank[0],
     payloadType: "parsed-genbank",
   });
@@ -73,7 +73,7 @@ test("parsed-genbank test", async () => {
 });
 
 test("fasta test", async () => {
-  const res = anythingToAnnotatedSequences({
+  const res = safeAnythingToAnnotatedSequences({
     payload: testFastaString,
     payloadType: "fasta",
   });

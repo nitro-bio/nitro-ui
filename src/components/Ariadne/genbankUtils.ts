@@ -2,7 +2,7 @@ import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { z } from "zod";
 import { annotatedSequenceSchema, annotationTypeSchema } from "./schemas";
 import { Annotation, AnnotationType, StackedAnnotation } from "./types";
-import { anythingToAnnotatedSequences } from "./utils";
+import { safeAnythingToAnnotatedSequences } from "./utils";
 
 export const GenbankFeatureSchema = z.object({
   name: z.string().min(1),
@@ -29,7 +29,7 @@ export const genbankToAnnotatedSequence = ({
     annotationOnClick,
   });
   const stackedAnnotations = stackAnnsByType(annotations);
-  const { successes, failures } = anythingToAnnotatedSequences({
+  const { successes, failures } = safeAnythingToAnnotatedSequences({
     payload: genbank.sequence,
     payloadType: "raw",
     annotations: stackedAnnotations,

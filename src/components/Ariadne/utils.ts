@@ -1,6 +1,10 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
+import { z } from "zod";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import { validatedSequenceStringSchema } from "./schemas";
+import {
+  stackedAnnotationSchema,
+  validatedSequenceStringSchema,
+} from "./schemas";
 import type {
   AA,
   AnnotatedSequence,
@@ -203,6 +207,33 @@ export const anythingToAnnotatedSequences = ({
   payloadType,
   annotations,
   annotationOnClick,
+}: AnythingSource): {
+  sequences: AnnotatedSequence[];
+  stackedAnnotations: StackedAnnotation[];
+} => {
+  const { successes, failures } = safeAnythingToAnnotatedSequences({
+    payload,
+    payloadType,
+    annotations,
+    annotationOnClick,
+  } as AnythingSource);
+  if (failures.length > 0) {
+    const failString = failures.map((f) => f.error).join("\n");
+    throw new Error(`Parse failures: ${failString}`);
+  }
+  const sequences = successes.map((s) => s.sequences).flat();
+  const newAnnotations: Annotation[] = successes
+    .map((s) => s.annotations)
+    .flat();
+  const stackedAnnotations = getStackedAnnotations(newAnnotations);
+  return { sequences, stackedAnnotations };
+};
+
+export const safeAnythingToAnnotatedSequences = ({
+  payload,
+  payloadType,
+  annotations,
+  annotationOnClick,
 }: AnythingSource): { successes: ParseSuccess[]; failures: ParseError[] } => {
   const successes: ParseSuccess[] = [];
   const failures: ParseError[] = [];
@@ -283,7 +314,7 @@ export const anythingToAnnotatedSequences = ({
       }
       records.forEach((record) => {
         try {
-          const res = anythingToAnnotatedSequences({
+          const res = safeAnythingToAnnotatedSequences({
             payload: record.sequence,
             payloadType: "raw",
           });
