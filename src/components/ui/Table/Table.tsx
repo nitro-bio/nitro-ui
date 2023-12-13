@@ -1,4 +1,10 @@
+import {
+  ArrowDownIcon,
+  ArrowsUpDownIcon,
+  ArrowUpIcon,
+} from "@heroicons/react/20/solid";
 import { usePaginator } from "@hooks/usePaginator";
+import { useSorted } from "@hooks/useSorted";
 import { Paginator } from "@ui/Paginator";
 import { classNames } from "@utils/stringUtils";
 import { z } from "zod";
@@ -15,9 +21,12 @@ export const Table = <T extends object>({
   className?: string;
 }) => {
   const paddingClass = compact ? "" : "px-2 py-1";
+  const { sortedData, sortKey, setSortKey, sortOrder, setSortOrder } =
+    useSorted<T>(data);
+
   const { currentPage, totalPages, nextPage, prevPage, currentDataSlice } =
     usePaginator<T>({
-      data,
+      data: sortedData,
       resultsPerPage,
     });
 
@@ -45,7 +54,14 @@ export const Table = <T extends object>({
     >
       <div className="overflow-x-auto">
         <table className="min-w-full border-separate">
-          <TableHeaders data={data} compact={compact} />
+          <TableHeaders
+            sortedData={sortedData}
+            compact={compact}
+            sortKey={sortKey}
+            setSortKey={setSortKey}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+          />
           <tbody className="bg-white">
             {currentDataSlice.map((datum, index) => (
               <TableRow
@@ -72,11 +88,19 @@ export const Table = <T extends object>({
   );
 };
 
-const TableHeaders = ({
-  data,
+const TableHeaders = <T extends object>({
+  sortedData,
+  sortKey,
+  setSortKey,
+  sortOrder,
+  setSortOrder,
   compact,
 }: {
-  data: object[];
+  sortedData: T[];
+  sortKey: keyof T | null;
+  setSortKey: (key: keyof T | null) => void;
+  sortOrder: "asc" | "dsc";
+  setSortOrder: (order: "asc" | "dsc") => void;
   compact?: boolean;
 }) => {
   const paddingClass = compact
@@ -85,16 +109,42 @@ const TableHeaders = ({
   return (
     <thead>
       <tr>
-        {Object.keys(data[0]).map((column) => (
+        {Object.keys(sortedData[0]).map((column) => (
           <th
             key={column}
             scope="col"
             className={classNames(
-              "relative z-10 border-b border-noir-300 bg-noir-50 bg-opacity-75  text-left text-sm font-semibold text-noir-900 ",
+              "relative z-10 cursor-pointer border-b border-noir-300  bg-noir-50 bg-opacity-75 text-left text-sm font-semibold text-noir-900 ",
               paddingClass
             )}
+            onClick={() => {
+              if (sortKey === column) {
+                setSortOrder(sortOrder === "asc" ? "dsc" : "asc");
+              } else {
+                setSortKey(column as keyof T);
+                setSortOrder("asc");
+              }
+            }}
           >
-            {column.replaceAll("_", " ")}
+            <span
+              className={classNames(
+                "flex items-center gap-1 ",
+                sortKey === column ? "text-brand-600" : ""
+              )}
+            >
+              {column.replaceAll("_", " ")}
+              {sortKey === column ? (
+                <>
+                  {sortOrder === "asc" ? (
+                    <ArrowUpIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+                  ) : (
+                    <ArrowDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+                  )}
+                </>
+              ) : (
+                <ArrowsUpDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+              )}
+            </span>
           </th>
         ))}
       </tr>
