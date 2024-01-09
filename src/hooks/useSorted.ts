@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 type SortOrder = "asc" | "dsc";
 
-export function useSorted<T>(data: T[]) {
+export function useSorted<T extends object>(data: T[]) {
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [sortedData, setSortedData] = useState<T[]>(data);

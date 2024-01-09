@@ -2,7 +2,10 @@ import {
   ArrowDownIcon,
   ArrowsUpDownIcon,
   ArrowUpIcon,
+  XMarkIcon,
 } from "@heroicons/react/20/solid";
+import { FunnelIcon } from "@heroicons/react/24/outline";
+import { Filter, useFiltered } from "@hooks/useFiltered";
 import { usePaginator } from "@hooks/usePaginator";
 import { useSorted } from "@hooks/useSorted";
 import { Paginator } from "@ui/Paginator";
@@ -21,9 +24,9 @@ export const Table = <T extends object>({
   className?: string;
 }) => {
   const paddingClass = compact ? "" : "px-2 py-1";
+  const { filteredData, filters, updateFilter } = useFiltered<T>(data);
   const { sortedData, sortKey, setSortKey, sortOrder, setSortOrder } =
-    useSorted<T>(data);
-
+    useSorted<T>(filteredData);
   const { currentPage, totalPages, nextPage, prevPage, currentDataSlice } =
     usePaginator<T>({
       data: sortedData,
@@ -55,12 +58,13 @@ export const Table = <T extends object>({
       <div className="overflow-x-auto">
         <table className="min-w-full border-separate">
           <TableHeaders
-            sortedData={sortedData}
             compact={compact}
             sortKey={sortKey}
             setSortKey={setSortKey}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
+            filters={filters}
+            updateFilter={updateFilter}
           />
           <tbody className="bg-white">
             {currentDataSlice.map((datum, index) => (
@@ -77,7 +81,7 @@ export const Table = <T extends object>({
       <div className="mt-4">
         <Paginator
           resultsPerPage={resultsPerPage}
-          totalResults={data.length}
+          totalResults={sortedData.length}
           currentPage={currentPage}
           nextPage={nextPage}
           prevPage={prevPage}
@@ -89,66 +93,144 @@ export const Table = <T extends object>({
 };
 
 const TableHeaders = <T extends object>({
-  sortedData,
   sortKey,
   setSortKey,
   sortOrder,
   setSortOrder,
+  filters,
+  updateFilter,
   compact,
 }: {
-  sortedData: T[];
   sortKey: keyof T | null;
   setSortKey: (key: keyof T | null) => void;
   sortOrder: "asc" | "dsc";
   setSortOrder: (order: "asc" | "dsc") => void;
+  filters: Filter<T>[];
+  updateFilter: (key: keyof T, filterString: string | null) => void;
+
   compact?: boolean;
 }) => {
   const paddingClass = compact
     ? "px-1 m:px-2 lg:px-4"
     : "py-3.5 pl-4 pr-3 sm:pl-6 lg:pl-8";
+
   return (
     <thead>
       <tr>
-        {Object.keys(sortedData[0]).map((column) => (
+        {filters.map(({ key }: Filter<T>) => (
           <th
-            key={column}
+            key={key.toString()}
             scope="col"
             className={classNames(
-              "relative z-10 cursor-pointer border-b border-noir-300  bg-noir-50 bg-opacity-75 text-left text-sm font-semibold text-noir-900 ",
+              "border-b border-noir-300 bg-noir-50 bg-opacity-75 text-left text-sm font-semibold text-noir-900",
               paddingClass
             )}
-            onClick={() => {
-              if (sortKey === column) {
-                setSortOrder(sortOrder === "asc" ? "dsc" : "asc");
-              } else {
-                setSortKey(column as keyof T);
-                setSortOrder("asc");
-              }
-            }}
           >
-            <span
-              className={classNames(
-                "flex items-center gap-1 ",
-                sortKey === column ? "text-brand-600" : ""
-              )}
-            >
-              {column.replaceAll("_", " ")}
-              {sortKey === column ? (
-                <>
-                  {sortOrder === "asc" ? (
-                    <ArrowUpIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
-                  ) : (
-                    <ArrowDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
-                  )}
-                </>
-              ) : (
-                <ArrowsUpDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
-              )}
+            <span className="flex items-center">
+              {key.toString().replaceAll("_", " ")}
+
+              <SortButton
+                column={key as keyof T}
+                sortKey={sortKey}
+                sortOrder={sortOrder}
+                setSortKey={setSortKey}
+                setSortOrder={setSortOrder}
+              />
+              <FilterButton
+                filter={filters.find((f) => f.key === (key as keyof T))}
+                updateFilter={updateFilter}
+              />
             </span>
           </th>
         ))}
       </tr>
     </thead>
+  );
+};
+
+const SortButton = <T extends object>({
+  column,
+  sortKey,
+  sortOrder,
+  setSortKey,
+  setSortOrder,
+}: {
+  column: keyof T;
+  sortKey: keyof T | null;
+  sortOrder: "asc" | "dsc";
+  setSortKey: (key: keyof T | null) => void;
+  setSortOrder: (order: "asc" | "dsc") => void;
+}) => (
+  <button
+    className={classNames(sortKey === column ? "text-brand-600" : "")}
+    onClick={() => {
+      if (sortKey === column) {
+        setSortOrder(sortOrder === "asc" ? "dsc" : "asc");
+      } else {
+        setSortKey(column);
+        setSortOrder("asc");
+      }
+    }}
+  >
+    {sortKey === column ? (
+      <>
+        {sortOrder === "asc" ? (
+          <ArrowUpIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+        ) : (
+          <ArrowDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+        )}
+      </>
+    ) : (
+      <ArrowsUpDownIcon className="ml-1 h-4 w-4 opacity-60 hover:opacity-100" />
+    )}
+  </button>
+);
+
+const FilterButton = <T extends object>({
+  filter,
+  updateFilter,
+}: {
+  filter: Filter<T> | undefined;
+  updateFilter: (key: keyof T, filterString: string | null) => void;
+}) => {
+  if (!filter) {
+    throw new Error("Filter not found");
+  }
+  const filterActive =
+    filter.filterString !== null && filter.filterString !== "";
+  return (
+    <div className="dropdown dropdown-end">
+      <div tabIndex={0} role="button" className="m-1">
+        <FunnelIcon
+          className={classNames(
+            "ml-1 h-4 w-4 opacity-60 hover:opacity-100",
+            filterActive && "fill-brand-600 text-brand-600"
+          )}
+        />
+      </div>
+      <div tabIndex={0} className="dropdown-content z-[1] flex gap-1">
+        <input
+          className={classNames(
+            "input-sm z-10 w-32 rounded-md border border-brand-600 bg-white opacity-100"
+          )}
+          type="text"
+          value={filter.filterString ?? ""}
+          onChange={(e) => {
+            updateFilter(filter.key, e.target.value);
+          }}
+        />
+        <button
+          className={classNames(
+            "text-white! group btn btn-circle btn-outline btn-error btn-sm"
+          )}
+          onClick={() => {
+            updateFilter(filter.key, null);
+          }}
+        >
+          <XMarkIcon className="mx-auto h-4 w-4 group-hover:text-white" />
+        </button>
+      </div>
+    </div>
   );
 };
 
