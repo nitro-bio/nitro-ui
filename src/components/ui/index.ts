@@ -1,19 +1,21 @@
 import { Button } from "./Button";
 import { Card } from "./Card";
-import { Dropdown } from "./Dropdown";
-import { Toggle } from "./Toggle";
-import { Combobox } from "./Combobox";
-import { Table } from "./Table";
-import { Paginator } from "./Paginator";
 import { Checkboxes } from "./Checkboxes";
+import { Combobox } from "./Combobox";
+import { Dropdown } from "./Dropdown";
+import { FileUpload } from "./FileUpload";
+import { Paginator } from "./Paginator";
+import { Table } from "./Table";
+import { Toggle } from "./Toggle";
 
 export {
   Button,
   Card,
-  Dropdown,
-  Toggle,
-  Combobox,
-  Table,
-  Paginator,
   Checkboxes,
+  Combobox,
+  Dropdown,
+  FileUpload,
+  Paginator,
+  Table,
+  Toggle,
 };

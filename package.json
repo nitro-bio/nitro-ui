@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.1.12",
+  "version": "0.1.17",
   "scripts": {
     "build": "pnpm lint && vite build && pnpm build-css",
     "build-css": "npx tailwindcss -o ./nitro.css --minify && mv ./nitro.css ./dist/nitro.css",
@@ -30,6 +30,7 @@
     "genbank-parser": "^1.2.4",
     "jotai": "^1.13.1",
     "molstar": "^3.39.0",
+    "react-drag-drop-files": "^2.3.10",
     "react-hook-form": "^7.46.1",
     "react-markdown": "^8.0.7",
     "react-render-if-visible": "^2.1.1",
@@ -95,7 +96,8 @@
   "exports": {
     ".": {
       "import": "./dist/nitro-ui.es.js",
-      "require": "./dist/nitro-ui.umd.js"
+      "require": "./dist/nitro-ui.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "description": "collection of ui components",
