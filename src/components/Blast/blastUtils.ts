@@ -36,7 +36,7 @@ export const generateResults = (args: { sequence: string }) => {
   function genSingleResultFromMetadata(): (
     value: { title: string; subtitle: string; sequenceId: string },
     index: number,
-    array: { title: string; subtitle: string; sequenceId: string }[]
+    array: { title: string; subtitle: string; sequenceId: string }[],
   ) => BlastResponseDatum {
     return (metadata, i) => {
       const { title, subtitle, sequenceId } = metadata;
@@ -69,7 +69,7 @@ export const generateResults = (args: { sequence: string }) => {
       const targetStart = getRndInteger(0, 10000);
       const targetRange = [targetStart, targetStart + target.length] as [
         number,
-        number
+        number,
       ];
 
       const generateMidline = (query: string, target: string) =>

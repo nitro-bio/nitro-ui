@@ -1,2 +1,3 @@
 import { useDebounce } from "./useDebounce";
-export { useDebounce };
+import { useStreamlit } from "./useStreamlit";
+export { useDebounce, useStreamlit };

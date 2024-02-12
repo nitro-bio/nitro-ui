@@ -15,7 +15,7 @@ const buttonStyles = cva(
     defaultVariants: {
       intent: "primary",
     },
-  }
+  },
 );
 export interface ButtonProps
   extends VariantProps<typeof buttonStyles>,

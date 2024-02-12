@@ -46,7 +46,7 @@ const layout = tree<Node>()
 const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
 const nodesInitializedSelector = (state: ReactFlowState) =>
   Array.from(state.nodeInternals.values()).every(
-    (node) => node.width && node.height
+    (node) => node.width && node.height,
   );
 
 function useAutoLayout(options: Options) {
@@ -69,7 +69,7 @@ function useAutoLayout(options: Options) {
       // get the id of each node by searching through the edges
       // this only works if every node has one connection
       .parentId(
-        (d: Node) => edges.find((e: Edge) => e.target === d.id)?.source
+        (d: Node) => edges.find((e: Edge) => e.target === d.id)?.source,
       )(nodes);
 
     // run the layout algorithm with the hierarchy data structure
@@ -91,11 +91,11 @@ function useAutoLayout(options: Options) {
           position: getPosition(x, y, direction),
           style: { opacity: 1 },
         };
-      })
+      }),
     );
 
     setEdges((edges) =>
-      edges.map((edge) => ({ ...edge, style: { opacity: 1 } }))
+      edges.map((edge) => ({ ...edge, style: { opacity: 1 } })),
     );
   }, [
     nodeCount,

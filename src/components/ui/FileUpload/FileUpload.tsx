@@ -40,7 +40,7 @@ export function FileUpload<T>({
     });
   };
   const [successes, setSuccesses] = useState<FileParseSuccess<T>[] | null>(
-    null
+    null,
   );
   useEffect(
     function parseFiles() {
@@ -51,10 +51,10 @@ export function FileUpload<T>({
           const promises = files.map(parseFile);
           const results = await Promise.all(promises);
           const _failures = results.filter(
-            (res) => res.success === false
+            (res) => res.success === false,
           ) as FileParseError[];
           const _successes = results.filter(
-            (res) => res.success === true
+            (res) => res.success === true,
           ) as FileParseSuccess<T>[];
           setErrors(_failures);
           setSuccesses(_successes);
@@ -62,7 +62,7 @@ export function FileUpload<T>({
       };
       asyncParseFiles();
     },
-    [files]
+    [files],
   );
 
   const handleChange = (files: FileList) => {
@@ -105,7 +105,7 @@ export function FileUpload<T>({
       <div
         className={classNames(
           "flex h-full flex-col gap-8 rounded-xl transition-all duration-500 ease-in-out",
-          className
+          className,
         )}
       >
         <ParseTable successes={successes} errors={errors} />
@@ -141,14 +141,14 @@ export function FileUpload<T>({
   }
 
   const allowedFileTypes = ["gb", "gbk", "fa", "fasta", "fna", "txt"].map(
-    (ext) => ext.toUpperCase()
+    (ext) => ext.toUpperCase(),
   );
 
   return (
     <div
       className={classNames(
         "flex h-full flex-col items-center justify-center gap-8 rounded-xl border-2 border-dashed border-brand-300 bg-noir-700 py-6 text-noir-500 transition-all duration-200 ease-in-out md:flex-row md:gap-4 md:divide-x-2",
-        className
+        className,
       )}
     >
       <FileUploader

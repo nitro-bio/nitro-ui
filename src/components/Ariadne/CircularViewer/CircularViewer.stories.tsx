@@ -18,7 +18,7 @@ const CircularStory = ({
   initialSelection?: AriadneSelection;
 }) => {
   const [selection, setSelection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
+    initialSelection ?? null,
   );
   const { annotatedSequences, stackedAnnotations } = useMemo(
     () =>
@@ -26,7 +26,7 @@ const CircularStory = ({
         maxSequences: 1,
         maxLength: maxLength ?? 1000,
       }),
-    []
+    [],
   );
 
   return (

@@ -107,7 +107,7 @@ const SequenceLine = ({
     const otherEnd = otherSequence.at(otherSequence.length - 1)?.index;
     if (otherEnd === undefined) {
       throw new Error(
-        `otherSequence must have at least one base ${otherSequence}`
+        `otherSequence must have at least one base ${otherSequence}`,
       );
     }
 
@@ -185,10 +185,10 @@ const LinearSelection = ({
       ) {
         const svgWidth = selectionRef.current?.getBoundingClientRect().width;
         const start = Math.floor(
-          (internalSelectionStart.x / svgWidth) * sequence.length
+          (internalSelectionStart.x / svgWidth) * sequence.length,
         );
         const end = Math.floor(
-          (internalSelectionEnd.x / svgWidth) * sequence.length
+          (internalSelectionEnd.x / svgWidth) * sequence.length,
         );
 
         // show a very small first selection result as start === end because the user probably doesn't want the entire sequence to be highlighted every time they click
@@ -204,7 +204,7 @@ const LinearSelection = ({
         }
       }
     },
-    [internalSelectionStart, internalSelectionEnd]
+    [internalSelectionStart, internalSelectionEnd],
   );
 
   if (!selection) {
@@ -247,7 +247,7 @@ const LinearSelection = ({
     <g
       className={classNames(
         "fill-current stroke-current",
-        selectionClassName?.(selection)
+        selectionClassName?.(selection),
       )}
     >
       <rect

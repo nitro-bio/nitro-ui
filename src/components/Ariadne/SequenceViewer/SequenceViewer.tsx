@@ -40,7 +40,7 @@ export const SequenceViewer = ({
             >
               {sequences.map((sequence: AnnotatedBase[], sequenceIdx) => {
                 const base = sequence.find(
-                  (base: AnnotatedBase) => base.index === baseIdx
+                  (base: AnnotatedBase) => base.index === baseIdx,
                 ) || { base: " ", annotations: [], index: baseIdx };
 
                 return (
@@ -58,7 +58,7 @@ export const SequenceViewer = ({
                         }),
                         baseInSelection(baseIdx, selection) &&
                           base.base !== " " &&
-                          selectionClassName
+                          selectionClassName,
                       )}
                     />
                     <SequenceAnnotation
@@ -100,7 +100,7 @@ const SequenceAnnotation = ({
               <div
                 className={classNames(
                   "absolute top-4 z-10 hidden flex-col items-start rounded-md px-2 py-1 text-sm group-hover:flex",
-                  annotation.className
+                  annotation.className,
                 )}
               >
                 <span>Pos: {index}</span>

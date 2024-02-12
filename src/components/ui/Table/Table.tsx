@@ -39,7 +39,7 @@ export const Table = <T extends object>({
         className={classNames(
           "mt-8 flex items-center justify-center rounded-xl border border-brand-800 bg-noir-50 text-sm font-medium text-noir-900",
           paddingClass,
-          className
+          className,
         )}
       >
         No results found.
@@ -52,7 +52,7 @@ export const Table = <T extends object>({
       className={classNames(
         "overflow-hidden rounded-xl border border-brand-800 bg-noir-50",
         paddingClass,
-        className
+        className,
       )}
     >
       <div className="overflow-x-auto">
@@ -123,7 +123,7 @@ const TableHeaders = <T extends object>({
             scope="col"
             className={classNames(
               "border-b border-noir-300 bg-noir-50 bg-opacity-75 text-left text-sm font-semibold text-noir-900",
-              paddingClass
+              paddingClass,
             )}
           >
             <span className="flex items-center">
@@ -204,14 +204,14 @@ const FilterButton = <T extends object>({
         <FunnelIcon
           className={classNames(
             "ml-1 h-4 w-4 opacity-60 hover:opacity-100",
-            filterActive && "fill-brand-600 text-brand-600"
+            filterActive && "fill-brand-600 text-brand-600",
           )}
         />
       </div>
       <div tabIndex={0} className="dropdown-content z-[1] flex gap-1">
         <input
           className={classNames(
-            "input-sm z-10 w-32 rounded-md border border-brand-600 bg-white opacity-100"
+            "input-sm z-10 w-32 rounded-md border border-brand-600 bg-white opacity-100",
           )}
           type="text"
           value={filter.filterString ?? ""}
@@ -221,7 +221,7 @@ const FilterButton = <T extends object>({
         />
         <button
           className={classNames(
-            "text-white! group btn btn-circle btn-outline btn-error btn-sm"
+            "text-white! group btn btn-circle btn-outline btn-error btn-sm",
           )}
           onClick={() => {
             updateFilter(filter.key, null);
@@ -254,7 +254,7 @@ const TableRow = ({
           key={`row-${index}-${column}`}
           className={classNames(
             "border-b border-noir-200 text-xs font-medium",
-            paddingClass
+            paddingClass,
           )}
         >
           <ValueRenderer rawValue={value} />

@@ -43,7 +43,7 @@ const Molstar = ({
         plugin.current = null;
       };
     },
-    [canvasRef.current, parentRef.current]
+    [canvasRef.current, parentRef.current],
   );
 
   useEffect(() => {
@@ -62,12 +62,12 @@ const Molstar = ({
       const structureUrl = `https://files.rcsb.org/view/${pdbId}.cif`;
       const data = await plugin.builders.data.download(
         { url: structureUrl },
-        { state: { isGhost: true } }
+        { state: { isGhost: true } },
       );
 
       const traj = await plugin.builders.structure.parseTrajectory(
         data,
-        "mmcif" /* why mmcif for cif? */
+        "mmcif" /* why mmcif for cif? */,
       );
       await plugin.builders.structure.hierarchy.applyPreset(traj, "default");
     }

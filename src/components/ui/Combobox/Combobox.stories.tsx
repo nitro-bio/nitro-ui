@@ -22,7 +22,7 @@ const people = repeatArray(
     { label: "Tanya Fox" },
     { label: "Hellen Schmidt" },
   ],
-  100
+  100,
 ).map((p, i) => ({ ...p, id: i.toString() }));
 
 export const Default = () => {

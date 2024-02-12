@@ -45,7 +45,7 @@ export const Histogram = ({
       <div
         className={classNames(
           "grid h-full w-full auto-cols-fr grid-flow-col-dense grid-rows-1 items-end px-8 pt-16",
-          containerClassName
+          containerClassName,
         )}
       >
         {binnedData.map((bd, i) => (

@@ -1,10 +1,6 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
-import { z } from "zod";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import {
-  stackedAnnotationSchema,
-  validatedSequenceStringSchema,
-} from "./schemas";
+import { validatedSequenceStringSchema } from "./schemas";
 import type {
   AA,
   AnnotatedSequence,
@@ -43,12 +39,12 @@ export const getComplement = (sequence: string) => {
 
 export const getAnnotatedSequence = (
   sequence: ValidatedSequence,
-  stackedAnnotations: StackedAnnotation[]
+  stackedAnnotations: StackedAnnotation[],
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
   const mapFn = (
     base: Nucl | AA | Gap | Stop | Space | Unknown,
-    idx: number
+    idx: number,
   ) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
       // if the annotation spans the seam of the plasmid
@@ -125,7 +121,7 @@ export const stackElements = <T extends Stackable>(elements: T[]) => {
 
 // returns annotations with their stack index and max stack index
 export const getStackedAnnotations = (
-  annotations: Annotation[]
+  annotations: Annotation[],
 ): StackedAnnotation[] => {
   const stackedAnnotations = stackElements(annotations);
   return stackedAnnotations
@@ -134,7 +130,7 @@ export const getStackedAnnotations = (
 };
 export const baseInSelection = (
   baseIndex: number,
-  selection: AriadneSelection | null
+  selection: AriadneSelection | null,
 ) => {
   if (!selection) {
     return false;
@@ -166,7 +162,7 @@ export const inRange = (value: number, min: number, max: number) => {
 
 export const getSubsequenceLength = (
   { start, end, direction }: AriadneSelection,
-  sequenceLength: number
+  sequenceLength: number,
 ) => {
   if (direction === "reverse") {
     [start, end] = [end, start];
@@ -362,12 +358,12 @@ export const stringToAnnotatedSequence = ({
   annotations?: Annotation[];
 }): AnnotatedSequence => {
   const validatedSequence = validatedSequenceStringSchema.parse(
-    sequence.split("")
+    sequence.split(""),
   );
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
   const annotatedSequence = getAnnotatedSequence(
     validatedSequence,
-    stackedAnnotations
+    stackedAnnotations,
   );
   return annotatedSequence;
 };

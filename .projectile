@@ -42,3 +42,4 @@ storybook-static
 .rollup.cache
 /nitro-ui/dist
 /dist
+venv

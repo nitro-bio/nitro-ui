@@ -36,26 +36,26 @@ const SequenceStory = ({
 }) => {
   const annotationsPerSequence = useMemo(
     () => sequences.map((sequence) => generateRandomAnnotations(sequence, 5)),
-    [sequences]
+    [sequences],
   );
   const stackedAnnotationsPerSequence = annotationsPerSequence.map(
-    (annotations) => getStackedAnnotations(annotations)
+    (annotations) => getStackedAnnotations(annotations),
   );
 
   const validatedSequences = sequences.map((sequence) =>
-    sequence.replace(/[^ACGT]/g, "").split("")
+    sequence.replace(/[^ACGT]/g, "").split(""),
   ) as Nucl[][] | AA[][];
   const zippedSequencesAndAnnotations = validatedSequences.map(
     (sequence, sequenceIdx) => {
       const annotations = stackedAnnotationsPerSequence[sequenceIdx];
       return [sequence, annotations] as const;
-    }
+    },
   );
   const annotatedSequences = zippedSequencesAndAnnotations.map(
-    ([sequence, annotations]) => getAnnotatedSequence(sequence, annotations)
+    ([sequence, annotations]) => getAnnotatedSequence(sequence, annotations),
   );
   const [selection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
+    initialSelection ?? null,
   );
 
   const defaultCharClassName = ({ sequenceIdx }: { sequenceIdx: number }) => {

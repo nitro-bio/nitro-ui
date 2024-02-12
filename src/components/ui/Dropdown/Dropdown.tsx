@@ -22,7 +22,7 @@ export const MenuItem = ({
             active
               ? "bg-inherit bg-opacity-50 opacity-50"
               : "bg-opacity-100 opacity-100",
-            className
+            className,
           )}
           onClick={onClick}
         >
@@ -56,12 +56,12 @@ export const Dropdown = ({
     initialSelectedIdx >= menuItems.length
   ) {
     throw new Error(
-      `initialSelectedIdx must be less than the length of menuItems`
+      `initialSelectedIdx must be less than the length of menuItems`,
     );
   }
 
   const [selectedItem, setSelectedItem] = useState<string | null>(
-    initialSelectedIdx != undefined ? menuItems[initialSelectedIdx] : null
+    initialSelectedIdx != undefined ? menuItems[initialSelectedIdx] : null,
   );
 
   return (
@@ -69,7 +69,7 @@ export const Dropdown = ({
       <Menu.Button
         className={classNames(
           "focus-visible:ring-white inline-flex w-full justify-center truncate rounded-md px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75",
-          menuButtonClassName
+          menuButtonClassName,
         )}
       >
         {title}
@@ -97,7 +97,7 @@ export const Dropdown = ({
         <Menu.Items
           className={classNames(
             "ring-black absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 overflow-y-auto  rounded-md p-1 text-white shadow-lg ring-1 ring-opacity-5 focus:outline-none",
-            menuClassName
+            menuClassName,
           )}
         >
           {menuItems.map((name, index) => (

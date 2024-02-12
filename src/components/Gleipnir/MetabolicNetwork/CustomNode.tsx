@@ -48,7 +48,7 @@ function CustomNode({
         isDropzoneActive && "shadow-xl",
         isCurrent
           ? "scale-110  border-2 border-brand-400 p-8 font-semibold text-brand-500 shadow-xl dark:border-brand-400 dark:text-brand-300"
-          : "border  border-noir-700 text-noir-500 dark:border-noir-100 dark:text-noir-50 "
+          : "border  border-noir-700 text-noir-500 dark:border-noir-100 dark:text-noir-50 ",
       )}
       onDrop={onDrop}
       onDragOver={onDragOver}

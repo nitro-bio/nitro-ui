@@ -30,7 +30,7 @@ export const getABData = (reference: string): ABData[] => {
   for (let i = 0; i < reference.length; i++) {
     const regionFactor = Math.sin((i / regionSize) * Math.PI) > 0 ? 1.5 : 0.5;
     const baseReads = Math.floor(
-      ((maxReads * randint(1, 10)) / 10) * regionFactor
+      ((maxReads * randint(1, 10)) / 10) * regionFactor,
     );
     const data = {
       pos: i + 1,
@@ -45,7 +45,7 @@ export const getABData = (reference: string): ABData[] => {
 
     bases.forEach((base) => {
       data[base] = Math.floor(
-        baseReads * (base === reference[i] ? 0.7 : uniform(0.0, 0.3))
+        baseReads * (base === reference[i] ? 0.7 : uniform(0.0, 0.3)),
       );
     });
 
@@ -84,7 +84,7 @@ const BaseReadsCol = ({
           className={classNames(
             "mr-px font-mono text-transparent",
             style,
-            `base-${i}-${base}-content`
+            `base-${i}-${base}-content`,
           )}
           title={`${base}: ${reads}`}
           style={{ height: `${(reads / maxReads) * 100}%` }}

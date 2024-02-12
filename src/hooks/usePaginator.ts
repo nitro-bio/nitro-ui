@@ -54,7 +54,7 @@ export const usePaginator = <T>({
 
   const currentDataSlice = data.slice(
     (state.currentPage - 1) * resultsPerPage,
-    state.currentPage * resultsPerPage
+    state.currentPage * resultsPerPage,
   );
 
   return {

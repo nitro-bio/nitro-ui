@@ -72,10 +72,10 @@ export const SpaceSchema = z.literal(" ");
 export const UnknownSchema = z.literal("?");
 export const validatedSequenceStringSchema = z.union([
   z.array(
-    z.union([nuclSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema])
+    z.union([nuclSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema]),
   ),
   z.array(
-    z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema])
+    z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema]),
   ),
 ]);
 export const annotatedNuclSchema = z.object({

@@ -1,11 +1,6 @@
 import { generateRandomSequences } from "@Ariadne/storyUtils";
-import {
-  Annotation,
-  AriadneSelection,
-  StackedAnnotation,
-} from "@Ariadne/types";
 import { Card } from "@ui/Card";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
@@ -24,7 +19,7 @@ const LinearStory = () => {
         maxSequences: 5,
         maxLength: 100,
       }),
-    []
+    [],
   );
 
   return (

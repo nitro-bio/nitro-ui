@@ -32,10 +32,10 @@ const LinearStory = ({
         maxSequences: 5,
         maxLength: 100,
       }),
-    []
+    [],
   );
   const [selection, setSelection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
+    initialSelection ?? null,
   );
   const classNameBySequenceIdx = (sequenceIdx: number) => {
     if (sequenceIdx === 0) {

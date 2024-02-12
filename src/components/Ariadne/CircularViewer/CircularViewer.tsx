@@ -42,7 +42,7 @@ export const CircularViewer = ({
     <div
       className={classNames(
         " flex select-none items-center justify-center font-thin",
-        containerClassName
+        containerClassName,
       )}
     >
       <svg
@@ -144,7 +144,7 @@ const CircularSelection = ({
           : 0;
         const newLength = getSubsequenceLength(
           { start, end, direction },
-          sequence.length
+          sequence.length,
         );
         const deltaLength = Math.abs(prevLength - newLength);
         const deltaThreshold = Math.max(0.7 * sequence.length, 10);
@@ -165,7 +165,7 @@ const CircularSelection = ({
         });
       }
     },
-    [internalSelectionStart, internalSelectionEnd]
+    [internalSelectionStart, internalSelectionEnd],
   );
 
   if (selection === null) {

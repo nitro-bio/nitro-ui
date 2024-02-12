@@ -17,11 +17,11 @@ const AriadneStory = ({
   initialSelection?: AriadneSelection;
 }) => {
   const [selection, setSelection] = useState<AriadneSelection | null>(
-    initialSelection ?? null
+    initialSelection ?? null,
   );
   const { annotatedSequences, stackedAnnotations } = useMemo(
     () => generateRandomSequences({ maxLength: 200, maxSequences: 2 }),
-    []
+    [],
   );
   const rootSequence = annotatedSequences[0];
   const classNameBySequenceIdx = (sequenceIdx: number) => {

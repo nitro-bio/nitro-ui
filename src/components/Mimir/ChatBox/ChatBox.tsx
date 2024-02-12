@@ -41,7 +41,7 @@ export const ChatBox = ({ apiUrl, apiKey }: ChatBoxProps) => {
         setMessages(gptResponse);
       }
     },
-    [gptResponse]
+    [gptResponse],
   );
 
   return (
@@ -58,7 +58,7 @@ export const ChatBox = ({ apiUrl, apiKey }: ChatBoxProps) => {
               "chat-bubble chat-bubble",
               message.role === "user"
                 ? "chat-bubble-primary"
-                : "chat-bubble-secondary"
+                : "chat-bubble-secondary",
             )}
           >
             {message.content}

@@ -8,7 +8,7 @@ test("raw test", async () => {
     safeAnythingToAnnotatedSequences({
       payload: "ATCG",
       payloadType: "raw",
-    })
+    }),
   ).toEqual({
     successes: [
       {

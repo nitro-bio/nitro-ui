@@ -15,7 +15,7 @@ export const GeneDetails = ({
   proteins: Protein[];
 }) => {
   const pdbForGene = proteins.find(
-    (protein) => protein.id === currentGene?.id
+    (protein) => protein.id === currentGene?.id,
   )?.pdb;
   const currentGeneIdx = genes.findIndex((gene) => gene.id === currentGene?.id);
 

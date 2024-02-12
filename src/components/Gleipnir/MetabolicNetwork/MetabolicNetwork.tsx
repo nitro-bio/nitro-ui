@@ -96,7 +96,7 @@ function ReactFlowPro({
 
   const onNodeClick: NodeMouseHandler = (
     _: MouseEvent,
-    node: Node<NodeData>
+    node: Node<NodeData>,
   ) => {
     const newCurrentGene = {
       id: node.id,

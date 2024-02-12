@@ -36,7 +36,7 @@ const classNames = [
 
 export const generateRandomAnnotations = (
   sequence: string,
-  maxAnnotations: number
+  maxAnnotations: number,
 ) => {
   const annotations: Annotation[] = [];
   const max_annotation_length = sequence.length;
@@ -47,7 +47,7 @@ export const generateRandomAnnotations = (
     const end =
       getRndInteger(
         start + min_annotation_length,
-        start + max_annotation_length
+        start + max_annotation_length,
       ) % sequence.length;
     const randomClassName = classNames[getRndInteger(0, classNames.length)];
     const annType = annotationTypes[getRndInteger(0, annotationTypes.length)];
@@ -60,7 +60,7 @@ export const generateRandomAnnotations = (
       text: `${annType} ${i}`,
       onClick: () =>
         console.debug(
-          `Clicked on annotation ${i}: ${annotation.start} - ${annotation.end}`
+          `Clicked on annotation ${i}: ${annotation.start} - ${annotation.end}`,
         ),
     };
     annotations.push(annotation);
@@ -86,12 +86,12 @@ export const generateRandomSequences = ({
   // generate one sequence of max Length
   const rootSequence = Array.from(
     { length: maxLength },
-    () => bases[getRndInteger(0, bases.length)]
+    () => bases[getRndInteger(0, bases.length)],
   );
   const annotations = generateRandomAnnotations(rootSequence.join(""), 5);
   const rootAnnotatedSequence = getAnnotatedSequence(
     rootSequence as ValidatedSequence,
-    getStackedAnnotations(annotations)
+    getStackedAnnotations(annotations),
   );
   const sequences: AnnotatedSequence[] = [rootAnnotatedSequence];
 
@@ -111,7 +111,7 @@ export const generateRandomSequences = ({
 
     const annotatedSequence = getAnnotatedSequence(
       sequence as ValidatedSequence,
-      []
+      [],
     ).map((x) => ({ ...x, index: x.index + startIdx }));
     sequences.push(annotatedSequence as AnnotatedSequence);
   });

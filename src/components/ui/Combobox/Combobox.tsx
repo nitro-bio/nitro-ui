@@ -37,7 +37,7 @@ export function Combobox({
         setSelected(selectedOption);
       }
     },
-    [selectedOptionIdx, options]
+    [selectedOptionIdx, options],
   );
 
   const [query, setQuery] = useState("");
@@ -49,7 +49,7 @@ export function Combobox({
           opt.label
             .toLowerCase()
             .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, ""))
+            .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
 
   return (
@@ -63,12 +63,12 @@ export function Combobox({
       <div className="relative mt-1">
         <div
           className={classNames(
-            "focus-visible:ring-brand-300 relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 dark:border dark:border-brand-300 sm:text-sm"
+            "focus-visible:ring-brand-300 relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 dark:border dark:border-brand-300 sm:text-sm",
           )}
         >
           <HeadlessCombobox.Input
             className={classNames(
-              "w-full border-none bg-white py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-brand-100"
+              "w-full border-none bg-white py-2 pl-3 pr-10 text-sm leading-5 text-noir-900 focus:ring-0 dark:bg-noir-800 dark:text-brand-100",
             )}
             displayValue={(opt: ComboboxOption) => opt.label}
             onChange={(event) => setQuery(event.target.value)}
@@ -90,7 +90,7 @@ export function Combobox({
           <HeadlessCombobox.Options
             className={classNames(
               "ring-brand-300 absolute z-10 mt-1 w-full  overflow-auto rounded-md bg-white bg-white py-1 text-base shadow-2xl ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm",
-              optionsContainerClassName
+              optionsContainerClassName,
             )}
           >
             {filteredOptions.length === 0 && query !== "" ? (
@@ -106,7 +106,7 @@ export function Combobox({
                         "relative cursor-default select-none py-2 pl-10 pr-4",
                         active
                           ? "bg-brand-600 text-white dark:text-noir-100"
-                          : "text-noir-900 dark:text-noir-100"
+                          : "text-noir-900 dark:text-noir-100",
                       )
                     }
                     value={opt}
@@ -117,7 +117,7 @@ export function Combobox({
                         <span
                           className={classNames(
                             "block truncate",
-                            selected ? "font-medium" : "font-normal"
+                            selected ? "font-medium" : "font-normal",
                           )}
                         >
                           {opt.label}
@@ -128,7 +128,7 @@ export function Combobox({
                               "absolute inset-y-0 left-0 flex items-center pl-3",
                               active
                                 ? "text-white dark:text-noir-800"
-                                : "text-brand-600"
+                                : "text-brand-600",
                             )}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />

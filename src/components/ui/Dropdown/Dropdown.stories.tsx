@@ -22,7 +22,7 @@ const people = repeatArray(
     "Tanya Fox",
     "Hellen Schmidt",
   ],
-  100
+  100,
 );
 
 export const Default = () => {

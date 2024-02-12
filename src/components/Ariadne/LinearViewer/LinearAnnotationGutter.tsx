@@ -21,7 +21,7 @@ export const LinearAnnotationGutter = ({
     <div
       className={classNames(
         "grid-rows-auto block grid grid-cols-1 gap-1",
-        containerClassName
+        containerClassName,
       )}
     >
       {stacks.map((annotations, stackIdx) => (
@@ -135,7 +135,7 @@ const LinearAnnotation = ({
         className={classNames(
           "px-2",
           annotation.direction === "forward" ? "text-left" : "text-right",
-          annotation.className
+          annotation.className,
         )}
         style={{
           clipPath:
@@ -149,7 +149,7 @@ const LinearAnnotation = ({
       <div
         className={classNames(
           "absolute left-1/2 z-10 hidden -translate-x-1/2 translate-y-4 flex-col rounded-md px-2 py-1 text-sm group-hover:flex",
-          annotation.className
+          annotation.className,
         )}
       >
         <span>{annotation.text}</span>

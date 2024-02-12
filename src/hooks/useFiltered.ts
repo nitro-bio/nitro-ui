@@ -14,7 +14,7 @@ export function useFiltered<T extends object>(data: T[]) {
     Object.keys(data[0]).map((key) => ({
       key: key as keyof T,
       filterString: null,
-    }))
+    })),
   );
 
   const [filteredData, setFilteredData] = useState<T[]>(data);
@@ -23,7 +23,7 @@ export function useFiltered<T extends object>(data: T[]) {
     setFilters((currentFilters) => {
       // Find and update the existing filter, or add a new one
       const existingFilterIndex = currentFilters.findIndex(
-        (f) => f.key === key
+        (f) => f.key === key,
       );
       if (existingFilterIndex > -1) {
         const newFilters = [...currentFilters];
@@ -44,13 +44,13 @@ export function useFiltered<T extends object>(data: T[]) {
           newFilteredData = newFilteredData.filter((item) =>
             JSON.stringify(item[filter.key])
               .toLowerCase()
-              .includes(filter.filterString?.toLowerCase() ?? "")
+              .includes(filter.filterString?.toLowerCase() ?? ""),
           );
         }
       }
       setFilteredData(newFilteredData);
     },
-    [data, filters]
+    [data, filters],
   );
   return { filteredData, filters, updateFilter };
 }

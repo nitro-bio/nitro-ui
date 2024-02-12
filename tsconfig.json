@@ -22,16 +22,16 @@
       "@Blast/*": ["./src/components/Blast/*"],
       "@Ariadne/*": ["./src/components/Ariadne/*"],
       "@Mimir/*": ["./src/components/Mimir/*"],
-      "@hooks/*": ["./src/hooks/*"]
-    }
+      "@hooks/*": ["./src/hooks/*"],
+    },
   },
   "include": [
     "src/",
     "index.ts",
     "tailwind.config.js",
     "postcss.config.js",
-    "vite.config.ts"
+    "vite.config.ts",
   ],
   "composite": true,
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

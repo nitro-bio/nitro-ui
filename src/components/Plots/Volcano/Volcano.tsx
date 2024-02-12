@@ -26,7 +26,7 @@ export const Volcano = ({
               "absolute",
               pointClassName
                 ? pointClassName(d)
-                : "h-2 w-2 rounded-full bg-brand-500"
+                : "h-2 w-2 rounded-full bg-brand-500",
             )}
             style={{
               left: `${(d.x / maxX) * 100}%`,

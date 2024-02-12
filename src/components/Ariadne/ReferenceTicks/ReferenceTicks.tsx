@@ -26,7 +26,7 @@ export const ReferenceTicks = ({
                 nucl.base === "G" && "text-red-500",
                 nucl.base === "A" && "text-yellow-500",
                 nucl.base === "T" && "text-green-500",
-                nucl.base === "C" && "text-blue-500"
+                nucl.base === "C" && "text-blue-500",
               )}
             >
               <p className="text-xs"> {nucl.index + 1}</p>

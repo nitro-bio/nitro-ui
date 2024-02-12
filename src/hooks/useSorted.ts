@@ -23,7 +23,7 @@ export function useSorted<T extends object>(data: T[]) {
       });
       setSortedData(sorted);
     },
-    [data, sortKey, sortOrder]
+    [data, sortKey, sortOrder],
   );
 
   return { sortedData, sortKey, setSortKey, sortOrder, setSortOrder };

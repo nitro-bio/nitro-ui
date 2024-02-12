@@ -5,7 +5,7 @@ import { RefObject, useEffect, useRef, useState } from "react";
 import { useStateRef } from "./useStateRef";
 // for cartesian coordinates
 export const useLinearSelectionRect = (
-  ref: RefObject<SVGSVGElement | null>
+  ref: RefObject<SVGSVGElement | null>,
 ) => {
   const [start, setStart, startRef] = useStateRef<Coor | null>(null);
   const [end, setEnd] = useStateRef<Coor | null>(null);
@@ -72,7 +72,7 @@ export const useLinearSelectionRect = (
 
 // for circular coordinates
 export const useCircularSelectionRect = (
-  ref: RefObject<SVGSVGElement | null>
+  ref: RefObject<SVGSVGElement | null>,
 ) => {
   const [start, setStart, startRef] = useStateRef<Angle | null>(null);
   const [end, setEnd] = useStateRef<Angle | null>(null);
@@ -132,7 +132,7 @@ export const useCircularSelectionRect = (
         const endAngleIsNearStartAngle = inRange(
           endAngle,
           startAngle - ANGLE_DELTA_THRESHOLD_IN_DEGREES,
-          startAngle + ANGLE_DELTA_THRESHOLD_IN_DEGREES
+          startAngle + ANGLE_DELTA_THRESHOLD_IN_DEGREES,
         );
         if (endAngleIsNearStartAngle) {
           setDirection(null);
@@ -155,7 +155,7 @@ export const useCircularSelectionRect = (
         setDirection(guessedDirection);
       }
     },
-    [start, end]
+    [start, end],
   );
 
   useEffect(
@@ -177,7 +177,7 @@ export const useCircularSelectionRect = (
         window?.removeEventListener("mouseup", onMouseUp);
       };
     },
-    [ref.current, start, direction]
+    [ref.current, start, direction],
   );
   return { start, end, direction };
 };

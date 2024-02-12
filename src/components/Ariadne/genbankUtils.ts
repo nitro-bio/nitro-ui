@@ -101,7 +101,7 @@ export function getClassNameFromFeatureType(annType: AnnotationType): string {
       "bg-teal-600 fill-teal-600 stroke-teal-600",
       "bg-gray-600 fill-gray-600 stroke-gray-600",
       "bg-pink-600 fill-pink-600 stroke-pink-600",
-    ]
+    ],
   );
   if (annType in classNameMap) {
     return `${common} ${classNameMap[annType]!}`;
@@ -114,12 +114,12 @@ export const zipArrays = <T1, T2>(keys: T1[], values: T2[]) => {
     keys.map((key: T1, i: number) => {
       const val: T2 | undefined = values[i];
       return [key, val];
-    })
+    }),
   ) as { T1: T2 };
 };
 
 export const stackAnnsByType = (
-  annotations: Annotation[]
+  annotations: Annotation[],
 ): StackedAnnotation[] => {
   // create a map of annotation type to list
   const annotationMap = annotations.reduce(
@@ -130,7 +130,7 @@ export const stackAnnsByType = (
       acc[annotation.type]!.push(annotation);
       return acc;
     },
-    {} as { [key: AnnotationType]: Annotation[] }
+    {} as { [key: AnnotationType]: Annotation[] },
   );
 
   const stacks = Object.values(annotationMap)

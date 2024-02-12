@@ -18,7 +18,7 @@ export default {
 export const Default = () => {
   const abData = useMemo(
     () => getABData(annotatedSequences[0].map((b) => b.base).join("")),
-    [annotatedSequences]
+    [annotatedSequences],
   );
   const charClassName = ({
     base,
@@ -46,7 +46,7 @@ export const Default = () => {
       const seqBase = annotatedSequences[1].find(
         (b: AnnotatedAA | AnnotatedNucl) => {
           return b.index === base.index;
-        }
+        },
       );
       if (!seqBase) {
         className.push("text-noir-100");
