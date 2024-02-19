@@ -41,7 +41,6 @@ export const useStreamlit = <T extends Record<string, unknown>>({
       }
     }
     window.parent.addEventListener("message", onDataFromStreamlit);
-    console.log("[useStreamlit] subscribed to streamlit");
   }, []);
 
   useEffect(
@@ -70,10 +69,7 @@ type StreamlitType =
   | "streamlit:render"
   | "streamlit:setFrameHeight";
 
-function sendMessageToStreamlitClient(
-  type: StreamlitType,
-  data: Record<string, unknown>,
-) {
+function sendMessageToStreamlitClient(type: StreamlitType, data: unknown) {
   console.debug("[useStreamlit]", type, data);
   const outData = Object.assign(
     {
@@ -117,26 +113,37 @@ export const useStreamlitMock = <T extends Record<string, unknown>>({
   return { sendToReact };
 };
 
-const removeUnclonable = (data: Record<string, unknown>) => {
+const removeUnclonable = (
+  data: unknown,
+): Record<string, unknown> | unknown[] | null => {
   // remove all functions from data
   const scrubbedData: Record<string, unknown> = {};
   // eslint-disable-next-line prefer-const
+  if (Array.isArray(data)) {
+    return data.map((v) => {
+      return removeUnclonable(v as Record<string, unknown>);
+    });
+  }
+  if (data === undefined || data === null) {
+    return null;
+  }
+  // key isn't reassigned, but value is, silence the error for key
+  // eslint-disable-next-line prefer-const
   for (let [key, value] of Object.entries(data)) {
-    if (typeof value !== "function") {
+    if (typeof value === "function") {
+      console.debug(`[useStreamlit] removing function ${key}`);
+      continue;
+    }
+    if (typeof value === "object") {
       if (Array.isArray(value)) {
         value = value.map((v) => {
-          if (typeof v === "object" && v !== null) {
-            return removeUnclonable(v as Record<string, unknown>);
-          }
-          return v;
+          return removeUnclonable(v as Record<string, unknown>);
         });
-      } else if (typeof value === "object" && value !== null) {
+      } else {
         value = removeUnclonable(value as Record<string, unknown>);
       }
-      scrubbedData[key] = value;
-    } else {
-      console.debug(`[useStreamlit] removing function ${key}`);
     }
+    scrubbedData[key] = value;
   }
   return scrubbedData;
 };

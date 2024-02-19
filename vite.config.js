@@ -30,6 +30,10 @@ export default defineConfig({
           replacement: path.resolve(__dirname, "./src/components/Ariadne"),
         },
         {
+          find: "@Streamlit",
+          replacement: path.resolve(__dirname, "./src/components/Streamlit"),
+        },
+        {
           find: "@Mimir",
           replacement: path.resolve(__dirname, "./src/components/Mimir"),
         },

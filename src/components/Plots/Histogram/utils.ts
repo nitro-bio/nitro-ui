@@ -1,7 +1,0 @@
-export const generateRandomHistogramData = (n: number) => {
-  const data = [];
-  for (let i = 0; i < n; i++) {
-    data.push({ x: Math.random(), y: Math.random() });
-  }
-  return data;
-};

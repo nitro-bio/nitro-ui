@@ -1,3 +1,2 @@
-import { Histogram } from "./Histogram";
-import { Volcano } from "./Volcano";
-export { Histogram, Volcano };
+import { PlotlyWithCustomOverlay } from "./PlotlyWithCustomOverlay";
+export { PlotlyWithCustomOverlay };

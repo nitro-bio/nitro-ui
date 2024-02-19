@@ -22,6 +22,7 @@
       "@Blast/*": ["./src/components/Blast/*"],
       "@Ariadne/*": ["./src/components/Ariadne/*"],
       "@Mimir/*": ["./src/components/Mimir/*"],
+      "@Streamlit/*": ["./src/components/Streamlit/*"],
       "@hooks/*": ["./src/hooks/*"],
     },
   },

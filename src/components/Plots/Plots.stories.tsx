@@ -1,36 +1,27 @@
-import { Card } from "@ui/Card";
-import { generateRandomHistogramData, Histogram } from "./Histogram";
-import { generateRandomVolcanoData } from "./Volcano/utils";
-import { Volcano } from "./Volcano/Volcano";
+import { classNames } from "../..";
+import { PlotlyWithCustomOverlay } from "./PlotlyWithCustomOverlay";
 
 export default {
-  title: "Plots/Plots",
+  title: "Plots/CustomPlotlyOverlay",
   argTypes: {},
 };
 
 export const Default = () => {
-  const histoData = generateRandomHistogramData(1000);
-  const volcanoData = generateRandomVolcanoData(1000);
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <Card className="content-fit grid bg-white dark:bg-noir-800">
-        <Histogram
-          data={histoData}
-          colClassName={() =>
-            "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-brand-500"
-          }
-          containerClassName={"h-[400px]"}
-        />
-      </Card>
-      <Card className="content-fit grid bg-white dark:bg-noir-800">
-        <Volcano
-          data={volcanoData}
-          pointClassName={() =>
-            "opacity-30 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-brand-500 h-2 w-2 rounded-full hover:scale-[200%] transform origin-center"
-          }
-          containerClassName={""}
-        />
-      </Card>
-    </div>
+    <PlotlyWithCustomOverlay>
+      {(point) => {
+        console.log(point);
+        return (
+          <div
+            className={classNames(
+              "absolute h-40 w-40 rounded-lg bg-white p-2 text-black shadow-lg",
+            )}
+          >
+            Hello
+            {point.data.x?.toString()}
+          </div>
+        );
+      }}
+    </PlotlyWithCustomOverlay>
   );
 };
