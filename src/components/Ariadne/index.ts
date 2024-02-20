@@ -1,6 +1,7 @@
 export * from "./CircularViewer";
 export * from "./LinearViewer";
 export * from "./SequenceViewer";
+export * from "./SequenceInput";
 export * from "./ABViewer";
 export * from "./HeadTailViewer";
 export * from "./ReferenceTicks";
