@@ -1,6 +1,10 @@
 import { useMousePosition } from "@hooks/useMousePosition";
-import Plotly from "plotly.js-basic-dist-min";
+import Plotly, {
+  PlotHoverEvent,
+  PlotMouseEvent,
+} from "plotly.js-basic-dist-min";
 import { useState } from "react";
+import { PlotParams } from "react-plotly.js";
 import createPlotlyComponent from "react-plotly.js/factory";
 const Plot = createPlotlyComponent(Plotly);
 
@@ -10,36 +14,26 @@ export type HoverPoint = {
 
 export const PlotlyWithCustomOverlay = ({
   children,
-}: {
-  children: (point: HoverPoint) => React.ReactNode;
+  ...props
+}: PlotParams & {
+  children: (hoverEvent: PlotHoverEvent) => React.ReactNode;
 }) => {
-  const [hoverPoint, setHoverPoint] = useState<HoverPoint | null>(null);
+  const [hoverEvent, setHoverEvent] = useState<PlotHoverEvent | null>(null);
   const { mousePosition } = useMousePosition();
   return (
     <>
       <Plot
-        onHover={(hover: Plotly.PlotMouseEvent) => {
-          setHoverPoint({
-            data: hover.points[0],
-          });
+        {...props}
+        onHover={(hover: PlotHoverEvent) => {
+          setHoverEvent(hover);
+          props.onHover?.(hover);
         }}
-        onUnhover={() => {
-          setHoverPoint(null);
+        onUnhover={(unhover: PlotMouseEvent) => {
+          setHoverEvent(null);
+          props.onUnhover?.(unhover);
         }}
-        data={[
-          {
-            x: [1, 2, 3],
-            y: [2, 6, 3],
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "red" },
-            hoverinfo: "none",
-          },
-        ]}
-        layout={{ title: "A Fancy Plot", paper_bgcolor: "" }}
-        className="overflow-hidden rounded-xl shadow-lg"
       />
-      {hoverPoint && mousePosition !== null && (
+      {hoverEvent && mousePosition !== null && (
         <div
           style={{
             position: "absolute",
@@ -47,7 +41,7 @@ export const PlotlyWithCustomOverlay = ({
             top: mousePosition.y,
           }}
         >
-          {children(hoverPoint)}
+          {children(hoverEvent)}
         </div>
       )}
     </>
