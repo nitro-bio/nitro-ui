@@ -10,6 +10,7 @@ import {
 import { CircularAnnotationGutter } from "./CircularAnnotations";
 import { CircularIndex } from "./CircularIndex";
 import { findIndexFromAngle, genArc } from "./circularUtils";
+import { clamp } from "reactflow";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -36,6 +37,11 @@ export const CircularViewer = ({
     radius: (SVG_SIZE - SVG_PADDING) / 2,
   };
 
+  if (sequence && selection && sequence.length > 0) {
+    const firstIdx = sequence.length > 0 ? sequence.at(0)!.index : 0;
+    const lastIdx = sequence.length > 0 ? sequence.at(-1)!.index : 0;
+    selection = clampSelection(selection, firstIdx, lastIdx);
+  }
   const selectionRef = useRef<SVGSVGElement>(null);
 
   return (
@@ -206,4 +212,30 @@ const CircularSelection = ({
       />
     </g>
   );
+};
+
+const clampSelection = (
+  selection: AriadneSelection | null,
+  firstIdx: number,
+  lastIdx: number,
+): AriadneSelection | null => {
+  if (selection === null) {
+    return null;
+  }
+  const { start, end, direction } = selection;
+  // if direction is out of bounds, return null
+  const outOfBoundsForwards =
+    direction === "forward" && start < firstIdx && end > lastIdx;
+  const outOfBoundsReverse =
+    direction === "reverse" && start > lastIdx && end < firstIdx;
+  if (outOfBoundsForwards || outOfBoundsReverse) {
+    return null;
+  }
+  const clampedStart = clamp(start, firstIdx, lastIdx);
+  const clampedEnd = clamp(end, firstIdx, lastIdx);
+  return {
+    start: clampedStart,
+    end: clampedEnd,
+    direction,
+  };
 };

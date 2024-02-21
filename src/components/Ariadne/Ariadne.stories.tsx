@@ -19,11 +19,33 @@ const AriadneStory = ({
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
-  const { annotatedSequences, stackedAnnotations } = useMemo(
-    () => generateRandomSequences({ maxLength: 200, maxSequences: 2 }),
+  const {
+    annotatedSequences: rootSequences,
+    stackedAnnotations: rootStackedAnnotations,
+  } = useMemo(
+    () =>
+      generateRandomSequences({
+        maxLength: 1000,
+        maxSequences: 1,
+        annotationOnClick: setSelection,
+      }),
     [],
   );
-  const rootSequence = annotatedSequences[0];
+  const {
+    annotatedSequences: secondarySequences,
+    stackedAnnotations: secondaryStackedAnnotations,
+  } = useMemo(
+    () =>
+      generateRandomSequences({
+        maxLength: 200,
+        maxSequences: 1,
+        annotationOnClick: setSelection,
+      }),
+    [],
+  );
+
+  const rootSequence = rootSequences[0];
+  const secondarySequence = secondarySequences[0];
   const classNameBySequenceIdx = (sequenceIdx: number) => {
     if (sequenceIdx === 0) {
       return "dark:text-brand-300 text-brand-600";
@@ -35,12 +57,11 @@ const AriadneStory = ({
       return "dark:text-noir-300 text-noir-600";
     }
   };
-
   return (
     <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
-      <div className="row-span-2 grid h-full max-w-xl shrink-0 content-start overflow-y-scroll py-12">
+      <div className="row-span-2 grid h-full max-w-xl shrink-0 content-start overflow-y-scroll border-r border-zinc-600 pr-8">
         <SequenceViewer
-          sequences={annotatedSequences}
+          sequences={[rootSequence, secondarySequence]}
           selection={selection}
           charClassName={({ sequenceIdx }) =>
             classNameBySequenceIdx(sequenceIdx)
@@ -48,28 +69,34 @@ const AriadneStory = ({
           selectionClassName="bg-brand-400/20"
         />
       </div>
-      <div className="row-span-1 grid shrink-0 content-center ">
+      <div className="row-span-1 grid grid-cols-2 gap-1">
         <CircularViewer
-          containerClassName="text-brand-400"
+          containerClassName="text-brand-400 "
           sequence={rootSequence}
-          stackedAnnotations={stackedAnnotations}
+          stackedAnnotations={rootStackedAnnotations}
           selection={selection}
           setSelection={setSelection}
         />
-      </div>
-      <div className="row-span-1 grid shrink-0 content-center">
+        <CircularViewer
+          containerClassName="text-sky-400"
+          sequence={secondarySequence}
+          stackedAnnotations={secondaryStackedAnnotations}
+          selection={selection}
+          setSelection={setSelection}
+        />
+
         <LinearViewer
-          containerClassName="text-brand-400"
-          sequences={annotatedSequences}
-          annotations={stackedAnnotations}
+          containerClassName="text-brand-400 h-32 col-span-2"
+          sequences={[rootSequence, secondarySequence]}
+          annotations={rootStackedAnnotations}
           selection={selection}
           setSelection={setSelection}
           selectionClassName={() => "text-brand-400"}
           sequenceClassName={classNameBySequenceIdx}
         />
-
         <LinearAnnotationGutter
-          stackedAnnotations={stackedAnnotations}
+          containerClassName="col-span-2"
+          stackedAnnotations={rootStackedAnnotations}
           sequence={rootSequence}
         />
       </div>

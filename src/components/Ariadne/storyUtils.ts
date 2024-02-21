@@ -37,6 +37,7 @@ const classNames = [
 export const generateRandomAnnotations = (
   sequence: string,
   maxAnnotations: number,
+  annotationOnClick?: (annotation: Annotation) => void,
 ) => {
   const annotations: Annotation[] = [];
   const max_annotation_length = sequence.length;
@@ -58,10 +59,12 @@ export const generateRandomAnnotations = (
       direction: i % 2 === 0 ? "forward" : "reverse",
       className: randomClassName,
       text: `${annType} ${i}`,
-      onClick: () =>
+      onClick: () => {
         console.debug(
           `Clicked on annotation ${i}: ${annotation.start} - ${annotation.end}`,
-        ),
+        );
+        annotationOnClick && annotationOnClick(annotation);
+      },
     };
     annotations.push(annotation);
     if (annotations.length >= maxAnnotations) {
@@ -75,9 +78,11 @@ export const generateRandomAnnotations = (
 export const generateRandomSequences = ({
   maxSequences,
   maxLength,
+  annotationOnClick,
 }: {
   maxSequences: number;
   maxLength: number;
+  annotationOnClick?: (annotation: Annotation) => void;
 }): {
   annotatedSequences: AnnotatedSequence[];
   stackedAnnotations: StackedAnnotation[];
@@ -88,7 +93,11 @@ export const generateRandomSequences = ({
     { length: maxLength },
     () => bases[getRndInteger(0, bases.length)],
   );
-  const annotations = generateRandomAnnotations(rootSequence.join(""), 5);
+  const annotations = generateRandomAnnotations(
+    rootSequence.join(""),
+    5,
+    annotationOnClick,
+  );
   const rootAnnotatedSequence = getAnnotatedSequence(
     rootSequence as ValidatedSequence,
     getStackedAnnotations(annotations),

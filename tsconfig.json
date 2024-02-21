@@ -23,16 +23,16 @@
       "@Ariadne/*": ["./src/components/Ariadne/*"],
       "@Mimir/*": ["./src/components/Mimir/*"],
       "@Streamlit/*": ["./src/components/Streamlit/*"],
-      "@hooks/*": ["./src/hooks/*"],
-    },
+      "@hooks/*": ["./src/hooks/*"]
+    }
   },
   "include": [
     "src/",
     "index.ts",
     "tailwind.config.js",
     "postcss.config.js",
-    "vite.config.ts",
+    "vite.config.ts"
   ],
   "composite": true,
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

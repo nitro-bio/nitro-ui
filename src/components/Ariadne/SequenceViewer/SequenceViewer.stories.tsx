@@ -1,16 +1,9 @@
-import { generateRandomAnnotations } from "@Ariadne/storyUtils";
-import { getAnnotatedSequence, getStackedAnnotations } from "@Ariadne/utils";
+import { generateRandomSequences } from "@Ariadne/storyUtils";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
-import type {
-  AA,
-  AnnotatedAA,
-  AnnotatedNucl,
-  AriadneSelection,
-  Nucl,
-} from "../types";
+import type { AnnotatedAA, AnnotatedNucl, AriadneSelection } from "../types";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -18,12 +11,12 @@ export default {
 };
 
 const SequenceStory = ({
-  sequences,
+  numSequences,
   initialSelection,
   containerClassName,
   charClassName,
 }: {
-  sequences: string[];
+  numSequences: number;
   initialSelection?: AriadneSelection;
   containerClassName?: string;
   charClassName?: ({
@@ -34,28 +27,17 @@ const SequenceStory = ({
     sequenceIdx: number;
   }) => string;
 }) => {
-  const annotationsPerSequence = useMemo(
-    () => sequences.map((sequence) => generateRandomAnnotations(sequence, 5)),
-    [sequences],
-  );
-  const stackedAnnotationsPerSequence = annotationsPerSequence.map(
-    (annotations) => getStackedAnnotations(annotations),
-  );
-
-  const validatedSequences = sequences.map((sequence) =>
-    sequence.replace(/[^ACGT]/g, "").split(""),
-  ) as Nucl[][] | AA[][];
-  const zippedSequencesAndAnnotations = validatedSequences.map(
-    (sequence, sequenceIdx) => {
-      const annotations = stackedAnnotationsPerSequence[sequenceIdx];
-      return [sequence, annotations] as const;
-    },
-  );
-  const annotatedSequences = zippedSequencesAndAnnotations.map(
-    ([sequence, annotations]) => getAnnotatedSequence(sequence, annotations),
-  );
-  const [selection] = useState<AriadneSelection | null>(
+  const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
+  );
+  const { annotatedSequences } = useMemo(
+    () =>
+      generateRandomSequences({
+        maxLength: 1000,
+        maxSequences: numSequences,
+        annotationOnClick: setSelection,
+      }),
+    [],
   );
 
   const defaultCharClassName = ({ sequenceIdx }: { sequenceIdx: number }) => {
@@ -71,8 +53,8 @@ const SequenceStory = ({
   };
 
   return (
-    <div className="grid h-screen content-center">
-      <Card className="h-[400px] max-w-xl overflow-y-scroll">
+    <div className="grid h-screen content-center py-8">
+      <Card className="max-w-4xl overflow-y-scroll">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
           sequences={annotatedSequences}
@@ -85,12 +67,11 @@ const SequenceStory = ({
   );
 };
 
-export const SequenceViewerStory = () => (
-  <SequenceStory sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))} />
-);
+export const OneSequence = () => <SequenceStory numSequences={1} />;
+export const TwoSequences = () => <SequenceStory numSequences={2} />;
 export const SequenceViewerStoryForwardSelectionOverSeam = () => (
   <SequenceStory
-    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    numSequences={1}
     initialSelection={{
       start: 10,
       end: 5,
@@ -101,7 +82,7 @@ export const SequenceViewerStoryForwardSelectionOverSeam = () => (
 
 export const SequenceViewerStoryReverseSelection = () => (
   <SequenceStory
-    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    numSequences={1}
     initialSelection={{
       start: 10,
       end: 5,
@@ -112,7 +93,7 @@ export const SequenceViewerStoryReverseSelection = () => (
 
 export const SequenceViewerStoryReverseSelectionOverSeam = () => (
   <SequenceStory
-    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    numSequences={1}
     initialSelection={{
       start: 5,
       end: 10,
@@ -123,14 +104,14 @@ export const SequenceViewerStoryReverseSelectionOverSeam = () => (
 
 export const SequenceViewerStoryCustomClassNames = () => (
   <SequenceStory
-    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    numSequences={1}
     containerClassName="text-xl bg-noir-800 skew-y-3"
   />
 );
 
 export const SequenceViewerStorySecondSequence = () => (
   <SequenceStory
-    sequences={["A", "T", "C", "G"].map((x) => x.repeat(400))}
+    numSequences={1}
     initialSelection={{
       start: 5,
       end: 10,
