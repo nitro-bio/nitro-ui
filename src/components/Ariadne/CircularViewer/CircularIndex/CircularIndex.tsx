@@ -113,6 +113,7 @@ const Ticks = ({
               y2={y2}
               stroke="currentColor"
               strokeWidth={1}
+              opacity={0.5}
               transform={`rotate(${rotateDegrees} ${cx} ${cy})`}
             />
             <text
@@ -122,6 +123,7 @@ const Ticks = ({
               fontSize=".8rem"
               transform={`rotate(${rotateDegrees} ${cx} ${cy})`}
               fill="currentColor"
+              opacity={0.5}
             >
               {i * basesPerTick}
             </text>

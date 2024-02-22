@@ -13,9 +13,11 @@ export default {
 const CircularStory = ({
   maxLength,
   initialSelection,
+  numSequences,
 }: {
   maxLength?: number;
   initialSelection?: AriadneSelection;
+  numSequences?: number;
 }) => {
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
@@ -23,22 +25,26 @@ const CircularStory = ({
   const { annotatedSequences, stackedAnnotations } = useMemo(
     () =>
       generateRandomSequences({
-        maxSequences: 1,
+        maxSequences: numSequences ?? 1,
         maxLength: maxLength ?? 1000,
+        annotationOnClick: setSelection,
       }),
     [],
   );
 
   return (
     <div className="grid h-screen content-center">
-      <Card className="max-w-xl">
-        <CircularViewer
-          containerClassName="text-brand-400"
-          sequence={annotatedSequences[0]}
-          stackedAnnotations={stackedAnnotations}
-          selection={selection}
-          setSelection={setSelection}
-        />
+      <Card className="items-between flex max-w-5xl justify-around">
+        {annotatedSequences.map((seq, idx) => (
+          <CircularViewer
+            key={idx}
+            containerClassName="text-brand-400"
+            sequence={seq}
+            stackedAnnotations={stackedAnnotations}
+            selection={selection}
+            setSelection={setSelection}
+          />
+        ))}
       </Card>
     </div>
   );
@@ -46,6 +52,7 @@ const CircularStory = ({
 
 export const MiniCircularViewerStory = () => <CircularStory maxLength={10} />;
 export const CircularViewerStory = () => <CircularStory />;
+export const TwoCircularViewerStory = () => <CircularStory numSequences={2} />;
 export const CircularViewerStoryForwardSelectionOverSeam = () => (
   <CircularStory
     initialSelection={{
