@@ -55,9 +55,9 @@ const AriadneStory = ({
         />
       </div>
       <div className="grid w-full grid-cols-2 content-start gap-2 overflow-y-scroll">
-      {sequences.map((sequence, idx) => (
+        {sequences.map((sequence, idx) => (
           <CircularViewer
-	key={idx}
+            key={idx}
             containerClassName={classNames(classNameBySequenceIdx(idx))}
             sequence={sequence}
             annotations={annotations}
