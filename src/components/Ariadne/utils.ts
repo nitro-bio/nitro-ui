@@ -1,18 +1,14 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import { validatedSequenceStringSchema } from "./schemas";
+import {
+  annotatedSequenceSchema,
+  validatedSequenceStringSchema,
+} from "./schemas";
 import type {
-  AA,
   AnnotatedSequence,
   Annotation,
   AriadneSelection,
-  Gap,
-  Nucl,
-  Space,
   StackedAnnotation,
-  Stop,
-  Unknown,
-  ValidatedSequence,
 } from "./types";
 
 export const getComplement = (sequence: string) => {
@@ -38,14 +34,11 @@ export const getComplement = (sequence: string) => {
 };
 
 export const getAnnotatedSequence = (
-  sequence: ValidatedSequence,
-  stackedAnnotations: StackedAnnotation[],
+  sequence: string,
+  stackedAnnotations: Annotation[],
 ): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
-  const mapFn = (
-    base: Nucl | AA | Gap | Stop | Space | Unknown,
-    idx: number,
-  ) => {
+  const mapFn = (base: string, idx: number) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
       // if the annotation spans the seam of the plasmid
       if (annotation.start > annotation.end) {
@@ -69,10 +62,15 @@ export const getAnnotatedSequence = (
       complement: getComplement(base),
     };
   };
-  const annotatedSequence = sequence.map(mapFn);
 
-  /* TODO: figure out how to get this to typecheck */
-  return annotatedSequence as AnnotatedSequence;
+  const annotatedSequence = annotatedSequenceSchema.parse(
+    sequence
+      .split("")
+      .map(mapFn)
+      .filter((x) => x.base !== " "), // remove padding
+  );
+
+  return annotatedSequence;
 };
 
 interface Stackable {
@@ -362,7 +360,7 @@ export const stringToAnnotatedSequence = ({
   );
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
   const annotatedSequence = getAnnotatedSequence(
-    validatedSequence,
+    validatedSequence.join(""),
     stackedAnnotations,
   );
   return annotatedSequence;

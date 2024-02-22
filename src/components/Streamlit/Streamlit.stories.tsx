@@ -7,6 +7,7 @@ import {
 } from "@Streamlit/Ariadne";
 import { LinearViewerStreamlit } from "./LinearViewerStreamlit";
 import { useStreamlitMock } from "@Streamlit/hooks";
+import { z } from "zod";
 
 export default {
   title: "Streamlit/Ariadne",
@@ -18,20 +19,11 @@ export const CircularViewerStory = () => {
     zodSchema: AriadneStreamlitSchema,
     scrubUnclonable: true,
   });
-
-  useEffect(function initializeStreamlitData() {
-    const selection = null;
-    const { annotatedSequences, stackedAnnotations } = generateRandomSequences({
-      maxSequences: 1,
-      maxLength: 1000,
-    });
-    sendToReact({
-      sequences: annotatedSequences,
-      stackedAnnotations,
-      selection,
-    });
-  }, []);
-
+  useRandomAriadneDataStreamlit({
+    maxSequences: 1,
+    maxLength: 1000,
+    sendToReact,
+  });
   return <CircularViewerStreamlit />;
 };
 
@@ -40,19 +32,34 @@ export const LinearViewerStory = () => {
     zodSchema: AriadneStreamlitSchema,
     scrubUnclonable: true,
   });
+  useRandomAriadneDataStreamlit({
+    maxSequences: 4,
+    maxLength: 1000,
+    sendToReact,
+  });
 
+  return <LinearViewerStreamlit />;
+};
+
+const useRandomAriadneDataStreamlit = ({
+  maxSequences,
+  maxLength,
+  sendToReact,
+}: {
+  maxSequences: number;
+  maxLength: number;
+  sendToReact: (data: z.infer<typeof AriadneStreamlitSchema>) => void;
+}) => {
   useEffect(function initializeStreamlitData() {
     const selection = null;
-    const { annotatedSequences, stackedAnnotations } = generateRandomSequences({
-      maxSequences: 2,
-      maxLength: 1000,
+    const { sequences, annotations } = generateRandomSequences({
+      maxSequences,
+      maxLength,
     });
     sendToReact({
-      sequences: annotatedSequences,
-      stackedAnnotations,
+      sequences,
+      annotations,
       selection,
     });
   }, []);
-
-  return <LinearViewerStreamlit />;
 };

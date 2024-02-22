@@ -1,23 +1,27 @@
-import { baseInSelection } from "@Ariadne/utils";
+import { baseInSelection, getAnnotatedSequence } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 
+import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { useMemo } from "react";
 import type {
   AnnotatedAA,
   AnnotatedBase,
   AnnotatedNucl,
-  AnnotatedSequence,
+  Annotation,
   AriadneSelection,
   StackedAnnotation,
 } from "../types";
 
 export const SequenceViewer = ({
   sequences,
+  annotations,
   selection,
   containerClassName,
   charClassName,
   selectionClassName,
 }: {
-  sequences: AnnotatedSequence[];
+  sequences: string[];
+  annotations: Annotation[];
   selection: AriadneSelection | null;
   containerClassName?: string;
   charClassName: ({
@@ -29,6 +33,22 @@ export const SequenceViewer = ({
   }) => string;
   selectionClassName?: string;
 }) => {
+  const stackedAnnotations = useMemo(
+    function memoize() {
+      return stackAnnsByType(annotations);
+    },
+    [annotations],
+  );
+
+  const annotatedSequences = useMemo(
+    function memoize() {
+      return sequences.map((sequence) =>
+        getAnnotatedSequence(sequence, stackedAnnotations),
+      );
+    },
+    [sequences, stackedAnnotations],
+  );
+
   const indicesClassName = ({
     base,
     sequenceIdx,
@@ -36,21 +56,14 @@ export const SequenceViewer = ({
     base: AnnotatedBase;
     sequenceIdx: number;
   }) => {
-    const isNotFirstOrLast =
-      sequenceIdx !== 0 && sequenceIdx !== sequences.length - 1;
+    const isNotFirstSeq = sequenceIdx !== 0;
     const isNotMultipleOfTen = base.index % 10 !== 0;
-    const onlyTwoSequencesAndIsSecondSeq =
-      sequences.length === 2 && sequenceIdx === 1;
 
-    if (
-      isNotFirstOrLast ||
-      isNotMultipleOfTen ||
-      onlyTwoSequencesAndIsSecondSeq
-    ) {
+    if (isNotFirstSeq || isNotMultipleOfTen) {
       return "opacity-0";
     }
     return classNames(
-      "text-xs ",
+      "text-xs",
       "group-hover:text-zinc-300",
       baseInSelection(base.index, selection)
         ? "text-brand-300"
@@ -59,61 +72,67 @@ export const SequenceViewer = ({
   };
   return (
     <>
-      <div className={classNames("mt-16 flex flex-wrap", containerClassName)}>
-        {sequences[0].map(({ index: baseIdx }) => {
+      <div
+        className={classNames("flex flex-wrap gap-y-8 ", containerClassName)}
+      >
+        {annotatedSequences[0].map(({ index: baseIdx }) => {
           return (
             <div
               className={classNames(
-                "my-2 flex flex-col justify-between",
+                "mt-4 flex flex-col justify-between",
                 "group hover:bg-zinc-600",
               )}
               key={`base-${baseIdx}`}
             >
-              {sequences.map((sequence: AnnotatedBase[], sequenceIdx) => {
-                const base = sequence.find(
-                  (base: AnnotatedBase) => base.index === baseIdx,
-                ) || { base: " ", annotations: [], index: baseIdx };
+              {annotatedSequences.map(
+                (sequence: AnnotatedBase[], sequenceIdx) => {
+                  const base = sequence.find(
+                    (base: AnnotatedBase) => base.index === baseIdx,
+                  ) || { base: " ", annotations: [], index: baseIdx };
 
-                return (
-                  <div
-                    key={`sequence-${sequenceIdx}-base-${baseIdx}`}
-                    className={classNames(
-                      "relative mt-4 whitespace-pre text-center",
-                    )}
-                  >
-                    <CharComponent
-                      char={`| ${base.index}`}
-                      index={baseIdx}
-                      charClassName={classNames(
-                        "absolute -top-4 left-0 z-10",
-                        "group-hover:text-brand-200",
-                        indicesClassName({
-                          base,
-                          sequenceIdx,
-                        }),
+                  return (
+                    <div
+                      key={`sequence-${sequenceIdx}-base-${baseIdx}`}
+                      className={classNames(
+                        "relative whitespace-pre text-center",
                       )}
-                    />
-                    <CharComponent
-                      char={base.base}
-                      index={baseIdx}
-                      charClassName={classNames(
-                        charClassName({
-                          base,
-                          sequenceIdx,
-                        }),
-                        baseInSelection(baseIdx, selection) &&
-                          base.base !== " " &&
-                          selectionClassName,
-                      )}
-                    />
-                    <SequenceAnnotation
-                      annotations={base.annotations}
-                      maxAnnotationStack={5}
-                      index={baseIdx}
-                    />
-                  </div>
-                );
-              })}
+                    >
+                      <CharComponent
+                        char={`| ${base.index}`}
+                        index={baseIdx}
+                        charClassName={classNames(
+                          "absolute -top-4 left-0 z-10",
+                          "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
+                          indicesClassName({
+                            base,
+                            sequenceIdx,
+                          }),
+                        )}
+                      />
+                      <CharComponent
+                        char={base.base}
+                        index={baseIdx}
+                        charClassName={classNames(
+                          charClassName({
+                            base,
+                            sequenceIdx,
+                          }),
+                          baseInSelection(baseIdx, selection) &&
+                            base.base !== " " &&
+                            selectionClassName,
+                        )}
+                      />
+                    </div>
+                  );
+                },
+              )}
+              <SequenceAnnotation
+                annotations={stackedAnnotations.filter(
+                  (ann) => baseIdx >= ann.start || baseIdx <= ann.end,
+                )}
+                index={baseIdx}
+                maxAnnotationStack={stackedAnnotations.length}
+              />
             </div>
           );
         })}
@@ -132,14 +151,23 @@ const SequenceAnnotation = ({
   index: number;
 }) => {
   const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
-  if (orderedAnnotations.length === 0) {
-    return <div className={"h-3"} />;
-  }
   return (
     <div className="relative " key={`annotation-${index}`}>
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
+          if (
+            (annotation.start <= index && index <= annotation.end) ||
+            (annotation.start >= index && index >= annotation.end)
+          ) {
+            return (
+              <div
+                key={`annotation-${index}-${i}`}
+                className={"h-3 border-b-2 border-zinc-100 opacity-10 "}
+              />
+            );
+          }
+
           return (
             <div
               key={`annotation-${index}-${i}`}
@@ -181,6 +209,13 @@ interface CharProps {
   charClassName: string;
 }
 
-const CharComponent = ({ char, charClassName }: CharProps) => (
-  <div className={classNames(charClassName, "mr-px font-mono")}>{char}</div>
-);
+const CharComponent = ({ char, charClassName }: CharProps) => {
+  if (char === " ") {
+    return (
+      <div className={classNames(charClassName, "font-mono opacity-20")}>.</div>
+    );
+  }
+  return (
+    <div className={classNames(charClassName, "mr-px font-mono")}>{char}</div>
+  );
+};

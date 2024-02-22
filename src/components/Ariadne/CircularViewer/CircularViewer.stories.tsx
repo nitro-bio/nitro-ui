@@ -22,7 +22,7 @@ const CircularStory = ({
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
-  const { annotatedSequences, stackedAnnotations } = useMemo(
+  const { sequences, annotations } = useMemo(
     () =>
       generateRandomSequences({
         maxSequences: numSequences ?? 1,
@@ -35,12 +35,12 @@ const CircularStory = ({
   return (
     <div className="grid h-screen content-center">
       <Card className="items-between flex max-w-5xl justify-around">
-        {annotatedSequences.map((seq, idx) => (
+        {sequences.map((seq, idx) => (
           <CircularViewer
             key={idx}
             containerClassName="text-brand-400"
             sequence={seq}
-            stackedAnnotations={stackedAnnotations}
+            annotations={annotations}
             selection={selection}
             setSelection={setSelection}
           />

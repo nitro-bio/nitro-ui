@@ -1,10 +1,11 @@
-import { getABData } from "@Ariadne/ABViewer/ABViewer";
 import { AnnotatedAA, AnnotatedNucl } from "@Ariadne/types";
 import { Card } from "@ui/Card";
-import { useMemo } from "react";
 
+import { getABData } from "@Ariadne/ABViewer/ABViewer";
+import { useMemo } from "react";
 import { HeadTailViewer } from ".";
-import { annotatedSequences } from "./storyUtils";
+import { exampleSequences } from "./storyUtils";
+import { getAnnotatedSequence } from "@Ariadne/utils";
 
 export default {
   title: "Ariadne/HeadTailViewer",
@@ -17,9 +18,19 @@ export default {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Default = () => {
   const abData = useMemo(
-    () => getABData(annotatedSequences[0].map((b) => b.base).join("")),
-    [annotatedSequences],
+    () => getABData(exampleSequences[0]),
+    [exampleSequences],
   );
+
+  const annotatedSequences = useMemo(
+    function memoize() {
+      return exampleSequences.map((sequence) =>
+        getAnnotatedSequence(sequence, []),
+      );
+    },
+    [exampleSequences],
+  );
+
   const charClassName = ({
     base,
     sequenceIdx,
@@ -67,7 +78,7 @@ export const Default = () => {
     <div className="grid h-screen content-center">
       <Card className="max-w-xl">
         <HeadTailViewer
-          sequences={annotatedSequences}
+          sequences={exampleSequences}
           abData={abData}
           selection={null}
           alignmentOffset={0}
