@@ -19,33 +19,18 @@ const AriadneStory = ({
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
-  const {
-    annotatedSequences: rootSequences,
-    stackedAnnotations: rootStackedAnnotations,
-  } = useMemo(
+  const { annotatedSequences, stackedAnnotations } = useMemo(
     () =>
       generateRandomSequences({
-        maxLength: 1000,
-        maxSequences: 1,
-        annotationOnClick: setSelection,
-      }),
-    [],
-  );
-  const {
-    annotatedSequences: secondarySequences,
-    stackedAnnotations: secondaryStackedAnnotations,
-  } = useMemo(
-    () =>
-      generateRandomSequences({
-        maxLength: 200,
-        maxSequences: 1,
+        maxLength: 2000,
+        maxSequences: 2,
         annotationOnClick: setSelection,
       }),
     [],
   );
 
-  const rootSequence = rootSequences[0];
-  const secondarySequence = secondarySequences[0];
+  const rootSequence = annotatedSequences[0];
+  const secondarySequence = annotatedSequences[1];
   const classNameBySequenceIdx = (sequenceIdx: number) => {
     if (sequenceIdx === 0) {
       return "dark:text-brand-300 text-brand-600";
@@ -73,14 +58,14 @@ const AriadneStory = ({
         <CircularViewer
           containerClassName="text-brand-400 "
           sequence={rootSequence}
-          stackedAnnotations={rootStackedAnnotations}
+          stackedAnnotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
         />
         <CircularViewer
           containerClassName="text-sky-400"
           sequence={secondarySequence}
-          stackedAnnotations={secondaryStackedAnnotations}
+          stackedAnnotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
         />
@@ -88,7 +73,7 @@ const AriadneStory = ({
         <LinearViewer
           containerClassName="text-brand-400 h-32 col-span-2"
           sequences={[rootSequence, secondarySequence]}
-          annotations={rootStackedAnnotations}
+          annotations={stackedAnnotations}
           selection={selection}
           setSelection={setSelection}
           selectionClassName={() => "text-brand-400"}
@@ -96,7 +81,7 @@ const AriadneStory = ({
         />
         <LinearAnnotationGutter
           containerClassName="col-span-2"
-          stackedAnnotations={rootStackedAnnotations}
+          stackedAnnotations={stackedAnnotations}
           sequence={rootSequence}
         />
       </div>

@@ -9,8 +9,7 @@ import {
 } from "../types";
 import { CircularAnnotationGutter } from "./CircularAnnotations";
 import { CircularIndex } from "./CircularIndex";
-import { findIndexFromAngle, genArc } from "./circularUtils";
-import { clamp } from "reactflow";
+import { clampSlice, findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
   sequence: AnnotatedSequence;
@@ -40,7 +39,9 @@ export const CircularViewer = ({
   if (sequence && selection && sequence.length > 0) {
     const firstIdx = sequence.length > 0 ? sequence.at(0)!.index : 0;
     const lastIdx = sequence.length > 0 ? sequence.at(-1)!.index : 0;
-    selection = clampSelection(selection, firstIdx, lastIdx);
+    console.log("previous selection", selection);
+    selection = clampSlice({ slice: selection, firstIdx, lastIdx });
+    console.log("clamped selection", selection);
   }
   const selectionRef = useRef<SVGSVGElement>(null);
 
@@ -188,7 +189,13 @@ const CircularSelection = ({
   const outerRadius = radius + 10;
   const length = getSubsequenceLength(selection, sequence.length);
 
-  const offset = direction === "forward" ? start : end;
+  const [startIdx, endIdx] = [sequence.at(0)?.index, sequence.at(-1)?.index];
+  if (startIdx === undefined || endIdx === undefined) {
+    console.error("CircularViewer: sequence has no indices");
+    return null;
+  }
+  const offset = direction === "forward" ? start - startIdx : end - startIdx;
+  console.table({ startIdx, endIdx, start, end, offset });
   const seqLength = sequence.length;
 
   const arc = genArc({
@@ -212,30 +219,4 @@ const CircularSelection = ({
       />
     </g>
   );
-};
-
-const clampSelection = (
-  selection: AriadneSelection | null,
-  firstIdx: number,
-  lastIdx: number,
-): AriadneSelection | null => {
-  if (selection === null) {
-    return null;
-  }
-  const { start, end, direction } = selection;
-  // if direction is out of bounds, return null
-  const outOfBoundsForwards =
-    direction === "forward" && start < firstIdx && end > lastIdx;
-  const outOfBoundsReverse =
-    direction === "reverse" && start > lastIdx && end < firstIdx;
-  if (outOfBoundsForwards || outOfBoundsReverse) {
-    return null;
-  }
-  const clampedStart = clamp(start, firstIdx, lastIdx);
-  const clampedEnd = clamp(end, firstIdx, lastIdx);
-  return {
-    start: clampedStart,
-    end: clampedEnd,
-    direction,
-  };
 };

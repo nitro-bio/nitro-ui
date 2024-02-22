@@ -2,6 +2,7 @@ import { Fragment } from "react";
 
 import type { AnnotatedSequence, StackedAnnotation } from "@Ariadne/types";
 import { CircularAnnotation } from "./CircularAnnotation";
+import { clampSlice } from "../circularUtils";
 
 export const CircularAnnotationGutter = ({
   stackedAnnotations,
@@ -17,6 +18,34 @@ export const CircularAnnotationGutter = ({
   sequence: AnnotatedSequence;
 }) => {
   const gutterRadius = radius * 0.3;
+  const firstIdx = sequence.length > 0 ? sequence.at(0)!.index : 0;
+  const lastIdx = sequence.length > 0 ? sequence.at(-1)!.index : 0;
+  stackedAnnotations = stackedAnnotations
+    .map((annotation) => {
+      const clampedBounds = clampSlice({
+        slice: annotation,
+        firstIdx,
+        lastIdx,
+      });
+      if (!clampedBounds) {
+        return null;
+      }
+      console.debug(
+        "clamped",
+        { start: clampedBounds.start, end: clampedBounds.end },
+        "from",
+        {
+          start: annotation.start,
+          end: annotation.end,
+        },
+      );
+      return {
+        ...annotation,
+        start: clampedBounds.start,
+        end: clampedBounds.end,
+      };
+    })
+    .filter(Boolean) as StackedAnnotation[]; // filter ensures that the array is of type StackedAnnotation[]
   const stacks: StackedAnnotation[][] = [];
   stackedAnnotations.forEach((ann) => {
     stacks[ann.stack] = stacks[ann.stack] || [];

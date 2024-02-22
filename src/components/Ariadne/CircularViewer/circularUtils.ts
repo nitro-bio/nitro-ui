@@ -1,4 +1,4 @@
-import { Angle, Coor } from "../types";
+import { Angle, AriadneSelection, Coor } from "../types";
 
 /**
  * Taken from seqviz
@@ -15,8 +15,7 @@ export const genArc = ({
   offset,
   outerRadius,
   seqLength,
-}: // sweepFWD,
-{
+}: {
   center: Coor;
   innerRadius: number;
   largeArc: boolean;
@@ -74,7 +73,6 @@ export const findCoor = ({
 }: {
   index: number;
   radius: number;
-
   center: Coor;
   seqLength: number;
 }): Coor => {
@@ -156,4 +154,44 @@ export const findIndexFromAngle = ({
 
   const rawBaseIdx = arcPerc * seqLength;
   return Math.round(rawBaseIdx < 0 ? seqLength + rawBaseIdx : rawBaseIdx);
+};
+
+export const clampSlice = ({
+  slice,
+  firstIdx,
+  lastIdx,
+}: {
+  slice: AriadneSelection | null | undefined;
+  firstIdx: number;
+  lastIdx: number;
+}): AriadneSelection | null => {
+  if (!slice) {
+    return null;
+  }
+  let { start, end } = slice;
+
+  const outOfBoundsBefore = start < firstIdx && end < firstIdx;
+  const outOfBoundsAfter = start > lastIdx && end > lastIdx;
+
+  if (outOfBoundsBefore || outOfBoundsAfter) {
+    return null;
+  }
+
+  if (start >= end) {
+    start = Math.min(start, lastIdx);
+    end = Math.max(end, firstIdx);
+  } else {
+    end = Math.min(end, lastIdx);
+    start = Math.max(start, firstIdx);
+  }
+  console.debug("clamped from", slice, "to", {
+    start: start - firstIdx,
+    end: end - firstIdx,
+    direction: slice.direction,
+  });
+  return {
+    start,
+    end,
+    direction: slice.direction,
+  };
 };
