@@ -1,54 +1,68 @@
 import { useCircularSelectionRect } from "@Ariadne/hooks/useSelection";
-import { getSubsequenceLength } from "@Ariadne/utils";
-import { classNames } from "@utils/stringUtils";
-import { useEffect, useRef } from "react";
 import {
   AnnotatedSequence,
+  Annotation,
   AriadneSelection,
-  StackedAnnotation,
-} from "../types";
+} from "@Ariadne/types";
+import {
+  getAnnotatedSequence,
+  getStackedAnnotations,
+  getSubsequenceLength,
+} from "@Ariadne/utils";
+import { classNames } from "@utils/stringUtils";
+import { useEffect, useMemo, useRef } from "react";
+import { stackAnnsByType } from "..";
 import { CircularAnnotationGutter } from "./CircularAnnotations";
 import { CircularIndex } from "./CircularIndex";
 import { clampSlice, findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
-  sequence: AnnotatedSequence;
-  stackedAnnotations: StackedAnnotation[];
+  sequence: string;
+  annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;
   containerClassName?: string;
+  svgSizePX?: number;
+  svgPadding?: number;
 }
 
-const SVG_SIZE = 300;
-const SVG_PADDING = 30;
 export const CircularViewer = ({
   sequence,
-  stackedAnnotations,
+  annotations,
   selection,
   setSelection,
   containerClassName,
+  svgSizePX = 300,
+  svgPadding = 20,
 }: Props) => {
   const { cx, cy, sizeX, sizeY, radius } = {
-    cx: SVG_SIZE / 2,
-    cy: SVG_SIZE / 2,
-    sizeX: SVG_SIZE,
-    sizeY: SVG_SIZE,
-    radius: (SVG_SIZE - SVG_PADDING) / 2,
+    cx: svgSizePX / 2,
+    cy: svgSizePX / 2,
+    sizeX: svgSizePX,
+    sizeY: svgSizePX,
+    radius: (svgSizePX - svgPadding) / 2,
   };
+  const stackedAnnotations = stackAnnsByType(annotations);
+  const annotatedSequence = useMemo(
+    function memoize() {
+      return getAnnotatedSequence(sequence, getStackedAnnotations(annotations));
+    },
+    [sequence, annotations],
+  );
 
-  if (sequence && selection && sequence.length > 0) {
-    const firstIdx = sequence.length > 0 ? sequence.at(0)!.index : 0;
-    const lastIdx = sequence.length > 0 ? sequence.at(-1)!.index : 0;
-    console.log("previous selection", selection);
+  if (annotatedSequence && selection && annotatedSequence.length > 0) {
+    const firstIdx =
+      annotatedSequence.length > 0 ? annotatedSequence.at(0)!.index : 0;
+    const lastIdx =
+      annotatedSequence.length > 0 ? annotatedSequence.at(-1)!.index : 0;
     selection = clampSlice({ slice: selection, firstIdx, lastIdx });
-    console.log("clamped selection", selection);
   }
   const selectionRef = useRef<SVGSVGElement>(null);
 
   return (
     <div
       className={classNames(
-        " flex select-none items-center justify-center font-thin",
+        "flex select-none items-center justify-center font-thin",
         containerClassName,
       )}
     >
@@ -67,18 +81,18 @@ export const CircularViewer = ({
           cx={cx}
           cy={cy}
           radius={radius}
-          sequence={sequence}
+          annotatedSequence={annotatedSequence}
           ticks={8}
         />
         <CircularAnnotationGutter
-          sequence={sequence}
+          annotatedSequence={annotatedSequence}
           stackedAnnotations={stackedAnnotations}
           cx={cx}
           cy={cy}
           radius={radius}
         />
         <CircularSelection
-          sequence={sequence}
+          annotatedSequence={annotatedSequence}
           selection={selection}
           cx={cx}
           cy={cy}
@@ -96,7 +110,7 @@ export const CircularViewer = ({
           alignmentBaseline="middle"
           fontSize={"1rem"}
         >
-          {sequence.length} bp
+          {annotatedSequence.length} bp
         </text>
       </svg>
     </div>
@@ -110,7 +124,7 @@ const CircularSelection = ({
   selection,
   selectionRef,
   setSelection,
-  sequence,
+  annotatedSequence,
 }: {
   radius: number;
 
@@ -119,7 +133,7 @@ const CircularSelection = ({
   selectionRef: React.RefObject<SVGSVGElement>;
   setSelection: (selection: AriadneSelection) => void;
   selection: AriadneSelection | null;
-  sequence: AnnotatedSequence;
+  annotatedSequence: AnnotatedSequence;
 }) => {
   /* Collect internal selection data and propogate up */
   const {
@@ -137,11 +151,11 @@ const CircularSelection = ({
       ) {
         const start = findIndexFromAngle({
           angle: internalSelectionStart,
-          seqLength: sequence.length,
+          seqLength: annotatedSequence.length,
         });
         const end = findIndexFromAngle({
           angle: internalSelectionEnd,
-          seqLength: sequence.length,
+          seqLength: annotatedSequence.length,
         });
         const direction =
           internalDirection === "clockwise" ? "forward" : "reverse";
@@ -151,10 +165,10 @@ const CircularSelection = ({
           : 0;
         const newLength = getSubsequenceLength(
           { start, end, direction },
-          sequence.length,
+          annotatedSequence.length,
         );
         const deltaLength = Math.abs(prevLength - newLength);
-        const deltaThreshold = Math.max(0.7 * sequence.length, 10);
+        const deltaThreshold = Math.max(0.7 * annotatedSequence.length, 10);
         if (deltaLength > deltaThreshold && selection) {
           // preserve initial direction
           setSelection({
@@ -187,16 +201,18 @@ const CircularSelection = ({
   const center = { x: cx, y: cy };
   const innerRadius = radius;
   const outerRadius = radius + 10;
-  const length = getSubsequenceLength(selection, sequence.length);
+  const length = getSubsequenceLength(selection, annotatedSequence.length);
 
-  const [startIdx, endIdx] = [sequence.at(0)?.index, sequence.at(-1)?.index];
+  const [startIdx, endIdx] = [
+    annotatedSequence.at(0)?.index,
+    annotatedSequence.at(-1)?.index,
+  ];
   if (startIdx === undefined || endIdx === undefined) {
     console.error("CircularViewer: sequence has no indices");
     return null;
   }
   const offset = direction === "forward" ? start - startIdx : end - startIdx;
-  console.table({ startIdx, endIdx, start, end, offset });
-  const seqLength = sequence.length;
+  const seqLength = annotatedSequence.length;
 
   const arc = genArc({
     center,

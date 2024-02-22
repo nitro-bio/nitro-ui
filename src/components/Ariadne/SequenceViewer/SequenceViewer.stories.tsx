@@ -27,15 +27,14 @@ const SequenceStory = ({
     sequenceIdx: number;
   }) => string;
 }) => {
-  const [selection, setSelection] = useState<AriadneSelection | null>(
+  const [selection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
-  const { annotatedSequences } = useMemo(
+  const { sequences, annotations } = useMemo(
     () =>
       generateRandomSequences({
-        maxLength: 1000,
         maxSequences: numSequences,
-        annotationOnClick: setSelection,
+        maxLength: 100,
       }),
     [],
   );
@@ -57,7 +56,8 @@ const SequenceStory = ({
       <Card className="max-w-4xl overflow-y-scroll">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
-          sequences={annotatedSequences}
+          sequences={sequences}
+          annotations={annotations}
           selection={selection}
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
@@ -69,6 +69,7 @@ const SequenceStory = ({
 
 export const OneSequence = () => <SequenceStory numSequences={1} />;
 export const TwoSequences = () => <SequenceStory numSequences={2} />;
+export const eightSequences = () => <SequenceStory numSequences={8} />;
 export const SequenceViewerStoryForwardSelectionOverSeam = () => (
   <SequenceStory
     numSequences={1}

@@ -9,17 +9,19 @@ export const CircularAnnotationGutter = ({
   cx,
   cy,
   radius,
-  sequence,
+  annotatedSequence,
 }: {
   stackedAnnotations: StackedAnnotation[];
   cx: number;
   cy: number;
   radius: number;
-  sequence: AnnotatedSequence;
+  annotatedSequence: AnnotatedSequence;
 }) => {
   const gutterRadius = radius * 0.3;
-  const firstIdx = sequence.length > 0 ? sequence.at(0)!.index : 0;
-  const lastIdx = sequence.length > 0 ? sequence.at(-1)!.index : 0;
+  const firstIdx =
+    annotatedSequence.length > 0 ? annotatedSequence.at(0)!.index : 0;
+  const lastIdx =
+    annotatedSequence.length > 0 ? annotatedSequence.at(-1)!.index : 0;
   stackedAnnotations = stackedAnnotations
     .map((annotation) => {
       const clampedBounds = clampSlice({
@@ -63,7 +65,7 @@ export const CircularAnnotationGutter = ({
               annotation={annotation}
               radius={gutterRadius + stackIdx * 6}
               center={{ x: cx, y: cy }}
-              sequence={sequence}
+              sequence={annotatedSequence}
             />
           ))}
         </Fragment>

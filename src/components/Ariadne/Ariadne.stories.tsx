@@ -2,10 +2,11 @@ import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from "./CircularViewer";
-import { LinearAnnotationGutter, LinearViewer } from "./LinearViewer";
+import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomSequences } from "./storyUtils";
 import { AriadneSelection } from "./types";
+import { classNames } from "../..";
 
 export default {
   title: "Ariadne/Ariadne",
@@ -19,18 +20,16 @@ const AriadneStory = ({
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
-  const { annotatedSequences, stackedAnnotations } = useMemo(
+  const { sequences, annotations } = useMemo(
     () =>
       generateRandomSequences({
-        maxLength: 2000,
-        maxSequences: 2,
+        maxSequences: 4,
+        maxLength: 300,
         annotationOnClick: setSelection,
       }),
     [],
   );
 
-  const rootSequence = annotatedSequences[0];
-  const secondarySequence = annotatedSequences[1];
   const classNameBySequenceIdx = (sequenceIdx: number) => {
     if (sequenceIdx === 0) {
       return "dark:text-brand-300 text-brand-600";
@@ -43,46 +42,38 @@ const AriadneStory = ({
     }
   };
   return (
-    <Card className="grid-row-auto grid grid-cols-1 content-center gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2 lg:grid-rows-2 ">
-      <div className="row-span-2 grid h-full max-w-xl shrink-0 content-start overflow-y-scroll border-r border-zinc-600 pr-8">
+    <Card className="grid grid-cols-1 gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2">
+      <div className="h-full  overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
         <SequenceViewer
-          sequences={[rootSequence, secondarySequence]}
+          sequences={sequences}
           selection={selection}
           charClassName={({ sequenceIdx }) =>
             classNameBySequenceIdx(sequenceIdx)
           }
           selectionClassName="bg-brand-400/20"
+          annotations={annotations}
         />
       </div>
-      <div className="row-span-1 grid grid-cols-2 gap-1">
-        <CircularViewer
-          containerClassName="text-brand-400 "
-          sequence={rootSequence}
-          stackedAnnotations={stackedAnnotations}
-          selection={selection}
-          setSelection={setSelection}
-        />
-        <CircularViewer
-          containerClassName="text-sky-400"
-          sequence={secondarySequence}
-          stackedAnnotations={stackedAnnotations}
-          selection={selection}
-          setSelection={setSelection}
-        />
-
+      <div className="grid w-full grid-cols-2 content-start gap-2 overflow-y-scroll">
+      {sequences.map((sequence, idx) => (
+          <CircularViewer
+	key={idx}
+            containerClassName={classNames(classNameBySequenceIdx(idx))}
+            sequence={sequence}
+            annotations={annotations}
+            selection={selection}
+            setSelection={setSelection}
+            svgSizePX={250}
+            svgPadding={20}
+          />
+        ))}
         <LinearViewer
-          containerClassName="text-brand-400 h-32 col-span-2"
-          sequences={[rootSequence, secondarySequence]}
-          annotations={stackedAnnotations}
-          selection={selection}
-          setSelection={setSelection}
-          selectionClassName={() => "text-brand-400"}
-          sequenceClassName={classNameBySequenceIdx}
-        />
-        <LinearAnnotationGutter
           containerClassName="col-span-2"
-          stackedAnnotations={stackedAnnotations}
-          sequence={rootSequence}
+          sequences={sequences}
+          selection={selection}
+          annotations={annotations}
+          setSelection={setSelection}
+          sequenceClassName={classNameBySequenceIdx}
         />
       </div>
     </Card>

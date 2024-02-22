@@ -1,20 +1,16 @@
-import {
-  annotatedSequenceSchema,
-  ariadneSelectionSchema,
-  stackedAnnotationSchema,
-} from "@Ariadne/schemas";
-import { AriadneSelection } from "@Ariadne/types";
 import { CircularViewer } from "@Ariadne/CircularViewer";
+import { LinearViewer } from "@Ariadne/LinearViewer";
+import { annotationSchema, ariadneSelectionSchema } from "@Ariadne/schemas";
+import { AriadneSelection } from "@Ariadne/types";
+import { useStreamlit } from "@Streamlit/hooks";
 import { Card } from "@ui/Card";
 import { useRef } from "react";
 import { z } from "zod";
-import { useStreamlit } from "@Streamlit/hooks";
-import { LinearAnnotationGutter, LinearViewer } from "@Ariadne/LinearViewer";
 
 export const AriadneStreamlitSchema = z.object({
-  sequences: z.array(annotatedSequenceSchema),
+  sequences: z.array(z.string()),
   selection: ariadneSelectionSchema.nullable(),
-  stackedAnnotations: z.array(stackedAnnotationSchema),
+  annotations: z.array(annotationSchema),
 });
 
 export const useStreamlitAriadne = () => {
@@ -28,9 +24,9 @@ export const useStreamlitAriadne = () => {
     if (!data) return;
     setData({ ...data, selection });
   };
-  const { sequences, stackedAnnotations, selection } = data ?? {
+  const { sequences, annotations, selection } = data ?? {
     sequences: undefined,
-    stackedAnnotations: undefined,
+    annotations: undefined,
     selection: undefined,
   };
   const classNameBySequenceIdx = (sequenceIdx: number) => {
@@ -48,7 +44,7 @@ export const useStreamlitAriadne = () => {
   return {
     ref,
     sequences,
-    stackedAnnotations,
+    annotations,
     selection,
     setSelection,
     classNameBySequenceIdx,
@@ -56,10 +52,10 @@ export const useStreamlitAriadne = () => {
 };
 
 export const CircularViewerStreamlit = () => {
-  const { ref, sequences, stackedAnnotations, selection, setSelection } =
+  const { ref, sequences, annotations, selection, setSelection } =
     useStreamlitAriadne();
 
-  const ready = sequences && stackedAnnotations && selection !== undefined;
+  const ready = sequences && annotations && selection !== undefined;
   return (
     <div className="grid h-screen content-center" ref={ref}>
       <Card className="max-w-xl">
@@ -67,7 +63,7 @@ export const CircularViewerStreamlit = () => {
           <CircularViewer
             containerClassName="text-brand-400"
             sequence={sequences[0]}
-            stackedAnnotations={stackedAnnotations}
+            annotations={annotations}
             selection={selection}
             setSelection={setSelection}
           />
@@ -83,13 +79,13 @@ export const LinearViewerStreamlit = () => {
   const {
     ref,
     sequences,
-    stackedAnnotations,
+    annotations,
     selection,
     setSelection,
     classNameBySequenceIdx,
   } = useStreamlitAriadne();
 
-  const ready = sequences && stackedAnnotations && selection !== undefined;
+  const ready = sequences && annotations && selection !== undefined;
   return (
     <div className="grid h-screen content-center" ref={ref}>
       <Card className="h-fit px-8">
@@ -98,16 +94,11 @@ export const LinearViewerStreamlit = () => {
             <LinearViewer
               containerClassName="text-brand-400 mb-8"
               sequences={sequences}
-              annotations={stackedAnnotations}
+              annotations={annotations}
               selection={selection}
               setSelection={setSelection}
               selectionClassName={() => "text-brand-400"}
               sequenceClassName={classNameBySequenceIdx}
-            />
-            <LinearAnnotationGutter
-              containerClassName="flex-1"
-              stackedAnnotations={stackedAnnotations}
-              sequence={sequences[0]}
             />
           </>
         ) : (
