@@ -1,4 +1,3 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { SequenceCard } from "./SequenceCard";
 
 export default {
@@ -8,17 +7,14 @@ export default {
     sequence: { type: "string" },
     sequenceName: { type: "string" },
   },
-} as ComponentMeta<typeof SequenceCard>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = (args: {
-  sequence: string;
-  sequenceName: string;
-}) => (
-  <div className="max-w-xl">
-    <SequenceCard sequenceName={args.sequenceName} sequence={args.sequence} />
-  </div>
-);
-
-export const SequenceCardStory = Template.bind({});
-SequenceCardStory.args = { sequence: "ATGCTG", sequenceName: "test" };
+export const SequenceCardStory = () => {
+  const sequence = "ATGCTG";
+  const sequenceName = "test";
+  return (
+    <div className="max-w-xl">
+      <SequenceCard sequenceName={sequenceName} sequence={sequence} />
+    </div>
+  );
+};

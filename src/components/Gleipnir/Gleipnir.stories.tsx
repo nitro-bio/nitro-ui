@@ -1,14 +1,12 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Gleipnir } from ".";
 import { GENES, PROTEINS, REACTIONS } from "./storyUtils";
 
 export default {
   title: "Gleipnir/Gleipnir",
   argTypes: {},
-} as ComponentMeta<typeof Gleipnir>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = () => {
+export const DefaultStory = () => {
   return (
     <div className="flex h-screen items-center justify-center px-8 py-6 dark:bg-noir-700">
       <div className="max-w-7xl flex-1">
@@ -17,5 +15,3 @@ const Template: ComponentStory<any> = () => {
     </div>
   );
 };
-
-export const DefaultStory = Template.bind({});

@@ -69,7 +69,7 @@ const SequenceStory = ({
 
 export const OneSequence = () => <SequenceStory numSequences={1} />;
 export const TwoSequences = () => <SequenceStory numSequences={2} />;
-export const eightSequences = () => <SequenceStory numSequences={8} />;
+export const EightSequences = () => <SequenceStory numSequences={8} />;
 export const SequenceViewerStoryForwardSelectionOverSeam = () => (
   <SequenceStory
     numSequences={1}

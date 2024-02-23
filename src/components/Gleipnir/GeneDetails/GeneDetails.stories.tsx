@@ -1,4 +1,3 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 
 import { useState } from "react";
@@ -12,10 +11,9 @@ export default {
   argTypes: {
     query: { type: "string" },
   },
-} as ComponentMeta<typeof GeneDetails>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = () => {
+export const GeneDetailsStory = () => {
   const [currentGene, setCurrentGene] = useState<Gene | null>(GENES[0]);
   return (
     <Card className="max-w-3xl">
@@ -28,5 +26,3 @@ const Template: ComponentStory<any> = () => {
     </Card>
   );
 };
-
-export const GeneDetailsStory = Template.bind({});

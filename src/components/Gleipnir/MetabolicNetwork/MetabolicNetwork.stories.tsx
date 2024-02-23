@@ -1,4 +1,3 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 import { useState } from "react";
 import { GENES, REACTIONS } from "../storyUtils";
@@ -11,10 +10,9 @@ export default {
   argTypes: {
     query: { type: "string" },
   },
-} as ComponentMeta<typeof MetabolicNetwork>;
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = () => {
+export const MetabolicNetworkStory = () => {
   const [currentGene, setCurrentGene] = useState<Gene | null>(GENES[0]);
   return (
     <Card className="">
@@ -26,10 +24,4 @@ const Template: ComponentStory<any> = () => {
       />
     </Card>
   );
-};
-
-export const MetabolicNetworkStory = Template.bind({});
-MetabolicNetworkStory.args = {
-  query:
-    "ATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATG",
 };

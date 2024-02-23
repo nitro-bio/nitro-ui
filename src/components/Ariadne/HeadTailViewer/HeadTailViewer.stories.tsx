@@ -9,10 +9,6 @@ import { getAnnotatedSequence } from "@Ariadne/utils";
 
 export default {
   title: "Ariadne/HeadTailViewer",
-  component: HeadTailViewer,
-  argTypes: {
-    sequence: { type: "string" },
-  },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
