@@ -184,11 +184,6 @@ export const clampSlice = ({
     end = Math.min(end, lastIdx);
     start = Math.max(start, firstIdx);
   }
-  console.debug("clamped from", slice, "to", {
-    start: start - firstIdx,
-    end: end - firstIdx,
-    direction: slice.direction,
-  });
   return {
     start,
     end,

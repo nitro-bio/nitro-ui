@@ -44,8 +44,9 @@ export default defineConfig({
       ],
     }),
   ],
-
   build: {
+    sourcemap: "inline",
+    minify: false,
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "Nitro UI",
@@ -60,6 +61,7 @@ export default defineConfig({
           "react-dom": "ReactDOM",
           "styled-components": "styled",
         },
+        interop: "compat",
       },
     },
   },

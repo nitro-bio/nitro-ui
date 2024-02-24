@@ -39,9 +39,8 @@ export const GlobalAlignmentViz = ({
     ];
 
     return (
-      <a href={`#card-${item.id}`}>
+      <a href={`#card-${item.id}`} key={item.title}>
         <div
-          key={item.title}
           className={
             "text-align-start my-2 cursor-pointer truncate rounded-xl bg-brand-500 p-1 pl-4 text-start text-xs text-white hover:bg-brand-700"
           }

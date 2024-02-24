@@ -32,15 +32,6 @@ export const CircularAnnotationGutter = ({
       if (!clampedBounds) {
         return null;
       }
-      console.debug(
-        "clamped",
-        { start: clampedBounds.start, end: clampedBounds.end },
-        "from",
-        {
-          start: annotation.start,
-          end: annotation.end,
-        },
-      );
       return {
         ...annotation,
         start: clampedBounds.start,

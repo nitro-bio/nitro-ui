@@ -59,23 +59,11 @@ AI: Props are arguments that are passed to components in React. The props for th
 
 ###### SequenceViewer
 
-##### Plots
-
-###### Histogram
-
-###### Volcano
-
 ##### Blast
 
 ###### GlobalAlignmentViz
 
 ###### TextAlignmentViz
-
-##### Gleipnir
-
-###### Metabolic Network
-
-###### GeneDetails
 
 ### Developer Quick Start
 

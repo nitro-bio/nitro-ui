@@ -1,6 +1,6 @@
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
+import { useDropzone } from "react-dropzone";
 import { Table } from "..";
 
 type FileParseSuccess<T> = {
@@ -65,21 +65,8 @@ export function FileUpload<T>({
     [files],
   );
 
-  const handleChange = (files: FileList) => {
-    const fileListToArray = (list: FileList): File[] => {
-      const array: File[] = [];
-      for (let i = 0; i < list.length; i++) {
-        const file = list.item(i);
-        if (file) {
-          array.push(file);
-        } else {
-          throw new Error(`File not found at index ${i}`);
-        }
-      }
-      return array;
-    };
-    const filesArray = fileListToArray(files);
-    setFiles(filesArray);
+  const handleChange = (files: File[]) => {
+    setFiles(files);
   };
 
   const uploadFiles = async () => {
@@ -151,12 +138,7 @@ export function FileUpload<T>({
         className,
       )}
     >
-      <FileUploader
-        handleChange={handleChange}
-        onDrop={handleChange}
-        name="file"
-        multiple={true}
-      >
+      <Dropzone onDrop={handleChange}>
         <div className="cursor-pointer space-y-1 text-center">
           <div className="flex text-sm text-noir-400">
             <p className="focus-within:ring-brand-500 relative cursor-pointer rounded-xl font-medium text-brand-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 hover:text-brand-500">
@@ -168,10 +150,26 @@ export function FileUpload<T>({
             .{allowedFileTypes.join(" .")}
           </p>
         </div>
-      </FileUploader>
+      </Dropzone>
     </div>
   );
 }
+
+const Dropzone = ({
+  onDrop,
+  children,
+}: {
+  onDrop: (files: File[]) => void;
+  children: React.ReactNode;
+}) => {
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  return (
+    <div {...getRootProps()} className="cursor-pointer space-y-1 text-center">
+      <input {...getInputProps()} />
+      {children}
+    </div>
+  );
+};
 
 function ParseTable<T>({
   successes,
