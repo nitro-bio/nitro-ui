@@ -25,6 +25,11 @@ module.exports = {
         noir: noirColor,
         brand: brandColor,
       },
+      gridTemplateColumns: {
+        6: "repeat(6, minmax(0, 1fr))",
+        24: "repeat(24, minmax(0, 1fr))",
+        48: "repeat(48, minmax(0, 1fr))",
+      },
     },
     ringColor: {
       brand: brandColor[500],
