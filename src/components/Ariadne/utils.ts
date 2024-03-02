@@ -148,9 +148,9 @@ export const baseInSelection = (
     direction = "forward";
   }
   if (start < end) {
-    return baseIndex >= start && baseIndex <= end;
+    return inRange(baseIndex, start, end);
   } else {
-    return baseIndex >= start || baseIndex <= end;
+    return inRange(baseIndex, start, end) || inRange(baseIndex, 0, end);
   }
 };
 

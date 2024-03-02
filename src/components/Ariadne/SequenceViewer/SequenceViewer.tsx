@@ -127,9 +127,7 @@ export const SequenceViewer = ({
                 },
               )}
               <SequenceAnnotation
-                annotations={stackedAnnotations.filter(
-                  (ann) => baseIdx >= ann.start || baseIdx <= ann.end,
-                )}
+                annotations={stackedAnnotations}
                 index={baseIdx}
                 maxAnnotationStack={stackedAnnotations.length}
               />
@@ -156,10 +154,7 @@ const SequenceAnnotation = ({
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
-          if (
-            (annotation.start <= index && index <= annotation.end) ||
-            (annotation.start >= index && index >= annotation.end)
-          ) {
+          if (!baseInSelection(index, annotation)) {
             return (
               <div
                 key={`annotation-${index}-${i}`}
