@@ -3,13 +3,15 @@ import { z } from "zod";
 
 const PlateSelectionSchema = z.object({
   wells: z.set(z.number()),
+  className: z.string().optional(),
 });
-type PlateSelection = z.infer<typeof PlateSelectionSchema>;
+export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
 
 export const Plate = ({
   wells,
   className,
   selection,
+  setSelection,
 }: {
   wells: 24 | 96 | 48 | 384;
   selection: PlateSelection | null;
@@ -24,8 +26,41 @@ export const Plate = ({
   const colLabels: string[] = Array.from({ length: cols }, (_, i) =>
     String.fromCharCode(65 + i),
   );
+  const toggleWellInSelection = (well: number) => {
+    const newSelection = new Set(selection?.wells || []);
+    if (newSelection.has(well)) {
+      newSelection.delete(well);
+    } else {
+      newSelection.add(well);
+    }
+    setSelection({ wells: newSelection });
+  };
+  const toggleColumnInSelection = (col: number) => {
+    const newSelection = new Set(selection?.wells || []);
+    for (let row = 0; row < rows; row++) {
+      const well = row * cols + col;
+      if (newSelection.has(well)) {
+        newSelection.delete(well);
+      } else {
+        newSelection.add(well);
+      }
+    }
+    setSelection({ wells: newSelection });
+  };
 
-  console.log(selection);
+  const toggleRowInSelection = (row: number) => {
+    const newSelection = new Set(selection?.wells || []);
+    for (let col = 0; col < cols; col++) {
+      const well = row * cols + col;
+      if (newSelection.has(well)) {
+        newSelection.delete(well);
+      } else {
+        newSelection.add(well);
+      }
+    }
+    setSelection({ wells: newSelection });
+  };
+
   switch (wells) {
     case 24:
       gridClass = "grid-cols-7 gap-4 ";
@@ -48,6 +83,7 @@ export const Plate = ({
       <div
         className={classNames(
           "grid gap-2 rounded-md rounded-r-3xl border border-noir-800 py-4 pr-4 dark:border-noir-200",
+
           wells > 96 && "px-4",
           gridClass,
           className,
@@ -55,46 +91,63 @@ export const Plate = ({
       >
         <div className="col-span-full col-start-2 grid grid-cols-subgrid ">
           {colLabels.map((colLabel) => (
-            <div
+            <button
               key={colLabel}
               className={classNames(
-                "mx-auto flex items-end justify-center",
+                "flex items-end justify-center",
                 wells > 96 && "break-all px-1 text-[0.6rem]",
-                "text-noir-600 dark:text-noir-300",
+                "border-b border-l border-r border-noir-300 pb-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
+                "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
               )}
+              onClick={() => {
+                toggleColumnInSelection(colLabels.indexOf(colLabel));
+              }}
             >
               {colLabel}
-            </div>
+            </button>
           ))}
         </div>
         <div
           className={classNames(
-            "col-span-1 grid grid-cols-subgrid ",
+            "col-span-1 grid grid-cols-subgrid gap-1 ",
             wells > 96 && "content-between py-1",
             "text-noir-600 dark:text-noir-300",
           )}
         >
           {rowLabels.map((rowLabel) => (
-            <div
+            <button
               key={rowLabel}
+              onClick={() => {
+                toggleRowInSelection(rowLabels.indexOf(rowLabel));
+              }}
               className={classNames(
-                "mx-auto my-auto",
+                "mx-auto h-full px-1",
                 wells > 96 && "text-[0.6rem]",
+                "border-b border-r border-t border-noir-300 pb-1 pr-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
+                "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
               )}
             >
               {rowLabel}
-            </div>
+            </button>
           ))}
         </div>
         <div className="col-span-full col-start-2 grid grid-cols-subgrid gap-2 ">
           {Array.from({ length: wells }).map((_, i) => (
-            <div
+            <button
               key={i}
               className={classNames(
                 "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full ",
-		"border-noir-800 dark:border-noir-200 border ",
-                "text-noir-300 hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
+                "transition-all duration-300 ease-in-out",
+                "border border-noir-800 dark:border-noir-200",
+                "text-noir-300 hover:scale-110 hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200 ",
+                selection?.wells.has(i) &&
+                  "bg-brand-200 text-noir-800 hover:bg-brand-400 hover:text-white dark:bg-brand-600 dark:text-white hover:dark:bg-brand-700",
+                selection?.wells.has(i) && selection.className,
               )}
+              onClick={() => {
+                toggleWellInSelection(i);
+                console.log("clicked");
+              }}
             >
               <div
                 className={classNames(wells > 96 && "opacity-0")}
@@ -102,7 +155,7 @@ export const Plate = ({
               >
                 {indexToExcelCell(i, wells)}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
