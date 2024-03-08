@@ -47,7 +47,7 @@ export const Plate = ({
     <>
       <div
         className={classNames(
-          "grid gap-2 rounded-md rounded-r-3xl border py-4 pr-4",
+          "grid gap-2 rounded-md rounded-r-3xl border border-noir-800 py-4 pr-4 dark:border-noir-200",
           wells > 96 && "px-4",
           gridClass,
           className,
@@ -60,6 +60,7 @@ export const Plate = ({
               className={classNames(
                 "mx-auto flex items-end justify-center",
                 wells > 96 && "break-all px-1 text-[0.6rem]",
+                "text-noir-600 dark:text-noir-300",
               )}
             >
               {colLabel}
@@ -70,6 +71,7 @@ export const Plate = ({
           className={classNames(
             "col-span-1 grid grid-cols-subgrid ",
             wells > 96 && "content-between py-1",
+            "text-noir-600 dark:text-noir-300",
           )}
         >
           {rowLabels.map((rowLabel) => (
@@ -89,8 +91,9 @@ export const Plate = ({
             <div
               key={i}
               className={classNames(
-                "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full border ",
-                "text-noir-300 hover:bg-noir-600 dark:text-noir-600 dark:hover:text-brand-600 hover:dark:text-brand-200",
+                "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full ",
+		"border-noir-800 dark:border-noir-200 border ",
+                "text-noir-300 hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
               )}
             >
               <div

@@ -8,7 +8,7 @@ export default {
 
 export const TwentyFour = () => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-3xl p-8">
       <Plate
         wells={24}
         selection={null}
@@ -21,7 +21,7 @@ export const TwentyFour = () => {
 };
 export const FourtyEight = () => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-3xl p-8">
       <Plate
         wells={48}
         selection={null}
@@ -35,7 +35,7 @@ export const FourtyEight = () => {
 
 export const NinetySix = () => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-3xl p-8">
       <Plate
         wells={96}
         selection={null}
@@ -49,7 +49,7 @@ export const NinetySix = () => {
 
 export const ThreeEightyFour = () => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="max-w-3xl p-8">
       <Plate
         wells={384}
         selection={null}
