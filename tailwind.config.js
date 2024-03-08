@@ -26,9 +26,15 @@ module.exports = {
         brand: brandColor,
       },
       gridTemplateColumns: {
-        6: "repeat(6, minmax(0, 1fr))",
-        24: "repeat(24, minmax(0, 1fr))",
-        48: "repeat(48, minmax(0, 1fr))",
+        13: "repeat(13, minmax(0, 1fr))",
+        25: "repeat(25, minmax(0, 1fr))",
+        49: "repeat(49, minmax(0, 1fr))",
+      },
+
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.5rem",
+        "6xl": "3rem",
       },
     },
     ringColor: {

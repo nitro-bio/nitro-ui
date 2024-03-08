@@ -11,54 +11,120 @@ export const Plate = ({
   className,
   selection,
 }: {
-  wells: 24 | 96 | 384 | 1536;
+  wells: 24 | 96 | 48 | 384;
   selection: PlateSelection | null;
   setSelection: (selection: PlateSelection) => void;
   className?: string;
 }) => {
   let gridClass: string;
+  const { rows, cols } = wellsToRowsCols(wells);
+  const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
+    (i + 1).toString(),
+  );
+  const colLabels: string[] = Array.from({ length: cols }, (_, i) =>
+    String.fromCharCode(65 + i),
+  );
+
+  console.log(selection);
   switch (wells) {
     case 24:
-      gridClass = "grid-cols-6 gap-4 ";
+      gridClass = "grid-cols-7 gap-4 ";
+      break;
+    case 48:
+      gridClass = "grid-cols-9 gap-4";
       break;
     case 96:
-      gridClass = "grid-cols-12 gap-1 ";
+      gridClass = "grid-cols-13 gap-1 ";
       break;
     case 384:
-      gridClass = "grid-cols-24 gap-1 ";
-      break;
-    case 1536:
-      gridClass = "grid-cols-48 gap-1 ";
+      gridClass = "grid-cols-25 gap-1 ";
       break;
     default:
       throw new Error("Invalid number of wells");
   }
 
   return (
-    <div
-      className={classNames(
-        "grid rounded-md rounded-br-2xl border p-2",
-        gridClass,
-        className,
-      )}
-    >
-      {Array.from({ length: wells }).map((_, i) => (
+    <>
+      <div
+        className={classNames(
+          "grid gap-2 rounded-md rounded-r-3xl border py-4 pr-4",
+          wells > 96 && "px-4",
+          gridClass,
+          className,
+        )}
+      >
+        <div className="col-span-full col-start-2 grid grid-cols-subgrid ">
+          {colLabels.map((colLabel) => (
+            <div
+              key={colLabel}
+              className={classNames(
+                "mx-auto flex items-end justify-center",
+                wells > 96 && "break-all px-1 text-[0.6rem]",
+              )}
+            >
+              {colLabel}
+            </div>
+          ))}
+        </div>
         <div
-          key={i}
           className={classNames(
-            "flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full border hover:bg-noir-600 hover:text-brand-200 hover:shadow-md",
+            "col-span-1 grid grid-cols-subgrid ",
+            wells > 96 && "content-between py-1",
           )}
         >
-          <div
-            className={classNames(
-              wells > 96 && "opacity-0",
-              selection?.wells.has(i + 1) && "bg-brand-200 text-noir-900",
-            )}
-          >
-            {i + 1}
-          </div>
+          {rowLabels.map((rowLabel) => (
+            <div
+              key={rowLabel}
+              className={classNames(
+                "mx-auto my-auto",
+                wells > 96 && "text-[0.6rem]",
+              )}
+            >
+              {rowLabel}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+        <div className="col-span-full col-start-2 grid grid-cols-subgrid gap-2 ">
+          {Array.from({ length: wells }).map((_, i) => (
+            <div
+              key={i}
+              className={classNames(
+                "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full border ",
+                "text-noir-300 hover:bg-noir-600 dark:text-noir-600 dark:hover:text-brand-600 hover:dark:text-brand-200",
+              )}
+            >
+              <div
+                className={classNames(wells > 96 && "opacity-0")}
+                title={indexToExcelCell(i, wells)}
+              >
+                {indexToExcelCell(i, wells)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
+};
+
+const wellsToRowsCols = (wells: 24 | 96 | 48 | 384) => {
+  switch (wells) {
+    case 24:
+      return { rows: 4, cols: 6 };
+    case 48:
+      return { rows: 6, cols: 8 };
+    case 96:
+      return { rows: 8, cols: 12 };
+    case 384:
+      return { rows: 16, cols: 24 };
+    default:
+      throw new Error("Invalid number of wells");
+  }
+};
+
+const indexToExcelCell = (index: number, wells: 24 | 96 | 48 | 384) => {
+  const { cols } = wellsToRowsCols(wells);
+  const row = Math.floor(index / cols);
+  const col = index % cols;
+  return `${String.fromCharCode(65 + col)}${row + 1}`;
 };

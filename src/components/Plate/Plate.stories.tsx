@@ -9,7 +9,26 @@ export default {
 export const TwentyFour = () => {
   return (
     <Card className="max-w-3xl">
-      <Plate wells={24} />
+      <Plate
+        wells={24}
+        selection={null}
+        setSelection={function (selection) {
+          console.log(selection);
+        }}
+      />
+    </Card>
+  );
+};
+export const FourtyEight = () => {
+  return (
+    <Card className="max-w-3xl">
+      <Plate
+        wells={48}
+        selection={null}
+        setSelection={function (selection) {
+          console.log(selection);
+        }}
+      />
     </Card>
   );
 };
@@ -17,7 +36,13 @@ export const TwentyFour = () => {
 export const NinetySix = () => {
   return (
     <Card className="max-w-3xl">
-      <Plate wells={96} />
+      <Plate
+        wells={96}
+        selection={null}
+        setSelection={function (selection) {
+          console.log(selection);
+        }}
+      />
     </Card>
   );
 };
@@ -25,15 +50,13 @@ export const NinetySix = () => {
 export const ThreeEightyFour = () => {
   return (
     <Card className="max-w-3xl">
-      <Plate wells={384} />
-    </Card>
-  );
-};
-
-export const FifteenThirtySix = () => {
-  return (
-    <Card className="max-w-3xl">
-      <Plate wells={1536} />
+      <Plate
+        wells={384}
+        selection={null}
+        setSelection={function (selection) {
+          console.log(selection);
+        }}
+      />
     </Card>
   );
 };
