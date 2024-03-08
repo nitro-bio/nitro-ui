@@ -1,7 +1,6 @@
 import { GlobalAlignmentViz } from "@Blast/GlobalAlignmentViz";
 import { ResultCard } from "@Blast/ResultCard";
 import { SequenceCard } from "@Blast/SequenceCard";
-import { ComponentStory } from "@storybook/react";
 import { generateResults } from "./blastUtils";
 export default {
   title: "Blast/Blast",
@@ -10,8 +9,9 @@ export default {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
+export const Default = () => {
+  const sequence =
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC";
   const results = generateResults({ sequence: sequence });
   const sequenceName = "Test Sequence";
   return (
@@ -39,10 +39,4 @@ const Template: ComponentStory<any> = ({ sequence }: { sequence: string }) => {
       </div>{" "}
     </div>
   );
-};
-
-export const KitchenSinkStory = Template.bind({});
-KitchenSinkStory.args = {
-  sequence:
-    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
 };

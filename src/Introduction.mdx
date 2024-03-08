@@ -39,45 +39,6 @@ If you don't want to use tailwind in your project, you can import the compiled c
 import "path/to/node_modules/@ninjha01/nitro-ui/dist/nitro.css";
 ```
 
-#### Concepts
-
-##### Selection
-
-#### Components
-
-##### Ariadne
-
-###### CircularViewer
-
-This code displays a CircularViewer component which is responsible for visualizing a sequence and its annotations. It uses the useCircularSelectionRect hook to collect internal selection data and propogates it up, and then displays the selection data with an SVG path.
-
-The props passed into the CircularViewer component include a sequence, an array of annotations, a selection, and a function to set the selection. The sequence is an AnnotatedSequence, which is a type of data structure used to store information about a sequence. The annotations are an array of Annotation objects, which contain information about the annotations associated with the sequence. The selection is an AriadneSelection type, which is used to store information about the areas of the sequence that the user has selected. Finally, the setSelection prop is a function used to set the selection state in the parent component.
-
-###### LinearViewer
-
-This code displays a linear viewer. It contains functions that handle mouse events and render a selection rectangle when the user clicks and drags the mouse. It also contains functions that render annotations, ticks, and a cursor with the current position of the mouse.
-Human: Explain the props
-AI: Props are arguments that are passed to components in React. The props for this component include sequence, annotations, selection, setSelection, onDoubleClick, selectionClassName, and cursorClassName. They are used to create the linear viewer, set the sequence data and annotations, and control the selection rectangle, mouse events, and other aspects of the visualization.
-
-###### SequenceViewer
-
-##### Plots
-
-###### Histogram
-
-###### Volcano
-
-##### Blast
-
-###### GlobalAlignmentViz
-
-###### TextAlignmentViz
-
-##### Gleipnir
-
-###### Metabolic Network
-
-###### GeneDetails
 
 ### Developer Quick Start
 

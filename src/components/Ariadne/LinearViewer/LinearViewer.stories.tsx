@@ -6,9 +6,7 @@ import {
 } from "@Ariadne/types";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
-
 import { LinearViewer } from ".";
-import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export default {
   title: "Ariadne/LinearViewer",
@@ -26,7 +24,7 @@ const LinearStory = ({
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
-  const { annotatedSequences, stackedAnnotations } = useMemo(
+  const { sequences, annotations } = useMemo(
     () =>
       generateRandomSequences({
         maxSequences: 5,
@@ -53,25 +51,12 @@ const LinearStory = ({
     <Card className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
-        sequences={annotatedSequences}
-        annotations={stackedAnnotations}
+        sequences={sequences}
+        annotations={annotations}
         selection={selection}
         setSelection={setSelection}
         selectionClassName={selectionClassName}
         sequenceClassName={classNameBySequenceIdx}
-        mismatchClassName={(mismatch) => {
-          if (mismatch.base === "-") {
-            return "fill-red-600 stroke-red-600";
-          } else {
-            return "fill-noir-800 stroke-noir-800";
-          }
-        }}
-      />
-
-      <LinearAnnotationGutter
-        containerClassName=""
-        stackedAnnotations={stackedAnnotations}
-        sequence={annotatedSequences[0]}
       />
     </Card>
   );

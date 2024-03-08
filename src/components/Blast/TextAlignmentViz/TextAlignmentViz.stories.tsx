@@ -1,4 +1,3 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Card } from "@ui/Card";
 import { generateResults } from "../blastUtils";
 import { TextAlignmentViz } from "./TextAlignmentViz";
@@ -9,12 +8,13 @@ export default {
   argTypes: {
     query: { type: "string" },
   },
-} as ComponentMeta<typeof TextAlignmentViz>;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: ComponentStory<any> = (args: { query: string }) => {
+export const TextAlignmentVizStory = () => {
   const results = generateResults({
-    sequence: args.query,
+    sequence:
+      "ATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATG",
   });
 
   const { queryRange, query, midline, target, targetRange } = results[0];
@@ -31,8 +31,4 @@ const Template: ComponentStory<any> = (args: { query: string }) => {
   );
 };
 
-export const TextAlignmentVizStory = Template.bind({});
-TextAlignmentVizStory.args = {
-  query:
-    "ATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATGATG",
-};
+TextAlignmentVizStory.args = {};

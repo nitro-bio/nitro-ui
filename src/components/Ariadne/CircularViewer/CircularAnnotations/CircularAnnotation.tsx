@@ -16,8 +16,12 @@ export const CircularAnnotation = ({
   center: Coor;
 }) => {
   const { x: cx, y: cy } = center;
-
   const annotationLength = getSubsequenceLength(annotation, sequence.length);
+  if (annotationLength > sequence.length) {
+    console.error(
+      `Annotation ${annotation.text}'s length is greater than sequence length: ${annotationLength} > ${sequence.length}`,
+    );
+  }
   const arcPath = genArc({
     innerRadius: radius,
     outerRadius: radius + 5,

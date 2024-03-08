@@ -1,18 +1,20 @@
 import { useLinearSelectionRect } from "@Ariadne/hooks/useSelection";
-import { getSubsequenceLength } from "@Ariadne/utils";
+import { getAnnotatedSequence, getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   AnnotatedAA,
   AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
-  StackedAnnotation,
+  Annotation,
 } from "../types";
+import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export interface Props {
-  sequences: AnnotatedSequence[];
-  annotations: StackedAnnotation[];
+  sequences: string[];
+  annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
@@ -22,13 +24,11 @@ export interface Props {
   mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
 }
 
-export const SVG_WIDTH = 500;
-export const SVG_HEIGHT = 100;
-
 export const LinearViewer = (props: Props) => {
   const {
     sequences,
     selection,
+    annotations,
     setSelection,
     onDoubleClick,
     selectionClassName,
@@ -37,44 +37,72 @@ export const LinearViewer = (props: Props) => {
     sequenceClassName,
   } = props;
 
-  const rootSequence = sequences[0];
+  const stackedAnnotations = useMemo(
+    function memoize() {
+      return stackAnnsByType(annotations);
+    },
+    [annotations],
+  );
+
+  const annotatedSequences = useMemo(
+    function memoize() {
+      return sequences.map((sequence) =>
+        getAnnotatedSequence(sequence, stackedAnnotations),
+      );
+    },
+    [sequences, stackedAnnotations],
+  );
+
+  const rootSequence = annotatedSequences[0];
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
   // const basesPerTick = Math.floor(sequence.length / numberOfTicks);
 
+  const SVG_WIDTH = 500;
+  const SVG_HEIGHT = sequences.length * 10 + 10;
+
   return (
-    <svg
-      ref={selectionRef}
-      className={classNames(containerClassName || "", "select-none font-thin")}
-      onDoubleClick={onDoubleClick}
-      viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-      width="100%"
-      height="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g>
-        {sequences.map((sequence, i) => (
-          <g key={`Sequence-${i}`}>
-            <SequenceLine
-              sequenceClassName={sequenceClassName}
-              sequence={sequence}
-              otherSequences={sequences.filter((_, j) => j !== i)}
-              sequenceIdx={i}
-              rootSequence={rootSequence}
-              mismatchClassName={mismatchClassName}
-            />
-          </g>
-        ))}
-      </g>
-      <LinearSelection
-        selectionClassName={selectionClassName}
-        selectionRef={selectionRef}
-        selection={selection}
-        setSelection={setSelection}
-        sequence={rootSequence}
-      />
-    </svg>
+    <div className={containerClassName || ""}>
+      <svg
+        ref={selectionRef}
+        className={classNames("select-none font-thin")}
+        onDoubleClick={onDoubleClick}
+        viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+        width="100%"
+        height="100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g>
+          {annotatedSequences.map((sequence, i) => (
+            <g key={`Sequence-${i}`}>
+              <SequenceLine
+                sequenceClassName={sequenceClassName}
+                sequence={sequence}
+                otherSequences={annotatedSequences.filter((_, j) => j !== i)}
+                sequenceIdx={i}
+                rootSequence={rootSequence}
+                mismatchClassName={mismatchClassName}
+              />
+            </g>
+          ))}
+        </g>
+        <LinearSelection
+          selectionClassName={selectionClassName}
+          selectionRef={selectionRef}
+          selection={selection}
+          setSelection={setSelection}
+          sequence={rootSequence}
+        />
+      </svg>
+      {stackedAnnotations.length > 0 && (
+        <LinearAnnotationGutter
+          containerClassName=""
+          stackedAnnotations={stackedAnnotations}
+          sequence={rootSequence}
+        />
+      )}
+    </div>
   );
 };
 
@@ -123,6 +151,15 @@ const SequenceLine = ({
     const rootBase = rootSequence.at(base.index);
     return rootBase && rootBase.base !== base.base;
   });
+  mismatchClassName =
+    mismatchClassName ??
+    function mismatchClassName(mismatch: AnnotatedAA | AnnotatedNucl) {
+      if (mismatch.base === "-") {
+        return "fill-red-600 stroke-red-600";
+      } else {
+        return "fill-noir-800 stroke-noir-800";
+      }
+    };
 
   return (
     <>
@@ -141,7 +178,7 @@ const SequenceLine = ({
 
         return (
           <g
-            className={classNames(mismatchClassName?.(base) || "")}
+            className={classNames(mismatchClassName?.(base) || "bg-red-400")}
             key={`sequence-${sequenceIdx}-mismatch-${base.index}`}
           >
             <line

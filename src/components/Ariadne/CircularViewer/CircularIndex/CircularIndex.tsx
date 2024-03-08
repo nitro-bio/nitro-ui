@@ -3,21 +3,21 @@ import { Fragment } from "react";
 import { findCoor } from "../circularUtils";
 
 export const CircularIndex = ({
-  sequence,
+  annotatedSequence,
   cx,
   cy,
   radius,
   ticks,
 }: {
-  sequence: AnnotatedSequence;
+  annotatedSequence: AnnotatedSequence;
   cx: number;
   cy: number;
   radius: number;
   ticks: number;
 }) => {
-  const basesPerTick = Math.floor(sequence.length / ticks);
+  const basesPerTick = Math.floor(annotatedSequence.length / ticks);
 
-  if (sequence.length > 80) {
+  if (annotatedSequence.length > 80) {
     return (
       <svg className={`bg-brand-800 fill-current`}>
         <g>
@@ -34,7 +34,7 @@ export const CircularIndex = ({
             cy={cy}
             radius={radius * 0.75}
             basesPerTick={basesPerTick}
-            totalBases={sequence.length}
+            totalBases={annotatedSequence.length}
           />
         </g>
       </svg>
@@ -42,14 +42,14 @@ export const CircularIndex = ({
   }
   return (
     <text>
-      {sequence.map(({ base: letter }, index) => {
+      {annotatedSequence.map(({ base: letter }, index) => {
         const { x, y } = findCoor({
           index,
           radius: radius * 0.7,
           center: { x: cx, y: cy },
-          seqLength: sequence.length,
+          seqLength: annotatedSequence.length,
         });
-        const rotateDegrees = (index / sequence.length) * 360;
+        const rotateDegrees = (index / annotatedSequence.length) * 360;
         return (
           <tspan
             key={`base-${index}`}
@@ -113,6 +113,7 @@ const Ticks = ({
               y2={y2}
               stroke="currentColor"
               strokeWidth={1}
+              opacity={0.5}
               transform={`rotate(${rotateDegrees} ${cx} ${cy})`}
             />
             <text
@@ -122,6 +123,7 @@ const Ticks = ({
               fontSize=".8rem"
               transform={`rotate(${rotateDegrees} ${cx} ${cy})`}
               fill="currentColor"
+              opacity={0.5}
             >
               {i * basesPerTick}
             </text>

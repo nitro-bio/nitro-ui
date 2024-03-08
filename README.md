@@ -4,7 +4,7 @@
 
 ## React Component Library for Life Science
 
-[Try before you buy!](storybook.nitro.bio) (...though this library is free)
+[Try before you buy!](https://storybook.nitro.bio) (...though this library is free)
 
 ### Quickstart
 
@@ -59,23 +59,11 @@ AI: Props are arguments that are passed to components in React. The props for th
 
 ###### SequenceViewer
 
-##### Plots
-
-###### Histogram
-
-###### Volcano
-
 ##### Blast
 
 ###### GlobalAlignmentViz
 
 ###### TextAlignmentViz
-
-##### Gleipnir
-
-###### Metabolic Network
-
-###### GeneDetails
 
 ### Developer Quick Start
 

@@ -24,25 +24,21 @@ test("raw test", async () => {
             {
               annotations: [],
               base: "A",
-              complement: "T",
               index: 0,
             },
             {
               annotations: [],
               base: "T",
-              complement: "A",
               index: 1,
             },
             {
               annotations: [],
               base: "C",
-              complement: "G",
               index: 2,
             },
             {
               annotations: [],
               base: "G",
-              complement: "C",
               index: 3,
             },
           ],
