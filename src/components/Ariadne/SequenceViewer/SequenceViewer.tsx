@@ -64,10 +64,10 @@ export const SequenceViewer = ({
     }
     return classNames(
       "text-xs",
-      "group-hover:text-zinc-300",
+      "dark:group-hover:text-zinc-300 group-hover:text-zinc-800",
       baseInSelection(base.index, selection)
-        ? "text-brand-300"
-        : "text-zinc-600",
+        ? "text-brand-700 dark:text-brand-300"
+        : "text-zinc-400 dark:text-zinc-600",
     );
   };
   return (
@@ -80,7 +80,7 @@ export const SequenceViewer = ({
             <div
               className={classNames(
                 "mt-4 flex flex-col justify-between",
-                "group hover:bg-zinc-600",
+                "group hover:bg-zinc-200 dark:hover:bg-zinc-600",
               )}
               key={`base-${baseIdx}`}
             >
