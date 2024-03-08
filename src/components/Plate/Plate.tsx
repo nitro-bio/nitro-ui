@@ -83,7 +83,7 @@ export const Plate = ({
       <div
         className={classNames(
           "grid gap-2 rounded-md rounded-r-3xl border border-noir-800 py-4 pr-4 dark:border-noir-200",
-
+          "text-xs md:text-sm lg:text-base",
           wells > 96 && "px-4",
           gridClass,
           className,
