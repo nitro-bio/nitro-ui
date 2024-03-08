@@ -1,7 +1,7 @@
 import { baseInSelection, getAnnotatedSequence } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 
-import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { stackAnnsEvenly } from "@Ariadne/utils";
 import { useMemo } from "react";
 import type {
   AnnotatedAA,
@@ -35,10 +35,11 @@ export const SequenceViewer = ({
 }) => {
   const stackedAnnotations = useMemo(
     function memoize() {
-      return stackAnnsByType(annotations);
+      return stackAnnsEvenly(annotations);
     },
     [annotations],
   );
+  console.log("stackedAnnotations", stackedAnnotations);
 
   const annotatedSequences = useMemo(
     function memoize() {
@@ -152,47 +153,49 @@ const SequenceAnnotation = ({
   return (
     <div className="relative " key={`annotation-${index}`}>
       {[...Array(maxAnnotationStack).keys()].map((i) => {
-        const annotation = orderedAnnotations.find((a) => a.stack === i);
-        if (annotation) {
-          if (!baseInSelection(index, annotation)) {
-            return (
-              <div
-                key={`annotation-${index}-${i}`}
-                className={"h-3 border-b-2 border-zinc-100 opacity-10 "}
-              />
-            );
-          }
+        const annotationsInStack = orderedAnnotations.filter(
+          (ann) => ann.stack == i,
+        );
+        const annotationsCoveringBase = annotationsInStack.filter(
+          (annotation) => baseInSelection(index, annotation),
+        );
 
-          return (
-            <div
-              key={`annotation-${index}-${i}`}
-              className={classNames(
-                "group/annotation h-3 border-black group-hover/annotation:border",
-                annotation.className,
-              )}
-              onClick={() =>
-                annotation.onClick?.({
-                  start: annotation.start,
-                  end: annotation.end,
-                  diection: annotation.direction,
-                })
-              }
-            >
-              <div
-                className={classNames(
-                  "absolute -top-28 z-10 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
-                  annotation.className,
-                )}
-              >
-                <span>Pos: {index}</span>
-                <span>{annotation.text}</span>
-                <span>{annotation.type}</span>
-              </div>
-            </div>
-          );
-        } else {
+        if (annotationsCoveringBase.length === 0) {
           return <div key={`placeholder-${index}-${i}`} className={"h-3"} />;
         }
+        if (annotationsCoveringBase.length > 1) {
+          throw new Error(
+            `Multiple annotations in stack ${i} covering the same base`,
+          );
+        }
+        const annotation = annotationsInStack[0];
+        return (
+          <div
+            key={`annotation-${index}-${i}`}
+            className={classNames(
+              "group/annotation h-3 border-black group-hover/annotation:border",
+              annotation.className,
+            )}
+            onClick={() =>
+              annotation.onClick?.({
+                start: annotation.start,
+                end: annotation.end,
+                diection: annotation.direction,
+              })
+            }
+          >
+            <div
+              className={classNames(
+                "absolute -top-28 z-10 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
+                annotation.className,
+              )}
+            >
+              <span>Pos: {index}</span>
+              <span>{annotation.text}</span>
+              <span>{annotation.type}</span>
+            </div>
+          </div>
+        );
       })}
     </div>
   );

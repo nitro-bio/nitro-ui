@@ -53,11 +53,39 @@ const SequenceStory = ({
 
   return (
     <div className="grid h-screen content-center py-8">
-      <Card className="max-w-4xl overflow-y-scroll">
+      <Card className="max-w-4xl">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
           sequences={sequences}
-          annotations={annotations}
+          annotations={[
+            {
+              type: "insertion",
+              start: 32,
+              end: 79,
+              direction: "reverse",
+              className:
+                "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-purple-600 fill-purple-600 stroke-purple-600 ",
+              text: "insertion 1",
+            },
+            {
+              type: "protein_bind",
+              start: 92,
+              end: 8,
+              direction: "forward",
+              className:
+                "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-orange-600 fill-orange-600 stroke-orange-600 ",
+              text: "protein_bind 0",
+            },
+            {
+              type: "intron",
+              start: 47,
+              end: 19,
+              direction: "forward",
+              className:
+                "cursor-pointer text-white truncate opacity-50 group-hover:opacity-100 hover:opacity-100 bg-purple-600 fill-purple-600 stroke-purple-600 ",
+              text: "intron 2",
+            },
+          ]}
           selection={selection}
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}

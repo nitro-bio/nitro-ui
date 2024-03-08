@@ -9,7 +9,7 @@ import {
   AriadneSelection,
   Annotation,
 } from "../types";
-import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { stackAnnsEvenly } from "@Ariadne/utils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export interface Props {
@@ -39,7 +39,7 @@ export const LinearViewer = (props: Props) => {
 
   const stackedAnnotations = useMemo(
     function memoize() {
-      return stackAnnsByType(annotations);
+      return stackAnnsEvenly(annotations);
     },
     [annotations],
   );

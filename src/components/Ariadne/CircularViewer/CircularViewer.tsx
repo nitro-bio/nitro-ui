@@ -11,7 +11,7 @@ import {
 } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useMemo, useRef } from "react";
-import { stackAnnsByType } from "..";
+import { stackAnnsEvenly } from "@Ariadne/utils";
 import { CircularAnnotationGutter } from "./CircularAnnotations";
 import { CircularIndex } from "./CircularIndex";
 import { clampSlice, findIndexFromAngle, genArc } from "./circularUtils";
@@ -42,7 +42,7 @@ export const CircularViewer = ({
     sizeY: svgSizePX,
     radius: (svgSizePX - svgPadding) / 2,
   };
-  const stackedAnnotations = stackAnnsByType(annotations);
+  const stackedAnnotations = stackAnnsEvenly(annotations);
   const annotatedSequence = useMemo(
     function memoize() {
       return getAnnotatedSequence(sequence, getStackedAnnotations(annotations));

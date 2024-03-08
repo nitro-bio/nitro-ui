@@ -411,3 +411,86 @@ export function parseFasta(data: string): FastaRecord[] {
 
   return records;
 }
+
+export const stackAnnsEvenly = (
+  annotations: Annotation[],
+): StackedAnnotation[] => {
+  // convert reverse annotations to forward temporarily
+  annotations = annotations.map((ann) => {
+    if (ann.direction === "reverse") {
+      return {
+        ...ann,
+        start: ann.end,
+        end: ann.start,
+      };
+    }
+    return ann;
+  });
+
+  // Initialize result array and a map to store levels of stacks.
+  let stacks = new Map<number, Annotation>();
+
+  // Iterate over annotations sorted by their 'start' property
+  const sortedAnnotations = annotations.sort((a, b) => {
+    if (a.start === b.start) {
+      return a.end - b.end;
+    }
+    return a.start - b.start;
+  });
+  for (const ann of sortedAnnotations) {
+    let stack = 0;
+
+    // Find the first stack level that is free (no overlap with existing ranged on the same level)
+    while (isOverlapped(ann, stacks.get(stack))) {
+      stack++;
+    }
+
+    // Assign the stack level to the annotation and record it.
+    stacks.set(stack, ann);
+    stackedAnnotations.push({
+      ...ann,
+      stack: stack,
+    });
+  }
+
+  // Function to check if the annotation overlaps with any ranged on the stack level.
+  function isOverlapped(
+    annotation: Annotation,
+    ranged: StackedAnnotation | undefined,
+  ) {
+    if (!ranged) return false;
+
+    for (let i = 0; i < stackedAnnotations.length; i++) {
+      const currAnn = stackedAnnotations[i];
+      // Skip if not in the same stack level
+      if (currAnn.stack !== ranged.stack) continue;
+      if (
+        baseInSelection(annotation.start, currAnn) ||
+        baseInSelection(annotation.end, currAnn)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+  // convert reverse annotations back to reverse
+  stackedAnnotations.forEach((ann) => {
+    if (ann.direction === "reverse") {
+      const prevStart = ann.start;
+      ann.start = ann.end;
+      ann.end = prevStart;
+    }
+  });
+  stackedAnnotations.map((a, i) => {
+    stackedAnnotations.slice(i + 1).forEach((b) => {
+      if (a.stack === b.stack && isOverlapped(a, b)) {
+        console.log(annotations);
+        console.log("a", a);
+        console.log("b", b);
+        throw new Error(`Two overlapping annotations in the same stack`);
+      }
+    });
+  });
+  return stackedAnnotations;
+};
