@@ -1,4 +1,7 @@
-import { Combobox } from "./Combobox";
+import { useEffect, useState } from "react";
+import { Combobox, ComboboxSection } from "./Combobox";
+import { v4 as uuid4 } from "uuid";
+import { Card } from "@ui/Card";
 
 export default {
   title: "UIElements/Combobox",
@@ -15,37 +18,60 @@ function repeatArray<T>(arr: T[], n: number): T[] {
 
 const people = repeatArray(
   [
-    { label: "Wade Cooper" },
-    { label: "Arlene Mccoy" },
-    { label: "Devon Webb" },
-    { label: "Tom Cook" },
-    { label: "Tanya Fox" },
-    { label: "Hellen Schmidt" },
+    {
+      options: [
+        { id: uuid4(), label: "Wade Cooper" },
+        { id: uuid4(), label: "Arlene Mccoy" },
+        { id: uuid4(), label: "Devon Webb" },
+        { id: uuid4(), label: "Tom Cook" },
+        { id: uuid4(), label: "Tanya Fox" },
+        { id: uuid4(), label: "Hellen Schmidt" },
+      ],
+    },
   ],
   100,
-).map((p, i) => ({ ...p, id: i.toString() }));
+).map((p, i) => ({ ...p, id: `Section ${i}`, label: `Section ${i}` }));
 
 export const Default = () => {
+  const [search, setSearch] = useState("");
   return (
-    <div className="fixed top-16 w-72">
+    <Card className="h-80 max-w-3xl">
       <Combobox
-        options={people}
+        sections={people}
+        search={search}
+        setSearch={setSearch}
         onSelect={(option) => alert(option.label)}
-        selectedOptionIdx={0}
+        placeholder="Search"
+        listClassName="w-80"
       />
-    </div>
+    </Card>
   );
 };
 
-export const ContainerClassname = () => {
+export const Loading = () => {
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [_people, setPeople] = useState<ComboboxSection[]>([]);
+  useEffect(function simulateLoading() {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+      setPeople(people);
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="fixed top-16 w-72">
+    <Card className="h-80 max-w-xl">
       <Combobox
-        options={people}
+        sections={_people}
+        loading={loading}
+        search={search}
+        setSearch={setSearch}
+        loadingText="Searching Census..."
         onSelect={(option) => alert(option.label)}
-        selectedOptionIdx={0}
-        optionsContainerClassName="mt-32 ml-32 !min-w-[600px]"
+        placeholder="Search"
+        listClassName="w-80"
       />
-    </div>
+    </Card>
   );
 };
