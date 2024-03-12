@@ -53,7 +53,7 @@ const SequenceStory = ({
 
   return (
     <div className="grid h-screen content-center py-8">
-      <Card className="max-w-4xl overflow-y-scroll">
+      <Card className="max-w-4xl">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
           sequences={sequences}
