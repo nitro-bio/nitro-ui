@@ -19,11 +19,13 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@lexical/react": "^0.13.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "daisyui": "^4.7.3",
     "genbank-parser": "^1.2.4",
+    "lexical": "^0.13.1",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",
     "react-markdown": "^9.0.1",
