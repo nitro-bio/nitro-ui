@@ -212,7 +212,7 @@ const LinearSelection = ({
     start: internalSelectionStart,
     end: internalSelectionEnd,
     direction: internalDirection,
-  } = useLinearSelectionRect(selectionRef);
+  } = useLinearSelectionRect({ ref: selectionRef });
   useEffect(
     function propagateSelectionUp() {
       if (

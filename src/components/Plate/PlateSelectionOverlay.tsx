@@ -1,6 +1,7 @@
+import { useStateRef } from "@Ariadne/hooks/useStateRef";
 import { classNames } from "@utils/stringUtils";
-import { useState } from "react";
-import { Coor, useLinearSelectionRect } from "../..";
+import { useEffect, useRef, useState } from "react";
+import { Coor } from "../..";
 
 export const PlateSelectionOverlay = ({
   plateRef,
@@ -38,8 +39,7 @@ export const PlateSelectionOverlay = ({
     }
     toggleSelection(intersecting);
   };
-  const { start, end } = useLinearSelectionRect({
-    ref: plateRef,
+  const { start, end } = useMouseRect({
     onMouseUp: (payload) => onMouseUp({ ...payload, wellBoxes }),
     onMouseMove,
   });
@@ -64,13 +64,21 @@ export const PlateSelectionOverlay = ({
   return (
     <>
       {start && end && (
-        <div
-          className={classNames(
-            "absolute border-2 border-brand-500 bg-brand-700 opacity-10 dark:bg-brand-200",
-            active ? "absolute" : "hidden",
-          )}
-          style={style}
-        />
+        <>
+          <div style={{ top: start.y, left: start.x }} className="fixed">
+            {start.x}, {start.y}
+          </div>
+          <div style={{ top: end.y - 30, left: end.x }} className="fixed ">
+            {end.x}, {end.y}
+          </div>
+          <div
+            className={classNames(
+              "pointer-events-none border-2 border-brand-500 bg-brand-700 opacity-10 dark:bg-brand-200",
+              active ? "fixed" : "hidden",
+            )}
+            style={style}
+          />
+        </>
       )}
     </>
   );
@@ -102,7 +110,7 @@ function findIntersectingWells({
     (selectionBox.right - selectionBox.left) *
     (selectionBox.bottom - selectionBox.top);
 
-  if (selectionArea < 200) {
+  if (selectionArea < 20) {
     console.warn("Selection area too small");
     return intersecting;
   }
@@ -130,3 +138,63 @@ function isIntersecting(boxA: Box, boxB: Box) {
     boxB.bottom < boxA.top
   );
 }
+
+export const useMouseRect = ({
+  onMouseUp,
+  onMouseDown,
+  onMouseMove,
+}: {
+  onMouseUp?: (payload: { start: Coor; end: Coor }) => void;
+  onMouseDown?: (payload: { start: Coor }) => void;
+  onMouseMove?: (payload: { start: Coor; end: Coor }) => void;
+}) => {
+  const [start, setStart, startRef] = useStateRef<Coor | null>(null);
+  const [end, setEnd, endRef] = useStateRef<Coor | null>(null);
+  const active = useRef(false);
+
+  const _onMouseDown = (e: MouseEvent) => {
+    const { clientX, clientY } = e;
+    console.log("mousedown", clientX, clientY);
+    setStart({ x: clientX, y: clientY });
+    setEnd({ x: clientX, y: clientY });
+    active.current = true;
+    onMouseDown?.({ start: { x: clientX, y: clientY } });
+  };
+  const _onMouseUp = () => {
+    active.current = false;
+    if (startRef.current && endRef.current) {
+      console.log("mouseup", { start: startRef.current, end: endRef.current });
+
+      onMouseUp?.({ start: startRef.current, end: endRef.current });
+    } else {
+      console.error("start or end is null when mouseup");
+    }
+  };
+
+  // must use refs in event handlers to get most up to date values
+  const _onMouseMove = (e: MouseEvent) => {
+    if (active.current) {
+      const { clientX, clientY } = e;
+      setEnd({ x: clientX, y: clientY });
+      if (startRef.current && endRef.current) {
+        onMouseMove?.({ start: startRef.current, end: endRef.current });
+      } else {
+        console.error("start is null when mousemove called");
+      }
+    }
+  };
+  useEffect(function wireUpListener() {
+    if (window) {
+      // still want to call mouseup if mouse leaves parent
+      window.addEventListener("mouseup", _onMouseUp);
+      window.addEventListener("mousemove", _onMouseMove);
+      window.addEventListener("mousedown", _onMouseDown);
+    }
+    return () => {
+      window?.removeEventListener("mousedown", _onMouseDown);
+      window?.removeEventListener("mousemove", _onMouseMove);
+      window?.removeEventListener("mouseup", _onMouseUp);
+    };
+  });
+  return { start, end };
+};

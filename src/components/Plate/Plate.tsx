@@ -1,5 +1,5 @@
 import { classNames } from "@utils/stringUtils";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { PlateSelectionOverlay } from "./PlateSelectionOverlay";
 
@@ -173,7 +173,8 @@ export const Plate = ({
               key={i}
               id={`well-${i}`}
               className={classNames(
-                "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full ",
+                "group my-auto flex cursor-pointer items-center justify-center ",
+                "aspect-square h-full min-h-px w-full min-w-px",
                 "transition-all duration-300 ease-in-out",
                 "border border-noir-800 dark:border-noir-200",
 
@@ -194,7 +195,11 @@ export const Plate = ({
                 className={classNames(wells > 96 && "opacity-0")}
                 title={indexToExcelCell(i, wells)}
               >
-                {indexToExcelCell(i, wells)}
+                {wellBoxes.length > 0 && (
+                  <>
+                    {wellBoxes[i].x.toFixed(0)}, {wellBoxes[i].y.toFixed(0)}
+                  </>
+                )}
               </div>
             </button>
           ))}
