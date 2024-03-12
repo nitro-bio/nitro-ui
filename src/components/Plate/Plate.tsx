@@ -1,5 +1,7 @@
 import { classNames } from "@utils/stringUtils";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import { PlateSelectionOverlay } from "./PlateSelectionOverlay";
 
 const PlateSelectionSchema = z.object({
   wells: z.set(z.number()),
@@ -15,9 +17,10 @@ export const Plate = ({
 }: {
   wells: 24 | 96 | 48 | 384;
   selection: PlateSelection | null;
-  setSelection: (selection: PlateSelection) => void;
+  setSelection: (selection: PlateSelection | null) => void;
   className?: string;
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   let gridClass: string;
   const { rows, cols } = wellsToRowsCols(wells);
   const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
@@ -26,63 +29,99 @@ export const Plate = ({
   const colLabels: string[] = Array.from({ length: cols }, (_, i) =>
     String.fromCharCode(65 + i),
   );
-  const toggleWellInSelection = (well: number) => {
-    const newSelection = new Set(selection?.wells || []);
-    if (newSelection.has(well)) {
-      newSelection.delete(well);
-    } else {
-      newSelection.add(well);
-    }
-    setSelection({ wells: newSelection });
-  };
-  const toggleColumnInSelection = (col: number) => {
-    const newSelection = new Set(selection?.wells || []);
-    for (let row = 0; row < rows; row++) {
-      const well = row * cols + col;
+  const toggleSelection = (indices: Set<number> | number[]) => {
+    const newSelection = new Set(selection?.wells ?? []);
+    indices.forEach((well) => {
       if (newSelection.has(well)) {
         newSelection.delete(well);
       } else {
         newSelection.add(well);
       }
-    }
+    });
+
     setSelection({ wells: newSelection });
+  };
+
+  const toggleWellInSelection = (well: number) => {
+    toggleSelection([well]);
+  };
+
+  const toggleColumnInSelection = (col: number) => {
+    const indices = Array.from({ length: rows }, (_, row) => row * cols + col);
+    toggleSelection(indices);
   };
 
   const toggleRowInSelection = (row: number) => {
-    const newSelection = new Set(selection?.wells || []);
-    for (let col = 0; col < cols; col++) {
-      const well = row * cols + col;
-      if (newSelection.has(well)) {
-        newSelection.delete(well);
-      } else {
-        newSelection.add(well);
-      }
-    }
-    setSelection({ wells: newSelection });
+    const indices = Array.from({ length: cols }, (_, col) => row * cols + col);
+    toggleSelection(indices);
   };
+  const [wellBoxes, setWellBoxes] = useState<DOMRect[]>([]);
+  useEffect(
+    function _calculateWellBoxes() {
+      const calculateWellBoxes = () => {
+        if (ref.current) {
+          const newWellBoxes: DOMRect[] = [];
+          // Iterate through each well and calculate the bounding box
+          for (let i = 0; i < wells; i++) {
+            const wellElement = ref.current.querySelector(
+              `#well-${i}`,
+            ) as HTMLElement;
+            if (wellElement) {
+              const boundingRect = wellElement.getBoundingClientRect();
+              newWellBoxes.push(boundingRect);
+            } else {
+              console.error(`Well ${i} not found`);
+            }
+          }
 
+          setWellBoxes(newWellBoxes);
+        }
+      };
+
+      // Run the calculation after the component has mounted and the browser has applied the layout.
+      calculateWellBoxes();
+      // and then run it again whenever the window is resized
+      window.addEventListener("resize", calculateWellBoxes);
+      return () => window.removeEventListener("resize", calculateWellBoxes);
+    },
+    [wells, ref],
+  );
   switch (wells) {
     case 24:
-      gridClass = "grid-cols-7 gap-4 ";
+      gridClass = "grid-cols-7 gap-2 ";
       break;
     case 48:
-      gridClass = "grid-cols-9 gap-4";
+      gridClass = "grid-cols-9 gap-2";
       break;
     case 96:
-      gridClass = "grid-cols-13 gap-1 ";
+      gridClass = "grid-cols-13 gap-2 ";
       break;
     case 384:
-      gridClass = "grid-cols-25 gap-1 ";
+      gridClass = "grid-cols-25 gap-2 ";
       break;
     default:
       throw new Error("Invalid number of wells");
   }
-
   return (
-    <>
+    <div
+      className="relative select-none rounded-md rounded-r-3xl border border border-noir-800 py-4 pr-4 dark:border-noir-200"
+      ref={ref}
+    >
+      {wellBoxes.length > 0 ? (
+        <PlateSelectionOverlay
+          plateRef={ref}
+          wellBoxes={wellBoxes}
+          toggleSelection={(indices) => {
+            toggleSelection(indices);
+          }}
+        />
+      ) : (
+        <>Loading...</>
+      )}
+
       <div
         className={classNames(
-          "grid gap-2 rounded-md rounded-r-3xl border border-noir-800 py-4 pr-4 dark:border-noir-200",
+          "grid gap-2  ",
           "text-xs md:text-sm lg:text-base",
           wells > 96 && "px-4",
           gridClass,
@@ -109,7 +148,7 @@ export const Plate = ({
         </div>
         <div
           className={classNames(
-            "col-span-1 grid grid-cols-subgrid gap-1 ",
+            "col-span-1 grid grid-cols-subgrid gap-2 ",
             wells > 96 && "content-between py-1",
             "text-noir-600 dark:text-noir-300",
           )}
@@ -135,31 +174,34 @@ export const Plate = ({
           {Array.from({ length: wells }).map((_, i) => (
             <button
               key={i}
+              id={`well-${i}`}
               className={classNames(
-                "group my-auto flex aspect-square min-h-px min-w-px cursor-pointer items-center justify-center rounded-full ",
+                "group my-auto flex cursor-pointer items-center justify-center ",
+                "aspect-square max-h-full min-h-px min-w-px max-w-full rounded-full",
                 "transition-all duration-300 ease-in-out",
                 "border border-noir-800 dark:border-noir-200",
-                "text-noir-300 hover:scale-110 hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200 ",
-                selection?.wells.has(i) &&
-                  "bg-brand-200 text-noir-800 hover:bg-brand-400 hover:text-white dark:bg-brand-600 dark:text-white hover:dark:bg-brand-700",
+                "hover:scale-110",
+                selection?.wells.has(i)
+                  ? "bg-brand-200 text-noir-900 dark:bg-brand-600 dark:text-noir-100"
+                  : "text-noir-300 dark:text-noir-600",
+                selection?.wells.has(i)
+                  ? "hover:opacity-50"
+                  : "hover:text-brand-500 hover:dark:text-brand-200",
                 selection?.wells.has(i) && selection.className,
               )}
               onClick={() => {
                 toggleWellInSelection(i);
-                console.log("clicked");
               }}
+              title={indexToExcelCell(i, wells)}
             >
-              <div
-                className={classNames(wells > 96 && "opacity-0")}
-                title={indexToExcelCell(i, wells)}
-              >
+              <div className={classNames(wells > 96 && "opacity-0")}>
                 {indexToExcelCell(i, wells)}
               </div>
             </button>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
