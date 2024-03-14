@@ -31,6 +31,7 @@
     "react-render-if-visible": "^2.1.1",
     "remark-gfm": "^4.0.0",
     "uuid": "^9.0.1",
+    "vite-raw-plugin": "^1.0.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

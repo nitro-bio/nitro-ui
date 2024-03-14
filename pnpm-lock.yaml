@@ -47,6 +47,9 @@ dependencies:
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
+  vite-raw-plugin:
+    specifier: ^1.0.2
+    version: 1.0.2
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -11278,6 +11281,10 @@ packages:
       - rollup
       - supports-color
     dev: true
+
+  /vite-raw-plugin@1.0.2:
+    resolution: {integrity: sha512-gdp/OFVXBiVq1UwPujVb7+4mmgYHTGrzslMbQvxmgzTN4/HC+3j4GNrumsIKSWfA/y3hktII7XqY38muRaGjhw==}
+    dev: false
 
   /vite@5.1.6:
     resolution: {integrity: sha512-yYIAZs9nVfRJ/AiOLCA91zzhjsHUgMjB+EigzFb6W2XTLO8JixBCKCjvhKZaye+NKYHCrkv3Oh50dH9EdLU2RA==}
