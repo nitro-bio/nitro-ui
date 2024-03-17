@@ -11,6 +11,7 @@ export const useStreamlit = <T extends Record<string, unknown>>({
   scrubUnclonable?: boolean;
 }) => {
   const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const sendToStreamlit = (next: T) => {
     sendMessageToStreamlitClient(
@@ -36,7 +37,8 @@ export const useStreamlit = <T extends Record<string, unknown>>({
           setData(parsed.data);
         } else {
           console.error(parsed.error);
-          throw new Error(`Invalid data from Streamlit`);
+          setData(null);
+          setError(parsed.error);
         }
       }
     }
@@ -60,7 +62,7 @@ export const useStreamlit = <T extends Record<string, unknown>>({
     },
     [ref.current?.scrollHeight],
   );
-  return { data, setData: sendToStreamlit };
+  return { data, setData: sendToStreamlit, error };
 };
 
 type StreamlitType =
@@ -113,19 +115,25 @@ export const useStreamlitMock = <T extends Record<string, unknown>>({
   return { sendToReact };
 };
 
+type Primitive = string | number | boolean | null | undefined;
+
 const removeUnclonable = (
   data: unknown,
-): Record<string, unknown> | unknown[] | null => {
+): Record<string, unknown> | unknown[] | Primitive => {
   // remove all functions from data
   const scrubbedData: Record<string, unknown> = {};
+  if (data === undefined || data === null) {
+    return null;
+  }
+  if (typeof data !== "object") {
+    return data as Primitive;
+  }
+
   // eslint-disable-next-line prefer-const
   if (Array.isArray(data)) {
     return data.map((v) => {
       return removeUnclonable(v as Record<string, unknown>);
     });
-  }
-  if (data === undefined || data === null) {
-    return null;
   }
   // key isn't reassigned, but value is, silence the error for key
   // eslint-disable-next-line prefer-const

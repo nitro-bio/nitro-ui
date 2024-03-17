@@ -140,7 +140,6 @@ export const useMouseRect = ({
 
   const _onMouseDown = (e: MouseEvent) => {
     const { clientX, clientY } = e;
-    console.log("mousedown", clientX, clientY);
     setStart({ x: clientX, y: clientY });
     setEnd({ x: clientX, y: clientY });
     active.current = true;
@@ -149,8 +148,6 @@ export const useMouseRect = ({
   const _onMouseUp = () => {
     active.current = false;
     if (startRef.current && endRef.current) {
-      console.log("mouseup", { start: startRef.current, end: endRef.current });
-
       onMouseUp?.({ start: startRef.current, end: endRef.current });
     } else {
       console.error("start or end is null when mouseup");
