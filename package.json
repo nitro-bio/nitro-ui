@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.1.36",
+  "version": "0.1.37",
   "scripts": {
     "build": "pnpm lint && vite build && pnpm build-css",
     "build-css": "npx tailwindcss -o ./nitro.css --minify && mv ./nitro.css ./dist/nitro.css",
@@ -24,6 +24,7 @@
     "cmdk": "^1.0.0",
     "daisyui": "^4.7.3",
     "genbank-parser": "^1.2.4",
+    "molstar": "^4.0.1",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",
     "react-markdown": "^9.0.1",
