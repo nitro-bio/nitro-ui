@@ -1,17 +1,29 @@
-import { DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
-import { useEffect, useRef } from "react";
-import "molstar/build/viewer/molstar.css";
-import { PluginContext } from "molstar/lib/mol-plugin/context";
 import { classNames } from "@utils/stringUtils";
+import "molstar/build/viewer/molstar.css";
+import { Structure, StructureSelection } from "molstar/lib/mol-model/structure";
+import { setStructureOverpaint } from "molstar/lib/mol-plugin-state/helpers/structure-overpaint";
+import { PluginContext } from "molstar/lib/mol-plugin/context";
+import { DefaultPluginSpec } from "molstar/lib/mol-plugin/spec";
+import { Script } from "molstar/lib/mol-script/script";
+import { Color } from "molstar/lib/mol-util/color";
+import { useEffect, useRef } from "react";
+
+interface Highlight {
+  start: number;
+  end: number;
+  hexColor: string;
+}
 
 export const MoleculeViewer = ({
   pdbStr,
   pdbUrl,
   className,
+  highlights,
 }: {
   pdbStr?: string;
   pdbUrl?: string;
   className?: string;
+  highlights?: Highlight[];
 }) => {
   if (!pdbStr && !pdbUrl) {
     throw new Error("pdbStr or pdbUrl is required");
@@ -56,6 +68,48 @@ export const MoleculeViewer = ({
     loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
   }, [pdbStr]);
 
+  const colorResidues = ({ start, end, hexColor }: Highlight) => {
+    console.log("coloring");
+    const range = Array.from(
+      //creates an array of all numbers in [start, end]
+      { length: end - start },
+      (_, idx) => idx + start,
+    );
+
+    const data =
+      plugin.current!.managers.structure.hierarchy.current.structures[0]?.cell
+        .obj?.data;
+    if (!data) {
+      alert("Problem with data, try to reload viewer.");
+      return;
+    }
+
+    const selection = Script.getStructureSelection(
+      (Q) =>
+        Q.struct.generator.atomGroups({
+          "residue-test": Q.core.set.has([
+            Q.set(...range),
+            Q.ammp("auth_seq_id"),
+          ]),
+          "group-by": Q.struct.atomProperty.macromolecular.residueKey(),
+        }),
+      data,
+    );
+    const lociGetter = async (s: Structure) =>
+      StructureSelection.toLociWithSourceUnits(selection);
+
+    const components =
+      plugin.current!.managers.structure.hierarchy.current.structures[0]
+        .components;
+
+    setStructureOverpaint(
+      plugin.current!,
+      components,
+      Color(Number(`0x${hexColor.substring(1)}`)),
+      lociGetter,
+    );
+    console.log("colored");
+  };
   const loadStructure = async ({
     pdbUrl,
     pdbStr,
@@ -76,6 +130,7 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
+        highlights?.forEach((highlight) => colorResidues(highlight));
       }
       if (pdbStr) {
         const data = await plugin.builders.data.rawData({
@@ -90,6 +145,7 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
+        highlights?.forEach((highlight) => colorResidues(highlight));
       }
     }
   };
