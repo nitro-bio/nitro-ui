@@ -34,6 +34,12 @@ const people = repeatArray(
 
 export const Default = () => {
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSearch("Wade");
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [search]);
   return (
     <Card className="h-80 max-w-3xl">
       <Combobox

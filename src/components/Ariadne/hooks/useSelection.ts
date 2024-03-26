@@ -4,17 +4,34 @@ import { inRange } from "@Ariadne/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { useStateRef } from "./useStateRef";
 // for cartesian coordinates
-export const useLinearSelectionRect = (
-  ref: RefObject<SVGSVGElement | null>,
-) => {
+export const useLinearSelectionRect = <
+  T extends {
+    getBoundingClientRect(): DOMRect;
+    addEventListener: (type: string, listener: (e: MouseEvent) => void) => void;
+    removeEventListener: (
+      type: string,
+      listener: (e: MouseEvent) => void,
+    ) => void;
+  },
+>({
+  ref,
+  onMouseUp,
+  onMouseDown,
+  onMouseMove,
+}: {
+  ref: RefObject<T | null>;
+  onMouseUp?: (payload: { start: Coor; end: Coor }) => void;
+  onMouseDown?: (payload: { start: Coor }) => void;
+  onMouseMove?: (payload: { start: Coor; end: Coor }) => void;
+}) => {
   const [start, setStart, startRef] = useStateRef<Coor | null>(null);
-  const [end, setEnd] = useStateRef<Coor | null>(null);
+  const [end, setEnd, endRef] = useStateRef<Coor | null>(null);
 
   const [direction, setDirection] = useState<"forward" | "reverse">("forward");
 
   const active = useRef(false);
 
-  const onMouseDown = (e: MouseEvent) => {
+  const _onMouseDown = (e: MouseEvent) => {
     const { clientX, clientY } = e;
     const { left, top } = ref.current?.getBoundingClientRect() || {
       left: 0,
@@ -25,13 +42,19 @@ export const useLinearSelectionRect = (
     active.current = true;
     setStart({ x, y });
     setEnd({ x, y });
+    onMouseDown?.({ start: { x, y } });
   };
-  const onMouseUp = () => {
+  const _onMouseUp = () => {
     active.current = false;
+    if (startRef.current && endRef.current) {
+      onMouseUp?.({ start: startRef.current, end: endRef.current });
+    } else {
+      console.error("start or end is null when mouseup");
+    }
   };
 
   // must use refs in event handlers to get most up to date values
-  const onMouseMove = (e: MouseEvent) => {
+  const _onMouseMove = (e: MouseEvent) => {
     if (active.current) {
       const { clientX, clientY } = e;
       const { left, top } = ref.current?.getBoundingClientRect() || {
@@ -49,22 +72,27 @@ export const useLinearSelectionRect = (
         setDirection("forward");
       }
       setEnd({ x, y });
+      if (startRef.current && endRef.current) {
+        onMouseMove?.({ start: startRef.current, end: endRef.current });
+      } else {
+        console.error("start is null when mousemove");
+      }
     }
   };
   useEffect(() => {
-    const node = ref.current;
-
+    const node = ref?.current;
     if (node) {
-      node.addEventListener("mousedown", onMouseDown);
-      node.addEventListener("mousemove", onMouseMove);
+      node.addEventListener("mousedown", _onMouseDown);
+      node.addEventListener("mousemove", _onMouseMove);
     }
     if (window) {
-      window.addEventListener("mouseup", onMouseUp);
+      // still want to call mouseup if mouse leaves parent
+      window.addEventListener("mouseup", _onMouseUp);
     }
     return () => {
-      node?.removeEventListener("mousedown", onMouseDown);
-      node?.removeEventListener("mousemove", onMouseMove);
-      window?.removeEventListener("mouseup", onMouseUp);
+      node?.removeEventListener("mousedown", _onMouseDown);
+      node?.removeEventListener("mousemove", _onMouseMove);
+      window?.removeEventListener("mouseup", _onMouseUp);
     };
   }, [ref]);
   return { start, end, direction };
@@ -86,6 +114,7 @@ export const useCircularSelectionRect = (
 
   const onMouseDown = (e: MouseEvent) => {
     if (ref.current) {
+      console.debug("resetting start and end");
       setStart(null);
       setEnd(null);
       setDirection(null);
