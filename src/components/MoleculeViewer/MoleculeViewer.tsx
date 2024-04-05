@@ -9,6 +9,7 @@ import { Color } from "molstar/lib/mol-util/color";
 import { useEffect, useRef } from "react";
 
 interface Highlight {
+  label: string;
   start: number;
   end: number;
   hexColor: string;
@@ -68,8 +69,7 @@ export const MoleculeViewer = ({
     loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
   }, [pdbStr]);
 
-  const colorResidues = ({ start, end, hexColor }: Highlight) => {
-    console.log("coloring");
+  const colorResidues = ({ start, end, hexColor, label }: Highlight) => {
     const range = Array.from(
       //creates an array of all numbers in [start, end]
       { length: end - start },
@@ -108,7 +108,13 @@ export const MoleculeViewer = ({
       Color(Number(`0x${hexColor.substring(1)}`)),
       lociGetter,
     );
-    console.log("colored");
+    const loci = StructureSelection.toLociWithSourceUnits(selection);
+    plugin.current!.managers.structure.measurement.addLabel(loci, {
+      labelParams: {
+        customText: `${label}: ${start}-${end}`,
+        textColor: Color(Number(`0x${hexColor.substring(1)}`)),
+      },
+    });
   };
   const loadStructure = async ({
     pdbUrl,
@@ -130,7 +136,6 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
-        highlights?.forEach((highlight) => colorResidues(highlight));
       }
       if (pdbStr) {
         const data = await plugin.builders.data.rawData({
@@ -145,8 +150,8 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
-        highlights?.forEach((highlight) => colorResidues(highlight));
       }
+      highlights?.forEach((highlight) => colorResidues(highlight));
     }
   };
 

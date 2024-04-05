@@ -13,12 +13,14 @@ export const Default = () => {
       highlights={[
         {
           // red
+          label: "Red Annotation",
           hexColor: "#ff0000",
           start: 14,
           end: 30,
         },
         {
           // blue
+          label: "Blue Annotation",
           hexColor: "#0000ff",
           start: 0,
           end: 10,
