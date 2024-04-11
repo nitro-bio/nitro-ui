@@ -36,38 +36,43 @@ export const MoleculeViewer = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const plugin = useRef<PluginContext | null>(null);
 
-  useEffect(
-    function onInit() {
-      (async () => {
-        plugin.current = new PluginContext(DefaultPluginSpec());
-        if (canvasRef.current && parentRef.current) {
-          plugin.current.initViewer(canvasRef.current, parentRef.current);
+  useEffect(function onInit() {
+    (async () => {
+      plugin.current = new PluginContext(DefaultPluginSpec());
+      if (canvasRef.current && parentRef.current) {
+        plugin.current.initViewer(canvasRef.current, parentRef.current);
 
-          /* remove axes and set background transparent */
-          plugin.current.canvas3d?.setProps({
-            camera: {
-              helper: {
-                axes: {
-                  name: "off",
-                  params: {},
-                },
+        /* remove axes and set background transparent */
+        plugin.current.canvas3d?.setProps({
+          camera: {
+            helper: {
+              axes: {
+                name: "off",
+                params: {},
               },
             },
-          });
-        }
-        await plugin.current.init();
-        await loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
-      })();
-      return () => {
-        plugin.current = null;
-      };
-    },
-    [pdbStr],
-  );
+          },
+        });
+      }
+      await plugin.current.init();
+    })();
+    return () => {
+      plugin.current = null;
+    };
+  }, []);
 
-  useEffect(() => {
-    loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
-  }, [pdbStr]);
+  useEffect(
+    function onPdbChange() {
+      const _onPdbChange = async () => {
+        // reset the structure
+        plugin.current!.clear();
+        await loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
+        highlights?.forEach((highlight) => colorResidues(highlight));
+      };
+      _onPdbChange();
+    },
+    [pdbStr, highlights, pdbUrl],
+  );
 
   const colorResidues = ({ start, end, hexColor, label }: Highlight) => {
     const range = Array.from(
@@ -151,7 +156,6 @@ export const MoleculeViewer = ({
           "default",
         );
       }
-      highlights?.forEach((highlight) => colorResidues(highlight));
     }
   };
 
