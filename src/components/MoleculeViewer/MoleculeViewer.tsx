@@ -9,6 +9,7 @@ import { Color } from "molstar/lib/mol-util/color";
 import { useEffect, useRef } from "react";
 
 interface Highlight {
+  label: string;
   start: number;
   end: number;
   hexColor: string;
@@ -35,41 +36,45 @@ export const MoleculeViewer = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const plugin = useRef<PluginContext | null>(null);
 
-  useEffect(
-    function onInit() {
-      (async () => {
-        plugin.current = new PluginContext(DefaultPluginSpec());
-        if (canvasRef.current && parentRef.current) {
-          plugin.current.initViewer(canvasRef.current, parentRef.current);
+  useEffect(function onInit() {
+    (async () => {
+      plugin.current = new PluginContext(DefaultPluginSpec());
+      if (canvasRef.current && parentRef.current) {
+        plugin.current.initViewer(canvasRef.current, parentRef.current);
 
-          /* remove axes and set background transparent */
-          plugin.current.canvas3d?.setProps({
-            camera: {
-              helper: {
-                axes: {
-                  name: "off",
-                  params: {},
-                },
+        /* remove axes and set background transparent */
+        plugin.current.canvas3d?.setProps({
+          camera: {
+            helper: {
+              axes: {
+                name: "off",
+                params: {},
               },
             },
-          });
-        }
-        await plugin.current.init();
+          },
+        });
+      }
+      await plugin.current.init();
+    })();
+    return () => {
+      plugin.current = null;
+    };
+  }, []);
+
+  useEffect(
+    function onPdbChange() {
+      const _onPdbChange = async () => {
+        // reset the structure
+        plugin.current!.clear();
         await loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
-      })();
-      return () => {
-        plugin.current = null;
+        highlights?.forEach((highlight) => colorResidues(highlight));
       };
+      _onPdbChange();
     },
-    [pdbStr],
+    [pdbStr, highlights, pdbUrl],
   );
 
-  useEffect(() => {
-    loadStructure({ pdbUrl, pdbStr, plugin: plugin.current });
-  }, [pdbStr]);
-
-  const colorResidues = ({ start, end, hexColor }: Highlight) => {
-    console.log("coloring");
+  const colorResidues = ({ start, end, hexColor, label }: Highlight) => {
     const range = Array.from(
       //creates an array of all numbers in [start, end]
       { length: end - start },
@@ -108,7 +113,13 @@ export const MoleculeViewer = ({
       Color(Number(`0x${hexColor.substring(1)}`)),
       lociGetter,
     );
-    console.log("colored");
+    const loci = StructureSelection.toLociWithSourceUnits(selection);
+    plugin.current!.managers.structure.measurement.addLabel(loci, {
+      labelParams: {
+        customText: `${label}: ${start}-${end}`,
+        textColor: Color(Number(`0x${hexColor.substring(1)}`)),
+      },
+    });
   };
   const loadStructure = async ({
     pdbUrl,
@@ -130,7 +141,6 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
-        highlights?.forEach((highlight) => colorResidues(highlight));
       }
       if (pdbStr) {
         const data = await plugin.builders.data.rawData({
@@ -145,7 +155,6 @@ export const MoleculeViewer = ({
           trajectory,
           "default",
         );
-        highlights?.forEach((highlight) => colorResidues(highlight));
       }
     }
   };
