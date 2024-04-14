@@ -28,7 +28,9 @@ export const HeadTailViewer = ({
   };
   const annotatedSequences = useMemo(
     function memoize() {
-      return sequences.map((sequence) => getAnnotatedSequence(sequence, []));
+      return sequences.map((sequence) =>
+        getAnnotatedSequence({ sequence, stackedAnnotations: [] }),
+      );
     },
     [sequences],
   );

@@ -33,10 +33,15 @@ export const getComplement = (sequence: string) => {
     .join("");
 };
 
-export const getAnnotatedSequence = (
-  sequence: string,
-  stackedAnnotations: Annotation[],
-): AnnotatedSequence => {
+export const getAnnotatedSequence = ({
+  sequence,
+  stackedAnnotations,
+  noValidate,
+}: {
+  sequence: string;
+  stackedAnnotations: Annotation[];
+  noValidate?: boolean;
+}): AnnotatedSequence => {
   /* loop through sequence finding all annoatations that apply to each base */
   const mapFn = (base: string, idx: number) => {
     const annotationsForBase = stackedAnnotations.filter((annotation) => {
@@ -62,15 +67,21 @@ export const getAnnotatedSequence = (
       complement: getComplement(base),
     };
   };
-
-  const annotatedSequence = annotatedSequenceSchema.parse(
-    sequence
-      .split("")
-      .map(mapFn)
-      .filter((x) => x.base !== " "), // remove padding
-  );
-
-  return annotatedSequence;
+  const raw = sequence
+    .split("")
+    .map(mapFn)
+    .filter((x) => x.base !== " "); // remove padding
+  const annotatedSequence = annotatedSequenceSchema.safeParse(raw);
+  if (noValidate) {
+    if (annotatedSequence.success === false) {
+      console.warn(annotatedSequence.error);
+    }
+    return raw as unknown as AnnotatedSequence;
+  }
+  if (annotatedSequence.success === false) {
+    throw new Error(annotatedSequence.error.message);
+  }
+  return annotatedSequence.data;
 };
 
 interface Stackable {
@@ -359,10 +370,10 @@ export const stringToAnnotatedSequence = ({
     sequence.split(""),
   );
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
-  const annotatedSequence = getAnnotatedSequence(
-    validatedSequence.join(""),
+  const annotatedSequence = getAnnotatedSequence({
+    sequence: validatedSequence.join(""),
     stackedAnnotations,
-  );
+  });
   return annotatedSequence;
 };
 

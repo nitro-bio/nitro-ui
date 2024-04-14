@@ -19,6 +19,7 @@ export const SequenceViewer = ({
   containerClassName,
   charClassName,
   selectionClassName,
+  noValidate,
 }: {
   sequences: string[];
   annotations: Annotation[];
@@ -32,6 +33,7 @@ export const SequenceViewer = ({
     sequenceIdx: number;
   }) => string;
   selectionClassName?: string;
+  noValidate?: boolean;
 }) => {
   const stackedAnnotations = useMemo(
     function memoize() {
@@ -43,12 +45,11 @@ export const SequenceViewer = ({
   const annotatedSequences = useMemo(
     function memoize() {
       return sequences.map((sequence) =>
-        getAnnotatedSequence(sequence, stackedAnnotations),
+        getAnnotatedSequence({ sequence, stackedAnnotations, noValidate }),
       );
     },
     [sequences, stackedAnnotations],
   );
-
   const indicesClassName = ({
     base,
     sequenceIdx,

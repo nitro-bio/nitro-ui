@@ -47,7 +47,7 @@ export const LinearViewer = (props: Props) => {
   const annotatedSequences = useMemo(
     function memoize() {
       return sequences.map((sequence) =>
-        getAnnotatedSequence(sequence, stackedAnnotations),
+        getAnnotatedSequence({ sequence, stackedAnnotations }),
       );
     },
     [sequences, stackedAnnotations],
