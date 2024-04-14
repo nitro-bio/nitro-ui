@@ -19,6 +19,8 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@udecode/plate-common": "^31.3.2",
+    "@udecode/plate-font": "^31.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
@@ -30,6 +32,10 @@
     "react-markdown": "^9.0.1",
     "react-render-if-visible": "^2.1.1",
     "remark-gfm": "^4.0.0",
+    "slate": "^0.102.0",
+    "slate-history": "^0.100.0",
+    "slate-hyperscript": "^0.100.0",
+    "slate-react": "^0.102.0",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
