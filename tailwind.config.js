@@ -2,12 +2,12 @@
 const colors = require("tailwindcss/colors");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-const brandColor = colors.fuchsia;
+const brandColor = colors.emerald;
+const accentColor = colors.sky;
 const noirColor = colors.zinc;
 
 module.exports = {
-  darkMode: "class",
-
+  darkMode: "selector",
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}"],
   safelist: [
     /* For user-defined ariadne colors */
@@ -24,6 +24,7 @@ module.exports = {
       colors: {
         noir: noirColor,
         brand: brandColor,
+        accent: accentColor,
       },
       gridTemplateColumns: {
         13: "repeat(13, minmax(0, 1fr))",

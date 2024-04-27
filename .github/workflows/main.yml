@@ -6,12 +6,12 @@ on: [push]
 jobs:
   frontend_compile:
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - uses: actions/checkout@v2
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Install deps
         run: npm i -g pnpm && pnpm i
       - name: Run Prettier
@@ -25,4 +25,4 @@ jobs:
       - name: Build Storybook
         run: pnpm run build-storybook
         env:
-            NODE_OPTIONS: "--max_old_space_size=4096" # to get around JavaScript heap out of memory error
+          NODE_OPTIONS: "--max_old_space_size=4096" # to get around JavaScript heap out of memory error

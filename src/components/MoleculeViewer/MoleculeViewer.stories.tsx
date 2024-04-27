@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { MoleculeViewer } from ".";
-import { classNames } from "../..";
+import { MoleculeViewer } from "./MoleculeViewer";
+import { classNames } from "@utils/stringUtils";
 
 export default {
   title: "MoleculeViewer/MoleculeViewer",
-  component: MoleculeViewer,
 };
 
-export const Default = () => {
+export const WithHiglights = () => {
   const highlights = [
     {
       // red

@@ -30,7 +30,7 @@ export const TextAlignmentViz = ({
   ];
 
   return (
-    <div className="leading-0 items-right  flex flex-wrap bg-white pt-4 text-center text-sm tracking-widest dark:bg-noir-800 md:mx-4">
+    <div className="leading-0 items-right  flex flex-wrap bg-white pt-4 text-center text-sm tracking-widest md:mx-4 dark:bg-noir-800">
       <div className="flex flex-row flex-wrap">
         <div className={"mr-2 text-right font-thin tracking-tighter"}>
           <CharComponent type="query" char={`${queryRange[0]}`} />{" "}

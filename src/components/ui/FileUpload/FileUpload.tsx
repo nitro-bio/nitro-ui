@@ -1,7 +1,7 @@
+import { SimpleTable } from "@ui/Table/SimpleTable";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Table } from "..";
 
 type FileParseSuccess<T> = {
   fileName: string;
@@ -198,5 +198,5 @@ function ParseTable<T>({
   if (data.length === 0) {
     return <div className="text-red-400">{"No files uploaded"}</div>;
   }
-  return <Table data={data} resultsPerPage={5} />;
+  return <SimpleTable data={data} />;
 }
