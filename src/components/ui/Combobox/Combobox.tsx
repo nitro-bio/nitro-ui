@@ -54,7 +54,7 @@ export function Combobox({
     >
       <Command.Input
         className={classNames(
-          "w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-noir-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset dark:bg-noir-800 dark:text-noir-100 sm:text-sm sm:leading-6",
+          "w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-noir-900 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 dark:bg-noir-800 dark:text-noir-100",
           inputClassName,
         )}
         placeholder={placeholder}
@@ -71,7 +71,7 @@ export function Combobox({
       )}
       <Command.List
         className={classNames(
-          "ring-black z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-opacity-5 focus:outline-none dark:bg-noir-800 dark:text-noir-100 sm:text-sm",
+          "ring-black z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-opacity-5 focus:outline-none sm:text-sm dark:bg-noir-800 dark:text-noir-100",
           listClassName,
           open ? "visible" : "invisible",
         )}
