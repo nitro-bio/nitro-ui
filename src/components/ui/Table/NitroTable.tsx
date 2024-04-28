@@ -87,36 +87,46 @@ export const NitroTable = <TData extends Record<string, ReactNode>>({
 
   // @ts-ignore
   const columns: ColumnDef<TData>[] = [
+    // if we have an onSelectHandler, create a select column
     ...(selectColumn ? [selectColumn] : []),
-    ...Object.keys(data[0]).map((key) => ({
-      header: ({ column }: { column: Column<TData> }): React.ReactElement => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className=""
-        >
-          {key}
-          <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+    // if we have data create columns for keys
+    ...(data[0]
+      ? Object.keys(data[0]).map((key) => ({
+          header: ({
+            column,
+          }: {
+            column: Column<TData>;
+          }): React.ReactElement => (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+              className=""
+            >
+              {key}
+              <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
 
-          <FunnelIcon
-            className={classNames(
-              "ml-2 h-4 w-4 text-brand-600/60  dark:text-brand-600/60",
-              columnFilters.map((filter) => filter.id).includes(key)
-                ? "opacity-100"
-                : "opacity-0",
-            )}
-          />
-        </Button>
-      ),
-      id: key,
-      accessorFn: (row: TData) => row[key],
-      canSort: true,
-      canFilter: true,
-      canHide: true,
-      cell: ({ cell }: { cell: Cell<TData, ReactNode> }): ReactNode => {
-        return <div className="ml-4">{cell.renderValue()}</div>;
-      },
-    })),
+              <FunnelIcon
+                className={classNames(
+                  "ml-2 h-4 w-4 text-brand-600/60  dark:text-brand-600/60",
+                  columnFilters.map((filter) => filter.id).includes(key)
+                    ? "opacity-100"
+                    : "opacity-0",
+                )}
+              />
+            </Button>
+          ),
+          id: key,
+          accessorFn: (row: TData) => row[key],
+          canSort: true,
+          canFilter: true,
+          canHide: true,
+          cell: ({ cell }: { cell: Cell<TData, ReactNode> }): ReactNode => {
+            return <div className="ml-4">{cell.renderValue()}</div>;
+          },
+        }))
+      : []),
   ];
   const table = useReactTable({
     data,

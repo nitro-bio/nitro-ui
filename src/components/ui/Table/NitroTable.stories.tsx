@@ -80,3 +80,11 @@ export const NoSelection = () => {
     </Card>
   );
 };
+
+export const NoData = () => {
+  return (
+    <Card>
+      <NitroTable data={[]} pageSize={20} />
+    </Card>
+  );
+};
