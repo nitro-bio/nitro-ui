@@ -22,7 +22,7 @@ import { Checkbox } from "@ui/Checkbox/Checkbox";
 import { Dropdown } from "@ui/Dropdown/Dropdown";
 import { Input } from "@ui/Input/Input";
 import { CustomTable } from "@ui/Table/CustomTable";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { classNames } from "../../..";
 
 export default {
@@ -30,10 +30,18 @@ export default {
 };
 export const NitroTable = <TData extends Record<string, ReactNode>>({
   data,
-  rowCount,
+  onSelectionChange,
+  pageSize = 10,
 }: {
   data: TData[];
-  rowCount: number;
+  onSelectionChange?: ({
+    selectedRows,
+    filteredSelectedRows,
+  }: {
+    selectedRows: TData[];
+    filteredSelectedRows: TData[];
+  }) => void;
+  pageSize: number;
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -43,8 +51,10 @@ export const NitroTable = <TData extends Record<string, ReactNode>>({
   const [currentColumnFilter, setCurrentColumnFilter] = useState<string>(
     data.length ? Object.keys(data[0])[0] : "",
   );
-  const columns: ColumnDef<TData>[] = [
-    {
+
+  let selectColumn: ColumnDef<TData> | undefined;
+  if (onSelectionChange !== undefined) {
+    selectColumn = {
       id: "select",
       header: ({ table }) => (
         <div className="flex items-center">
@@ -72,8 +82,12 @@ export const NitroTable = <TData extends Record<string, ReactNode>>({
       accessorFn: (row) => row,
       enableSorting: false,
       enableHiding: false,
-    },
-    // @ts-ignore
+    };
+  }
+
+  // @ts-ignore
+  const columns: ColumnDef<TData>[] = [
+    ...(selectColumn ? [selectColumn] : []),
     ...Object.keys(data[0]).map((key) => ({
       header: ({ column }: { column: Column<TData> }): React.ReactElement => (
         <Button
@@ -115,14 +129,33 @@ export const NitroTable = <TData extends Record<string, ReactNode>>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    rowCount,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
     },
+    initialState: {
+      pagination: {
+        pageSize,
+      },
+    },
   });
+
+  const selectedRowModel = table.getSelectedRowModel();
+  const filteredSelectedRowModel = table.getFilteredSelectedRowModel();
+  useEffect(
+    function pushSelectionChange() {
+      const selectedRows: TData[] = selectedRowModel.rows.map(
+        (row) => row.original,
+      );
+      const filteredSelectedRows: TData[] = filteredSelectedRowModel.rows.map(
+        (row) => row.original,
+      );
+      onSelectionChange?.({ selectedRows, filteredSelectedRows });
+    },
+    [selectedRowModel, filteredSelectedRowModel],
+  );
 
   return (
     <>

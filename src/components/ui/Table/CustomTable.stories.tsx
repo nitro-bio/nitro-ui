@@ -336,7 +336,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
     ),
   },
 ];
-export function DataTableDemo({ rowCount }: { rowCount?: number }) {
+export function DataTableDemo() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -356,7 +356,11 @@ export function DataTableDemo({ rowCount }: { rowCount?: number }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    rowCount,
+    initialState: {
+      pagination: {
+        pageSize: 20,
+      },
+    },
     state: {
       sorting,
       columnFilters,

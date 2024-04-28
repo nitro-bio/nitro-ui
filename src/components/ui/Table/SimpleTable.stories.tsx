@@ -58,7 +58,6 @@ const generateBioData = (n: number): BioData[] => {
 
 export const Default = () => {
   const data = generateBioData(10);
-
   return (
     <Card>
       <SimpleTable data={data} />

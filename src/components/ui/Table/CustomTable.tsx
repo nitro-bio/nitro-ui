@@ -69,11 +69,12 @@ export const CustomTable = <TData extends Record<string, unknown>>({
       </div>
 
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 truncate text-sm text-noir-800 dark:text-noir-200">
-          {table.getSelectedRowModel().rows?.length} of {table.getRowCount()}{" "}
-          selected
-        </div>
-
+        {table.getSelectedRowModel().rows?.length > 0 && (
+          <div className="flex-1 truncate text-sm text-noir-800 dark:text-noir-200">
+            {table.getSelectedRowModel().rows?.length} of {table.getRowCount()}{" "}
+            selected
+          </div>
+        )}
         <div className="space-x-2">
           <span className="flex-1 truncate text-sm text-noir-800 dark:text-noir-200">
             Page {table.getState().pagination.pageIndex + 1} of{" "}

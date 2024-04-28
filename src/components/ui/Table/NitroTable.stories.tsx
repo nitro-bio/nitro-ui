@@ -4,6 +4,7 @@ export default {
 
 import { Card } from "@ui/Card";
 import { NitroTable } from "@ui/Table";
+import { useState } from "react";
 
 type BioData = {
   "Protein Name": string | null;
@@ -57,10 +58,25 @@ const generateBioData = (n: number): BioData[] => {
 };
 const data: BioData[] = generateBioData(1000);
 
-export const Default = () => {
+export const WithSelection = () => {
+  const [selected, setSelected] = useState<BioData[]>([]);
   return (
     <Card>
-      <NitroTable data={data} rowCount={100} />
+      <NitroTable
+        data={data}
+        pageSize={20}
+        onSelectionChange={({ selectedRows }) => setSelected(selectedRows)}
+      />
+      <h4 className="my-8 text-3xl font-semibold">Selected:</h4>
+      <pre>{JSON.stringify(selected, null, 2)}</pre>
+    </Card>
+  );
+};
+
+export const NoSelection = () => {
+  return (
+    <Card>
+      <NitroTable data={data} pageSize={20} />
     </Card>
   );
 };
