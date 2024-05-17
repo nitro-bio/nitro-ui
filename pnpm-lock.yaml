@@ -56,6 +56,9 @@ importers:
       react-render-if-visible:
         specifier: ^2.1.1
         version: 2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-selectable:
+        specifier: ^2.1.1
+        version: 2.1.1
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
@@ -5178,6 +5181,9 @@ packages:
     peerDependencies:
       react: '>= 16.8.0 < 19'
       react-dom: '>= 16.8.0 < 19'
+
+  react-selectable@2.1.1:
+    resolution: {integrity: sha512-5W7WrC+TCchIwE8wDQhV5F1iJXNZJN09RsIa7kgl8P8tcG7UOYSkK6M3Jundec90mB7iN+KOLeLivSRdf9WrxQ==}
 
   react-style-singleton@2.2.1:
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
@@ -12322,6 +12328,8 @@ snapshots:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  react-selectable@2.1.1: {}
 
   react-style-singleton@2.2.1(@types/react@18.2.65)(react@18.2.0):
     dependencies:
