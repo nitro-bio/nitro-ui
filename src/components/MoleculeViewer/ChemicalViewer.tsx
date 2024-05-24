@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { classNames } from "@utils/stringUtils";
+import { ReactNode, useEffect, useState } from "react";
 
 // add initRDKitModule() to window
 interface RDKitModule {
@@ -14,19 +15,41 @@ declare global {
   }
 }
 
-export const RDKitComponent = () => {
+export const RDKitComponent = ({
+  smiles,
+  loadingPlaceholder,
+  containerClassName,
+  svgClassName,
+}: {
+  smiles?: string;
+  loadingPlaceholder: ReactNode;
+  containerClassName?: string;
+  svgClassName?: string;
+}) => {
   const loaded = useRDKit();
+  const ready = loaded && smiles !== undefined;
   return (
-    <>
-      <div>{loaded ? <p>RDKit is loaded!</p> : <p>Loading RDKit...</p>}</div>
-      {loaded && <RDKitDraw smiles="CC(=O)Oc1ccccc1C(=O)O" />}
-    </>
+    <div className={classNames("h-full w-full", containerClassName)}>
+      {!loaded && loadingPlaceholder}
+      {ready && <RDKitDraw smiles={smiles} svgClassName={svgClassName} />}
+    </div>
   );
 };
 
-const RDKitDraw = ({ smiles }: { smiles: string }) => {
+const RDKitDraw = ({
+  smiles,
+  svgClassName,
+}: {
+  smiles: string;
+  svgClassName?: string;
+}) => {
   const mol = window.RDKit.get_mol(smiles);
-  const svg = mol.get_svg();
+  let svg = mol.get_svg();
+  const svgClassNames = classNames("", svgClassName);
+  // Replace fill and stroke colors with CSS variables
+  svg = svg.replace(/fill:#FFFFFF/g, "fill:transparent");
+  svg = svg.replace(/stroke:#000000/g, "stroke:currentColor");
+  svg = svg.replace("<svg", `<svg class="${svgClassNames}"`);
   return <div dangerouslySetInnerHTML={{ __html: svg }} />;
 };
 
