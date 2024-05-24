@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { classNames } from "@utils/stringUtils";
 import RDKitComponent from "./ChemicalViewer";
 
 export default {

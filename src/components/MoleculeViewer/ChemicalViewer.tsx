@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 
 // add initRDKitModule() to window
+interface RDKitModule {
+  version: () => string;
+  get_mol: (smiles: string) => {
+    get_svg: () => string;
+  };
+}
 declare global {
   interface Window {
-    initRDKitModule: () => Promise<any>;
-    RDKit: any;
+    initRDKitModule: () => Promise<RDKitModule>;
+    RDKit: RDKitModule;
   }
 }
 
