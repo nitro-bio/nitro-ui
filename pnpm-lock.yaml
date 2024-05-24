@@ -23,6 +23,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.65)(react@18.2.0)
+      '@rdkit/rdkit':
+        specifier: 2023.9.2-1.0.0
+        version: 2023.9.2-1.0.0
       '@tanstack/react-table':
         specifier: ^8.16.0
         version: 8.16.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1719,6 +1722,9 @@ packages:
 
   '@radix-ui/rect@1.0.1':
     resolution: {integrity: sha512-fyrgCaedtvMg9NK3en0pnOYJdtfwxUcNolezkNPUsoX57X8oQk+NkqcvzHXD2uKNij6GXmWU9NDru2IWjrO4BQ==}
+
+  '@rdkit/rdkit@2023.9.2-1.0.0':
+    resolution: {integrity: sha512-dHRex6db9J5NexCPUqV5cCJR28zduTUZv0vriBhl4sJMvmFT1jcViPWBoRUB4Tee0PPHRWUi2sqXtfj4vgbvhg==}
 
   '@rollup/plugin-alias@5.1.0':
     resolution: {integrity: sha512-lpA3RZ9PdIG7qqhEfv79tBffNaoDuukFDrmhLqg9ifv99u/ehn+lOg30x2zmhf8AQqQUZaMk/B9fZraQ6/acDQ==}
@@ -7874,6 +7880,8 @@ snapshots:
   '@radix-ui/rect@1.0.1':
     dependencies:
       '@babel/runtime': 7.24.0
+
+  '@rdkit/rdkit@2023.9.2-1.0.0': {}
 
   '@rollup/plugin-alias@5.1.0(rollup@4.13.0)':
     dependencies:

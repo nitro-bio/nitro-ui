@@ -1,2 +1,3 @@
 import { MoleculeViewer } from "./MoleculeViewer";
-export { MoleculeViewer };
+import { RDKitComponent as ChemicalViewer } from "./ChemicalViewer";
+export { MoleculeViewer, ChemicalViewer };
