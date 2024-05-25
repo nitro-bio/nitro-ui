@@ -58,7 +58,18 @@ const useRDKit = () => {
 
   useEffect(() => {
     // Only attempt to load the script if it's not already present
-    if (!document.querySelector("script#rdkit-loader")) {
+    if (document.querySelector("script#rdkit-loader")) {
+      if (!window.RDKit) {
+        const interval = setInterval(() => {
+          if (window.RDKit) {
+            setLoaded(true);
+            clearInterval(interval);
+          }
+        }, 100);
+      } else {
+        setLoaded(true);
+      }
+    } else {
       const script = document.createElement("script");
       script.id = "rdkit-loader";
       script.src = "https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js";
@@ -83,13 +94,6 @@ const useRDKit = () => {
         // Cleanup the script when the hook's effect cleans up
         document.head.removeChild(script);
       };
-    } else {
-      // If the script is already loaded, directly set loaded to true
-      // You might also want to check if window.RDKit is already defined
-      // and initialized to avoid unnecessary re-init
-      if (window.RDKit) {
-        setLoaded(true);
-      }
     }
   }, [setLoaded]);
   return loaded;

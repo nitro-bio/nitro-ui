@@ -27,3 +27,38 @@ export const Styled = () => {
     </Card>
   );
 };
+
+export const Multiple = () => {
+  return (
+    <Card className="w-fit px-4 py-2">
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+      <RDKitComponent
+        loadingPlaceholder={"Loading..."}
+        smiles={"CC(=O)Oc1ccccc1C(=O)O"}
+      />
+    </Card>
+  );
+};
