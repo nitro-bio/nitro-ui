@@ -1,3 +1,4 @@
+import { Card } from "..";
 import { FileUpload } from "./FileUpload";
 
 export default {
@@ -7,17 +8,19 @@ export default {
 
 export const FileUploadStory = () => {
   return (
-    <FileUpload
-      parseFile={async (f) => {
-        return { fileName: f.name, success: true, data: { foo: "bar" } };
-      }}
-      upload={async (res: {
-        fileName: string;
-        success: true;
-        data: unknown;
-      }) => {
-        alert("Uploaded " + res.fileName);
-      }}
-    />
+    <Card className="max-w-3xl p-8">
+      <FileUpload
+        parseFile={async (f) => {
+          return { fileName: f.name, success: true, data: { foo: "bar" } };
+        }}
+        upload={async (res: {
+          fileName: string;
+          success: true;
+          data: unknown;
+        }) => {
+          alert("Uploaded " + res.fileName);
+        }}
+      />
+    </Card>
   );
 };

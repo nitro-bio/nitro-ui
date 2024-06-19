@@ -132,26 +132,28 @@ export function FileUpload<T>({
   );
 
   return (
-    <div
-      className={classNames(
-        "flex h-full flex-col items-center justify-center gap-8 rounded-xl border-2 border-dashed border-brand-300 bg-noir-700 py-6 text-noir-500 transition-all duration-200 ease-in-out md:flex-row md:gap-4 md:divide-x-2",
-        className,
-      )}
-    >
-      <Dropzone onDrop={handleChange}>
+    <Dropzone onDrop={handleChange}>
+      <div
+        className={classNames(
+          "flex h-full flex-col items-center justify-center gap-8 rounded-xl border-2 border-dashed   py-6  transition-all duration-200 ease-in-out md:flex-row md:gap-4 md:divide-x-2",
+          "border-noir-400 bg-noir-200 text-noir-900 hover:border-brand-400",
+          "dark:border-brand-500 dark:bg-noir-700 dark:text-noir-300",
+          className,
+        )}
+      >
         <div className="cursor-pointer space-y-1 text-center">
-          <div className="flex text-sm text-noir-400">
-            <p className="focus-within:ring-brand-500 relative cursor-pointer rounded-xl font-medium text-brand-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 hover:text-brand-500">
+          <div className="flex text-sm dark:text-noir-400">
+            <p className="focus-within:ring-brand-500 relative cursor-pointer rounded-xl font-medium text-brand-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 hover:text-brand-500 dark:text-brand-400">
               <span>Upload a file</span>
             </p>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs text-noir-300">
+          <p className="text-xs text-noir-600 dark:text-noir-300">
             .{allowedFileTypes.join(" .")}
           </p>
         </div>
-      </Dropzone>
-    </div>
+      </div>
+    </Dropzone>
   );
 }
 
