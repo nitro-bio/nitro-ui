@@ -10,20 +10,24 @@ import type {
   Annotation,
   AriadneSelection,
   StackedAnnotation,
+  ValidatedSequence,
 } from "../types";
+import { SeqMetadataBar } from "./SeqMetadataBar";
 
 export const SequenceViewer = ({
   sequences,
   annotations,
   selection,
+  setSelection,
   containerClassName,
   charClassName,
   selectionClassName,
   noValidate,
 }: {
-  sequences: string[];
+  sequences: ValidatedSequence[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
+  setSelection: (selection: AriadneSelection | null) => void;
   containerClassName?: string;
   charClassName: ({
     base,
@@ -74,6 +78,11 @@ export const SequenceViewer = ({
   };
   return (
     <>
+      <SeqMetadataBar
+        sequences={sequences}
+        selection={selection}
+        setSelection={setSelection}
+      />
       <div
         className={classNames("flex flex-wrap gap-y-8 ", containerClassName)}
       >

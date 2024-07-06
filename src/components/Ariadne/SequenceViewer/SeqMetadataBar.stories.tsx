@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { SequenceViewer } from ".";
 import type { AriadneSelection } from "../types";
 import { SeqMetadataBar } from "./SeqMetadataBar";
+import { Card } from "@ui/Card";
 
 export default {
   title: "Ariadne/SequenceViewer/SeqMetadataBar",
@@ -26,10 +27,12 @@ export const Default = () => {
   );
 
   return (
-    <SeqMetadataBar
-      sequences={sequences}
-      selection={selection}
-      setSelection={setSelection}
-    />
+    <Card>
+      <SeqMetadataBar
+        sequences={sequences}
+        selection={selection}
+        setSelection={setSelection}
+      />
+    </Card>
   );
 };

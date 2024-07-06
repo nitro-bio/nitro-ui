@@ -9,6 +9,7 @@ import type {
   Annotation,
   AriadneSelection,
   StackedAnnotation,
+  ValidatedSequence,
 } from "./types";
 
 export const getComplement = (sequence: string) => {
@@ -38,7 +39,7 @@ export const getAnnotatedSequence = ({
   stackedAnnotations,
   noValidate,
 }: {
-  sequence: string;
+  sequence: ValidatedSequence;
   stackedAnnotations: Annotation[];
   noValidate?: boolean;
 }): AnnotatedSequence => {
@@ -67,10 +68,7 @@ export const getAnnotatedSequence = ({
       complement: getComplement(base),
     };
   };
-  const raw = sequence
-    .split("")
-    .map(mapFn)
-    .filter((x) => x.base !== " "); // remove padding
+  const raw = sequence.map(mapFn).filter((x) => x.base !== " "); // remove padding
   const annotatedSequence = annotatedSequenceSchema.safeParse(raw);
   if (noValidate) {
     if (annotatedSequence.success === false) {
@@ -366,12 +364,10 @@ export const stringToAnnotatedSequence = ({
   sequence: string;
   annotations?: Annotation[];
 }): AnnotatedSequence => {
-  const validatedSequence = validatedSequenceStringSchema.parse(
-    sequence.split(""),
-  );
+  const validatedSequence = validatedSequenceStringSchema.parse(sequence);
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
   const annotatedSequence = getAnnotatedSequence({
-    sequence: validatedSequence.join(""),
+    sequence: validatedSequence,
     stackedAnnotations,
   });
   return annotatedSequence;

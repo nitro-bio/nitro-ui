@@ -1,10 +1,14 @@
 import { AriadneSelection, ValidatedSequence } from "@Ariadne/types";
-import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowsRightLeftIcon,
+  CheckIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/24/outline";
+import { Button } from "@ui/Button/Button";
 import { Combobox } from "@ui/Combobox";
 import { ComboboxOption } from "@ui/Combobox/Combobox";
-import { useCallback, useState } from "react";
-import { ArrowsRightLeftIcon, CheckIcon } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
+import { Input } from "@ui/Input/Input";
+import { useCallback, useEffect, useState } from "react";
 
 export const SeqMetadataBar = ({
   sequences,
@@ -18,7 +22,7 @@ export const SeqMetadataBar = ({
   const [currentSeqIdx, setCurrentSeqIdx] = useState(0);
   const currentSequence = sequences[currentSeqIdx];
   return (
-    <nav className="flex flex-row items-start justify-between border">
+    <nav className="mb-4 flex flex-row items-start justify-between text-noir-800 dark:text-noir-100">
       <SequenceSelectorTitle
         sequences={sequences}
         currentSeqIdx={currentSeqIdx}
@@ -48,7 +52,7 @@ function SequenceSelectorTitle({
   setCurrentSeqIdx: (idx: number) => void;
 }) {
   return (
-    <h4 className="text-md flex  w-full flex-col items-start justify-start gap-2 text-brand-100">
+    <h4 className="text-md flex flex-col items-start justify-start gap-2">
       <span className="">Sequence: </span>
       <Combobox
         search={""}
@@ -70,62 +74,60 @@ function SelectionSubtitle({
   sequenceLength,
 }: {
   selection: AriadneSelection | null;
-
   setSelection: (selection: AriadneSelection | null) => void;
   sequenceLength: number;
 }) {
+  const defaultInitialSelection: AriadneSelection = {
+    start: 0,
+    end: sequenceLength,
+    direction: "forward",
+  };
   return (
-    <h4 className="text-md flex w-full flex-col items-start  gap-2 text-brand-100">
-      {selection ? (
-        <>
-          Selection:{" "}
-          <span className="flex items-center gap-4">
-            <input
-              type="number"
-              min={0}
-              max={selection.end}
-              value={selection.start}
-              onChange={(e) => {
-                setSelection({
-                  ...selection,
-                  start: parseInt(e.target.value) || 0,
-                });
-              }}
-              className="w-14 border-b border-brand-100 bg-transparent text-right text-sm text-brand-100"
-            />
-            -
-            <input
-              type="number"
-              min={selection.start}
-              max={sequenceLength}
-              value={selection.end}
-              onChange={(e) => {
-                setSelection({
-                  ...selection,
-                  end: parseInt(e.target.value) || sequenceLength,
-                });
-              }}
-              className="w-14 border-b border-brand-100 bg-transparent text-right text-sm text-brand-100"
-            />{" "}
-            |{" "}
-            <select
-              value={selection.direction}
-              onChange={(e) => {
-                setSelection({
-                  ...selection,
-                  direction: e.target.value as "forward" | "reverse",
-                });
-              }}
-              className="w-18 border-b border-brand-100 bg-transparent text-sm text-brand-100"
-            >
-              <option value="forward">Forward</option>
-              <option value="reverse">Reverse</option>
-            </select>
-          </span>
-        </>
-      ) : (
-        "No Selection"
-      )}
+    <h4 className="text-md flex flex-col gap-3">
+      Selection:{" "}
+      <span className="flex items-center gap-4">
+        <Input
+          type="number"
+          className="min-w-12 "
+          min={0}
+          max={selection?.end ?? sequenceLength}
+          value={selection?.start ?? defaultInitialSelection.start}
+          onChange={(e) => {
+            setSelection({
+              ...(selection ?? defaultInitialSelection),
+              start: parseInt(e.target.value) || 0,
+            });
+          }}
+        />
+        -
+        <Input
+          type="number"
+          className="min-w-12 "
+          min={selection?.start ?? 0}
+          max={sequenceLength}
+          value={selection?.end ?? sequenceLength}
+          onChange={(e) => {
+            setSelection({
+              ...(selection ?? defaultInitialSelection),
+              end: parseInt(e.target.value) || sequenceLength,
+            });
+          }}
+        />{" "}
+        |{" "}
+        <select
+          value={selection?.direction ?? "forward"}
+          onChange={(e) => {
+            setSelection({
+              ...(selection ?? defaultInitialSelection),
+              direction: e.target.value as "forward" | "reverse",
+            });
+          }}
+          className="w-18 rounded-md border-b bg-transparent text-sm "
+        >
+          <option value="forward">Forward</option>
+          <option value="reverse">Reverse</option>
+        </select>
+      </span>
     </h4>
   );
 }
@@ -140,7 +142,7 @@ export function ButtonBar({
   currentSequence: ValidatedSequence;
 }) {
   return (
-    <div className="flex h-10 gap-2">
+    <div className="my-auto flex gap-2">
       <InvertButton selection={selection} setSelection={setSelection} />
       <CopyButton selection={selection} sequence={currentSequence} />
     </div>
@@ -180,8 +182,8 @@ export function InvertButton({
   };
 
   return (
-    <button
-      className="rounded-md  bg-noir-600 px-2 py-1 text-noir-200 transition-colors duration-200 ease-in-out hover:bg-noir-700 disabled:cursor-not-allowed disabled:opacity-50"
+    <Button
+      variant="outline"
       disabled={buttonState === "Disabled"}
       onClick={() => {
         if (selection) {
@@ -194,7 +196,7 @@ export function InvertButton({
       }}
     >
       {buttonIcon()}
-    </button>
+    </Button>
   );
 }
 
@@ -210,12 +212,12 @@ export function CopyButton({
   >("Ready");
 
   const copyToClipboard = useCallback(() => {
-    let seqToCopy = sequence;
+    let seqToCopy = sequence.join("");
     if (selection) {
       if (selection.direction === "forward") {
         seqToCopy = seqToCopy?.slice(selection.start, selection.end + 1);
       } else {
-        seqToCopy = sequence.slice(selection.end, selection.start + 1);
+        seqToCopy = seqToCopy.slice(selection.end, selection.start + 1);
       }
     }
     if (!navigator?.clipboard) {
@@ -279,12 +281,12 @@ export function CopyButton({
   };
 
   return (
-    <button
-      className="grid content-center rounded-md bg-noir-600 px-2 py-1 text-noir-200 transition-colors duration-200 ease-in-out hover:bg-noir-700 disabled:cursor-not-allowed disabled:opacity-50"
+    <Button
+      variant="outline"
       onClick={copyToClipboard}
       disabled={buttonState === "Disabled"}
     >
       {buttonIcon()}
-    </button>
+    </Button>
   );
 }

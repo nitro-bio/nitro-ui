@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
 import type { AnnotatedAA, AnnotatedNucl, AriadneSelection } from "../types";
+import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { getAnnotatedSequence } from "@Ariadne/utils";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -27,7 +29,7 @@ const SequenceStory = ({
     sequenceIdx: number;
   }) => string;
 }) => {
-  const [selection] = useState<AriadneSelection | null>(
+  const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
   const { sequences, annotations } = useMemo(
@@ -38,7 +40,6 @@ const SequenceStory = ({
       }),
     [],
   );
-
   const defaultCharClassName = ({ sequenceIdx }: { sequenceIdx: number }) => {
     if (sequenceIdx === 0) {
       return "dark:text-brand-300 text-brand-600";
@@ -61,6 +62,7 @@ const SequenceStory = ({
           selection={selection}
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
+          setSelection={setSelection}
         />
       </Card>
     </div>
