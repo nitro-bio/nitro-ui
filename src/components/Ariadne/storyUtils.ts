@@ -1,5 +1,5 @@
-import { getRndInteger } from "../..";
-import { Annotation } from "./types";
+import { getRndInteger, validatedSequenceStringSchema } from "../..";
+import { Annotation, ValidatedSequence } from "./types";
 
 const annotationTypes = [
   "CDS",
@@ -79,7 +79,7 @@ export const generateRandomSequences = ({
   maxLength: number;
   annotationOnClick?: (annotation: Annotation) => void;
 }): {
-  sequences: string[];
+  sequences: ValidatedSequence[];
   annotations: Annotation[];
 } => {
   const bases = ["A", "C", "G", "T"];
@@ -114,7 +114,7 @@ export const generateRandomSequences = ({
     sequences.push(sequence);
   });
   return {
-    sequences: sequences.map((seq) => seq.join("")),
+    sequences: sequences.map((seq) => validatedSequenceStringSchema.parse(seq)),
     annotations,
   };
 };
