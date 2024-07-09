@@ -5,26 +5,34 @@ import {
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@ui/Button/Button";
-import { Combobox } from "@ui/Combobox";
-import { ComboboxOption } from "@ui/Combobox/Combobox";
 import { Input } from "@ui/Input/Input";
+import { classNames } from "@utils/stringUtils";
 import { useCallback, useEffect, useState } from "react";
 
 export const SeqMetadataBar = ({
   sequences,
+  sequenceLabels,
   selection,
   setSelection,
+  className,
 }: {
+  className?: string;
   sequences: ValidatedSequence[];
+  sequenceLabels: string[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
 }) => {
   const [currentSeqIdx, setCurrentSeqIdx] = useState(0);
   const currentSequence = sequences[currentSeqIdx];
   return (
-    <nav className="mb-4 flex flex-row items-start justify-between text-noir-800 dark:text-noir-100">
+    <nav
+      className={classNames(
+        "mb-4 flex flex-row items-start justify-between text-noir-800 dark:text-noir-100",
+        className,
+      )}
+    >
       <SequenceSelectorTitle
-        sequences={sequences}
+        sequenceLabels={sequenceLabels}
         currentSeqIdx={currentSeqIdx}
         setCurrentSeqIdx={setCurrentSeqIdx}
       />
@@ -43,27 +51,30 @@ export const SeqMetadataBar = ({
 };
 
 function SequenceSelectorTitle({
-  sequences,
+  sequenceLabels,
   currentSeqIdx,
   setCurrentSeqIdx,
 }: {
-  sequences: ValidatedSequence[];
+  sequenceLabels: string[];
   currentSeqIdx: number;
   setCurrentSeqIdx: (idx: number) => void;
 }) {
   return (
     <h4 className="text-md flex flex-col items-start justify-start gap-2">
       <span className="">Sequence: </span>
-      <Combobox
-        search={""}
-        setSearch={function (search: string): void {
-          throw new Error("Function not implemented.");
+      <select
+        value={currentSeqIdx}
+        onChange={(e) => {
+          setCurrentSeqIdx(parseInt(e.target.value));
         }}
-        sections={[]}
-        onSelect={function (option: ComboboxOption): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+        className="w-18 rounded-md border-b bg-transparent text-sm "
+      >
+        {sequenceLabels.map((label, idx) => (
+          <option key={idx} value={idx}>
+            {label}
+          </option>
+        ))}
+      </select>
     </h4>
   );
 }
@@ -183,6 +194,7 @@ export function InvertButton({
 
   return (
     <Button
+      size="sm"
       variant="outline"
       disabled={buttonState === "Disabled"}
       onClick={() => {
@@ -283,6 +295,7 @@ export function CopyButton({
   return (
     <Button
       variant="outline"
+      size="sm"
       onClick={copyToClipboard}
       disabled={buttonState === "Disabled"}
     >

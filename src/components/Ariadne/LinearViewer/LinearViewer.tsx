@@ -8,19 +8,20 @@ import {
   AnnotatedSequence,
   AriadneSelection,
   Annotation,
+  ValidatedSequence,
 } from "../types";
 import { stackAnnsByType } from "@Ariadne/genbankUtils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export interface Props {
-  sequences: string[];
+  sequences: ValidatedSequence[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
   containerClassName?: string;
-  sequenceClassName: (sequenceIdx: number) => string;
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
 }
 
@@ -118,7 +119,7 @@ const SequenceLine = ({
   sequence: AnnotatedSequence;
   sequenceIdx: number;
   otherSequences: AnnotatedSequence[];
-  sequenceClassName: (sequenceIdx: number) => string;
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
 }) => {
   const start = sequence[0]?.index;
@@ -164,7 +165,7 @@ const SequenceLine = ({
   return (
     <>
       <line
-        className={classNames("", sequenceClassName(sequenceIdx))}
+        className={classNames("", sequenceClassName({ sequenceIdx }))}
         x1={`${startPerc * 100}%`}
         y1={`${sequenceIdx * 10 + 10}`}
         x2={`${endPerc * 100}%`}

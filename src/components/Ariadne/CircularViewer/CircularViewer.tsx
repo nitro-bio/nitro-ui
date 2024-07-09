@@ -3,6 +3,7 @@ import {
   AnnotatedSequence,
   Annotation,
   AriadneSelection,
+  ValidatedSequence,
 } from "@Ariadne/types";
 import {
   getAnnotatedSequence,
@@ -17,7 +18,7 @@ import { CircularIndex } from "./CircularIndex";
 import { clampSlice, findIndexFromAngle, genArc } from "./circularUtils";
 
 export interface Props {
-  sequence: string;
+  sequence: ValidatedSequence;
   annotations: Annotation[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection) => void;

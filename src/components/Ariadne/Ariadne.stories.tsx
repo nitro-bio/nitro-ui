@@ -4,9 +4,10 @@ import { useMemo, useState } from "react";
 import { CircularViewer } from "./CircularViewer";
 import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
-import { generateRandomSequences } from "./storyUtils";
+import { classNamesBySequenceIdx, generateRandomSequences } from "./storyUtils";
 import { AriadneSelection } from "./types";
 import { classNames } from "@utils/stringUtils";
+import { SeqMetadataBar } from "./SequenceViewer/SeqMetadataBar";
 
 export default {
   title: "Ariadne/Ariadne",
@@ -30,27 +31,25 @@ const AriadneStory = ({
     [],
   );
 
-  const classNameBySequenceIdx = (sequenceIdx: number) => {
-    if (sequenceIdx === 0) {
-      return "dark:text-brand-300 text-brand-600";
-    } else if (sequenceIdx === 1) {
-      return "dark:text-indigo-300 text-indigo-600";
-    } else if (sequenceIdx === 2) {
-      return "dark:text-amber-300 text-amber-600";
-    } else {
-      return "dark:text-noir-300 text-noir-600";
-    }
-  };
   return (
-    <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800">
-      <div className="h-full  overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
+    <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
+      <div className="h-full overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
+        <SeqMetadataBar
+          className="sticky top-0 z-[1] bg-white px-1 dark:bg-noir-800 "
+          sequences={sequences}
+          selection={selection}
+          setSelection={setSelection}
+          sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
+        />
         <SequenceViewer
           sequences={sequences}
           selection={selection}
           charClassName={({ sequenceIdx }) =>
-            classNameBySequenceIdx(sequenceIdx)
+            classNamesBySequenceIdx(sequenceIdx).charClassName
           }
-          selectionClassName="bg-brand-400/20"
+          selectionClassName={({ sequenceIdx }) => {
+            return classNamesBySequenceIdx(sequenceIdx).selectionClassName;
+          }}
           annotations={annotations}
         />
       </div>
@@ -58,7 +57,7 @@ const AriadneStory = ({
         {sequences.map((sequence, idx) => (
           <CircularViewer
             key={idx}
-            containerClassName={classNames(classNameBySequenceIdx(idx))}
+            containerClassName={classNamesBySequenceIdx(idx).charClassName}
             sequence={sequence}
             annotations={annotations}
             selection={selection}
@@ -73,7 +72,9 @@ const AriadneStory = ({
           selection={selection}
           annotations={annotations}
           setSelection={setSelection}
-          sequenceClassName={classNameBySequenceIdx}
+          sequenceClassName={({ sequenceIdx }) => {
+            return classNamesBySequenceIdx(sequenceIdx).charClassName;
+          }}
         />
       </div>
     </Card>

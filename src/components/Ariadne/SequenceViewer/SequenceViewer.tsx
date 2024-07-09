@@ -12,13 +12,11 @@ import type {
   StackedAnnotation,
   ValidatedSequence,
 } from "../types";
-import { SeqMetadataBar } from "./SeqMetadataBar";
 
 export const SequenceViewer = ({
   sequences,
   annotations,
   selection,
-  setSelection,
   containerClassName,
   charClassName,
   selectionClassName,
@@ -27,7 +25,6 @@ export const SequenceViewer = ({
   sequences: ValidatedSequence[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
-  setSelection: (selection: AriadneSelection | null) => void;
   containerClassName?: string;
   charClassName: ({
     base,
@@ -36,7 +33,7 @@ export const SequenceViewer = ({
     base: AnnotatedAA | AnnotatedNucl;
     sequenceIdx: number;
   }) => string;
-  selectionClassName?: string;
+  selectionClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   noValidate?: boolean;
 }) => {
   const stackedAnnotations = useMemo(
@@ -78,11 +75,6 @@ export const SequenceViewer = ({
   };
   return (
     <>
-      <SeqMetadataBar
-        sequences={sequences}
-        selection={selection}
-        setSelection={setSelection}
-      />
       <div
         className={classNames("flex flex-wrap gap-y-8 ", containerClassName)}
       >
@@ -112,9 +104,7 @@ export const SequenceViewer = ({
                         char={`| ${base.index}`}
                         index={baseIdx}
                         charClassName={classNames(
-                          "absolute -top-4 left-0 z-10",
-                          // don't allow selection of indices
-
+                          "absolute -top-4 left-0",
                           "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
                           indicesClassName({
                             base,
@@ -132,7 +122,7 @@ export const SequenceViewer = ({
                           }),
                           baseInSelection(baseIdx, selection) &&
                             base.base !== " " &&
-                            selectionClassName,
+                            selectionClassName({ sequenceIdx }),
                         )}
                       />
                     </div>
@@ -193,7 +183,7 @@ const SequenceAnnotation = ({
             >
               <div
                 className={classNames(
-                  "absolute -top-28 z-10 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
+                  "absolute -top-28 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
                   annotation.className,
                 )}
               >
