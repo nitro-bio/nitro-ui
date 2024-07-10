@@ -1,42 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import Aioli from "@biowasm/aioli";
-import { FileUpload } from "..";
-export const Samtools = () => {
-  const [files, setFiles] = useState<File[] | null>(null);
-  const { loaded, output, mounted } = useSamtools({ files });
-  if (!files) {
-    return (
-      <FileUpload
-        parseFile={async (f) => {
-          const text = await f.text();
-          return { fileName: f.name, success: true, data: text };
-        }}
-        upload={async (res: {
-          fileName: string;
-          success: true;
-          data: string;
-        }) => {
-          setFiles([new File([res.data], res.fileName)]);
-        }}
-      />
-    );
-  }
-
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
-  if (!mounted) {
-    return <div>Mounting files...</div>;
-  }
-  if (output.length === 0) {
-    return <div>No output</div>;
-  }
-  return (
-    <div className="pre-whitespace font-mono">
-      {JSON.stringify(output, null, 2)}
-    </div>
-  );
-};
 
 const useAioli = (packages: string[]) => {
   const [loaded, setLoaded] = useState(false);
@@ -56,19 +19,21 @@ const useAioli = (packages: string[]) => {
   return { loaded, cli };
 };
 
-const useSamtools = ({ files }: { files: File[] | null }) => {
-  const { loaded, cli } = useAioli(["samtools/1.10"]);
+const useMountFiles = ({
+  files,
+  cli,
+}: {
+  files: File[] | null;
+  cli: React.MutableRefObject<Aioli | null>;
+}) => {
   const [mounted, setMounted] = useState(false);
-  const [output, setOutput] = useState<string[]>([]);
   const [paths, setPaths] = useState<string[]>([]);
   useEffect(
     function mountFiles() {
       if (!files) {
-        console.log("no files");
         return;
       }
       if (cli.current === null) {
-        console.log("no cli");
         return;
       }
       setMounted(false);
@@ -82,6 +47,14 @@ const useSamtools = ({ files }: { files: File[] | null }) => {
     [files, cli.current],
   );
 
+  return { mounted, paths };
+};
+
+export const useSamtools = ({ files }: { files: File[] | null }) => {
+  const { loaded, cli } = useAioli(["samtools/1.10"]);
+  const { mounted, paths } = useMountFiles({ files, cli });
+
+  const [output, setOutput] = useState<string[]>([]);
   useEffect(
     function runSamtools() {
       const run = async () => {
@@ -94,6 +67,31 @@ const useSamtools = ({ files }: { files: File[] | null }) => {
             "-h",
             paths[0], // just the first file for now
           ]);
+          setOutput(result);
+        }
+      };
+      run();
+    },
+    [paths],
+  );
+  return { loaded, mounted, output };
+};
+
+export const useMinimap = ({ files }: { files: File[] | null }) => {
+  const { loaded, cli } = useAioli(["minimap2/2.22"]);
+  const { mounted, paths } = useMountFiles({ files, cli });
+
+  const [output, setOutput] = useState<string[]>([]);
+  useEffect(
+    function runMinimap() {
+      const run = async () => {
+        if (!mounted) {
+          return;
+        }
+        if (cli.current) {
+          const result = await cli.current?.exec(
+            `minimap2 -a ${paths[0]} ${paths[1]}`,
+          );
           setOutput(result);
         }
       };
