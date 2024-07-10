@@ -15,7 +15,7 @@ export const AriadneStreamlitSchema = z.object({
 
 export const useStreamlitAriadne = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { data, setData } = useStreamlit({
+  const { data, setData, error } = useStreamlit({
     ref,
     zodSchema: AriadneStreamlitSchema,
     scrubUnclonable: true,
@@ -43,6 +43,7 @@ export const useStreamlitAriadne = () => {
 
   return {
     ref,
+    error,
     sequences,
     annotations,
     selection,
@@ -52,7 +53,7 @@ export const useStreamlitAriadne = () => {
 };
 
 export const CircularViewerStreamlit = () => {
-  const { ref, sequences, annotations, selection, setSelection } =
+  const { ref, sequences, annotations, selection, setSelection, error } =
     useStreamlitAriadne();
 
   const ready = sequences && annotations && selection !== undefined;
@@ -70,6 +71,7 @@ export const CircularViewerStreamlit = () => {
         ) : (
           "Waiting for data from Streamlit..."
         )}
+        {error && <div className="text-error">{error.message}</div>}
       </Card>
     </div>
   );

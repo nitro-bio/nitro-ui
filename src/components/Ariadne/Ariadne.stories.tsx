@@ -6,7 +6,7 @@ import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { generateRandomSequences } from "./storyUtils";
 import { AriadneSelection } from "./types";
-import { classNames } from "../..";
+import { classNames } from "@utils/stringUtils";
 
 export default {
   title: "Ariadne/Ariadne",
@@ -42,7 +42,7 @@ const AriadneStory = ({
     }
   };
   return (
-    <Card className="grid grid-cols-1 gap-4 bg-white dark:bg-noir-800 lg:h-screen lg:grid-cols-2">
+    <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800">
       <div className="h-full  overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
         <SequenceViewer
           sequences={sequences}

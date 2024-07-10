@@ -21,7 +21,7 @@ export const Default = () => {
   const annotatedSequences = useMemo(
     function memoize() {
       return exampleSequences.map((sequence) =>
-        getAnnotatedSequence(sequence, []),
+        getAnnotatedSequence({ sequence, stackedAnnotations: [] }),
       );
     },
     [exampleSequences],

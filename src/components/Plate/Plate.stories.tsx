@@ -10,15 +10,20 @@ export default {
 export const TwentyFour = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   return (
-    <Card className="max-w-3xl p-8">
-      <Plate wells={24} selection={selection} setSelection={setSelection} />
+    <Card className="max-w-3xl">
+      <Plate
+        className="-ml-5 -ml-8"
+        wells={24}
+        selection={selection}
+        setSelection={setSelection}
+      />
     </Card>
   );
 };
 export const FourtyEight = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   return (
-    <Card className="max-w-3xl p-8">
+    <Card className="max-w-3xl">
       <Plate wells={48} selection={selection} setSelection={setSelection} />
     </Card>
   );
@@ -27,7 +32,7 @@ export const FourtyEight = () => {
 export const NinetySix = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   return (
-    <Card className="max-w-3xl p-8">
+    <Card className="max-w-3xl">
       <Plate wells={96} selection={selection} setSelection={setSelection} />
     </Card>
   );
@@ -36,7 +41,7 @@ export const NinetySix = () => {
 export const ThreeEightyFour = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   return (
-    <Card className="max-w-3xl p-8">
+    <Card className="max-w-7xl">
       <Plate wells={384} selection={selection} setSelection={setSelection} />
     </Card>
   );

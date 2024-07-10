@@ -45,7 +45,10 @@ export const CircularViewer = ({
   const stackedAnnotations = stackAnnsByType(annotations);
   const annotatedSequence = useMemo(
     function memoize() {
-      return getAnnotatedSequence(sequence, getStackedAnnotations(annotations));
+      return getAnnotatedSequence({
+        sequence,
+        stackedAnnotations: getStackedAnnotations(annotations),
+      });
     },
     [sequence, annotations],
   );

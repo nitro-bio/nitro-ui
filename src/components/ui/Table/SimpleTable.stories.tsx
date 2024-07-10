@@ -1,12 +1,9 @@
-import { Table } from ".";
-
 export default {
-  title: "UIElements/Table",
-  component: Table,
-  argTypes: {
-    fullWidth: { type: "boolean" },
-  },
+  title: "UIElements/Table/SimpleTable",
 };
+
+import { Card } from "@ui/Card";
+import { SimpleTable } from "./SimpleTable";
 
 type BioData = {
   proteinName: string | null;
@@ -60,16 +57,10 @@ const generateBioData = (n: number): BioData[] => {
 };
 
 export const Default = () => {
-  const data = generateBioData(10000);
-  const resultsPerPage = 100;
-  return <Table data={data} resultsPerPage={resultsPerPage} />;
-};
-
-export const Compact = () => {
-  const data = generateBioData(100);
-  const resultsPerPage = 10;
-  return <Table data={data} resultsPerPage={resultsPerPage} compact />;
-};
-export const NoResults = () => {
-  return <Table data={[]} resultsPerPage={10} />;
+  const data = generateBioData(10);
+  return (
+    <Card>
+      <SimpleTable data={data} />
+    </Card>
+  );
 };

@@ -120,3 +120,32 @@ export const SequenceViewerStorySecondSequence = () => (
     }}
   />
 );
+
+export const SequenceViewerInvalid = () => {
+  const charClassName = ({ sequenceIdx }: { sequenceIdx: number }) => {
+    if (sequenceIdx === 0) {
+      return "dark:text-brand-300 text-brand-600";
+    } else if (sequenceIdx === 1) {
+      return "dark:text-indigo-300 text-indigo-600";
+    } else if (sequenceIdx === 2) {
+      return "dark:text-amber-300 text-amber-600";
+    } else {
+      return "dark:text-noir-300 text-noir-600";
+    }
+  };
+
+  return (
+    <div className="grid h-screen content-center py-8">
+      <Card className="max-w-4xl">
+        <SequenceViewer
+          selectionClassName="bg-brand-400/20"
+          sequences={["FAIL SEQUENCE"]}
+          annotations={[]}
+          selection={null}
+          charClassName={charClassName}
+          noValidate
+        />
+      </Card>
+    </div>
+  );
+};

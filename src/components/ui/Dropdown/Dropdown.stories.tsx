@@ -1,80 +1,101 @@
-import { Dropdown } from "./Dropdown";
+import { CreditCardIcon, UserIcon } from "@heroicons/react/20/solid";
+import { Card } from "@ui/Card";
+import {
+  Dropdown,
+  DropdownBaseGroup,
+  DropdownCheckboxGroup,
+  DropdownRadioGroup,
+} from "@ui/Dropdown/Dropdown";
+import { useState } from "react";
 
 export default {
   title: "UIElements/Dropdown",
-  component: Dropdown,
 };
 
-function repeatArray<T>(arr: T[], n: number): T[] {
-  const result = [];
-  for (let i = 0; i < n; i++) {
-    result.push(...arr);
-  }
-  return result;
+export function DropdownMenuDemo() {
+  const [radioValue, setRadioValue] = useState<"Profile" | "Billing">(
+    "Profile",
+  );
+  const [checkboxValues, setCheckboxValues] = useState<
+    ("Profile" | "Billing")[]
+  >(["Profile"]);
+  const toggleCheckboxValue = (val: "Profile" | "Billing") => {
+    if (checkboxValues.includes(val)) {
+      setCheckboxValues(checkboxValues.filter((x) => x !== val));
+    } else {
+      setCheckboxValues([...checkboxValues, val]);
+    }
+  };
+  const isChecked = (val: "Profile" | "Billing") =>
+    checkboxValues.includes(val);
+
+  const baseGroup: DropdownBaseGroup = {
+    label: "Base",
+    type: "base" as const,
+    items: [
+      {
+        label: "Profile",
+        id: "Profile",
+        icon: <UserIcon className="mr-2 h-4 w-4" />,
+        aside: "⇧⌘P",
+      },
+      {
+        label: "Billing",
+        id: "Billing",
+        icon: <CreditCardIcon className="mr-2 h-4 w-4" />,
+        aside: "⌘B",
+      },
+    ],
+  };
+  const checkboxGroup: DropdownCheckboxGroup = {
+    label: "Radio",
+    type: "checkbox" as const,
+    items: [
+      {
+        label: "Profile",
+        id: "Profile",
+        icon: <UserIcon className="mr-2 h-4 w-4" />,
+        aside: "⇧⌘P",
+        checked: isChecked("Profile"),
+        onCheckedChange: () => toggleCheckboxValue("Profile"),
+      },
+      {
+        label: "Billing",
+        id: "Billing",
+        icon: <CreditCardIcon className="mr-2 h-4 w-4" />,
+        aside: "⌘B",
+        checked: isChecked("Billing"),
+        onCheckedChange: () => toggleCheckboxValue("Billing"),
+      },
+    ],
+  };
+  const radioGroup: DropdownRadioGroup<"Profile" | "Billing"> = {
+    label: "Checkbox",
+    type: "radio",
+    value: radioValue,
+    onValueChange: setRadioValue,
+    items: [
+      {
+        label: "Profile",
+        id: "Profile",
+        icon: <UserIcon className="mr-2 h-4 w-4" />,
+        aside: "⇧⌘P",
+      },
+      {
+        label: "Billing",
+        id: "Billing",
+        icon: <CreditCardIcon className="mr-2 h-4 w-4" />,
+        aside: "⌘B",
+      },
+    ],
+  };
+  return (
+    <Card className="h-[800px] p-4">
+      <Dropdown
+        groups={[baseGroup, checkboxGroup, radioGroup]}
+        menuLabel="Dropdown Menu"
+        buttonLabel="Open"
+      />
+    </Card>
+  );
 }
-
-const people = repeatArray(
-  [
-    "Wade Cooper",
-    "Arlene Mccoy",
-    "Devon Webb",
-    "Tom Cook",
-    "Tanya Fox",
-    "Hellen Schmidt",
-  ],
-  100,
-);
-
-export const Default = () => {
-  return (
-    <div className="mx-auto flex min-h-screen w-full max-w-3xl justify-end">
-      <Dropdown
-        title="people"
-        onSelection={(option) => alert(option)}
-        menuItems={people}
-        menuButtonClassName="bg-noir-600 dark:bg-noir-600"
-        menuItemClassName="bg-noir-600 dark:bg-noir-600"
-        menuClassName="bg-noir-600 dark:bg-noir-600"
-      />
-    </div>
-  );
-};
-
-export const Variety = () => {
-  return (
-    <div className="mx-auto flex h-80 w-full max-w-3xl flex-col items-end gap-2">
-      <Dropdown
-        title="people"
-        onSelection={(option) => alert(option)}
-        menuItems={people}
-        menuButtonClassName="bg-red-600 dark:bg-red-600"
-        menuItemClassName="bg-red-600 dark:bg-red-600"
-        menuClassName="bg-red-600 dark:bg-red-600 h-20"
-      />
-      <Dropdown
-        title="people"
-        onSelection={(option) => alert(option)}
-        menuItems={people}
-        menuButtonClassName="bg-green-600 dark:bg-green-600"
-        menuItemClassName="bg-green-600 dark:bg-green-600"
-        menuClassName="bg-green-600 dark:bg-green-600 h-40"
-      />
-      <Dropdown
-        title="people"
-        onSelection={(option) => alert(option)}
-        menuItems={people}
-        menuButtonClassName="bg-blue-600 dark:bg-blue-600"
-        menuItemClassName="bg-blue-600 dark:bg-blue-600"
-        menuClassName="bg-blue-600 dark:bg-blue-600 h-60"
-      />
-      <Dropdown
-        title="people"
-        onSelection={(option) => alert(option)}
-        menuItems={people}
-        menuButtonClassName="bg-amber-600 dark:bg-amber-600"
-        menuItemClassName="bg-amber-600 dark:bg-amber-600"
-        menuClassName="bg-amber-600 dark:bg-amber-600 h-80"
-      />
-    </div>
-  );
-};

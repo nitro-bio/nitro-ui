@@ -1,118 +1,367 @@
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { classNames } from "../../..";
-import RenderIfVisible from "react-render-if-visible";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/20/solid";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { Button } from "@ui/Button/Button";
+import { classNames } from "@utils/stringUtils";
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  HTMLAttributes,
+  ReactNode,
+  forwardRef,
+} from "react";
 
-export const MenuItem = ({
-  name,
-  className,
-  onClick,
+export interface DropdownBaseItem {
+  id: string;
+  label: string;
+  icon?: JSX.Element;
+  aside?: string;
+  disabled?: boolean;
+  onClick?: () => void;
+}
+export interface DropdownRadioItem {
+  id: string;
+  label: string;
+  icon?: JSX.Element;
+  aside?: string;
+  disabled?: boolean;
+}
+export interface DropdownCheckboxItem {
+  id: string;
+  label: string;
+  icon?: JSX.Element;
+  aside?: string;
+  disabled?: boolean;
+  checked: boolean;
+  onCheckedChange: () => void;
+}
+
+export interface DropdownBaseGroup {
+  label: string;
+  items: DropdownBaseItem[];
+  type: "base";
+}
+export interface DropdownCheckboxGroup {
+  label: string;
+  items: DropdownCheckboxItem[];
+  type: "checkbox";
+}
+export interface DropdownRadioGroup<T extends string> {
+  label: string;
+  items: DropdownRadioItem[];
+  value: T;
+  onValueChange: (value: T) => void;
+  type: "radio";
+}
+export type DropdownGroup<T extends string> =
+  | DropdownBaseGroup
+  | DropdownCheckboxGroup
+  | DropdownRadioGroup<T>;
+
+function Dropdown<T extends string>({
+  buttonLabel,
+  menuLabel,
+  groups,
 }: {
-  name: string;
-  className?: string;
-  onClick: () => void;
-}) => (
-  <RenderIfVisible defaultHeight={36}>
-    <Menu.Item>
-      {({ active }) => (
-        <button
-          className={classNames(
-            "group flex w-full items-center rounded-md px-2 py-2 text-sm dark:text-white",
-            active
-              ? "bg-inherit bg-opacity-50 opacity-50"
-              : "bg-opacity-100 opacity-100",
-            className,
-          )}
-          onClick={onClick}
-        >
-          <div className="mr-2 h-5 w-5" aria-hidden="true" />
-          {name}
-        </button>
-      )}
-    </Menu.Item>
-  </RenderIfVisible>
-);
-
-export const Dropdown = ({
-  title,
-  menuClassName,
-  menuButtonClassName,
-  menuItemClassName,
-  menuItems,
-  onSelection,
-  initialSelectedIdx,
-}: {
-  title: string;
-  menuClassName?: string;
-  menuItemClassName?: string;
-  menuButtonClassName?: string;
-  menuItems: string[];
-  onSelection: (selection: string) => void;
-  initialSelectedIdx?: number;
-}) => {
-  if (
-    initialSelectedIdx != undefined &&
-    initialSelectedIdx >= menuItems.length
-  ) {
-    throw new Error(
-      `initialSelectedIdx must be less than the length of menuItems`,
-    );
-  }
-
-  const [selectedItem, setSelectedItem] = useState<string | null>(
-    initialSelectedIdx != undefined ? menuItems[initialSelectedIdx] : null,
-  );
-
+  buttonLabel: ReactNode;
+  menuLabel: string;
+  groups: DropdownGroup<T>[];
+}) {
   return (
-    <Menu as="div" className={classNames("relative inline-block text-right")}>
-      <Menu.Button
-        className={classNames(
-          "focus-visible:ring-white inline-flex w-full justify-center truncate rounded-md px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75",
-          menuButtonClassName,
-        )}
-      >
-        {title}
-        {selectedItem && (
-          <>
-            {" | "}
-            {selectedItem}
-          </>
-        )}
-        <ChevronDownIcon
-          className="-mr-1 ml-2 h-5 w-5 text-brand-200 hover:text-brand-100"
-          aria-hidden="true"
-        />
-      </Menu.Button>
-
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <Menu.Items
-          className={classNames(
-            "ring-black absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 overflow-y-auto  rounded-md p-1 text-white shadow-lg ring-1 ring-opacity-5 focus:outline-none",
-            menuClassName,
-          )}
-        >
-          {menuItems.map((name, index) => (
-            <MenuItem
-              key={index}
-              name={name}
-              onClick={() => {
-                onSelection(name);
-                setSelectedItem(name);
-              }}
-              className={menuItemClassName}
-            />
-          ))}
-        </Menu.Items>
-      </Transition>
-    </Menu>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">{buttonLabel}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>{menuLabel}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {groups.map((group, i) => {
+          if (group.type === "checkbox") {
+            return (
+              <DropdownMenuGroup key={`${group.label}-checkbox-${i}`}>
+                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.items.map((item) => (
+                  <DropdownMenuCheckboxItem
+                    key={item.id}
+                    checked={item.checked}
+                    onCheckedChange={() => item.onCheckedChange()}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                    {item.aside && (
+                      <DropdownMenuShortcut>{item.aside}</DropdownMenuShortcut>
+                    )}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuGroup>
+            );
+          }
+          if (group.type === "radio") {
+            return (
+              <DropdownMenuRadioGroup
+                key={`${group.label}-${i}`}
+                value={group.value}
+                onValueChange={(value) => group.onValueChange(value as T)}
+              >
+                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.items.map((item) => (
+                  <DropdownMenuRadioItem key={item.id} value={item.id}>
+                    {item.icon}
+                    <span>{item.label}</span>
+                    {item.aside && (
+                      <DropdownMenuShortcut>{item.aside}</DropdownMenuShortcut>
+                    )}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            );
+          }
+          if (group.type === "base") {
+            return (
+              <DropdownMenuGroup key={`${group.label}-${i}`}>
+                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.items.map((item) => (
+                  <DropdownMenuItem onClick={item.onClick} key={item.id}>
+                    {item.icon}
+                    <span>{item.label}</span>
+                    {item.aside && (
+                      <DropdownMenuShortcut>{item.aside}</DropdownMenuShortcut>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            );
+          } else {
+            const _group = group as { type: string };
+            throw new Error(`Invalid group type: ${_group.type}`);
+          }
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
+}
+Dropdown.displayName = "Dropdown";
+
+const DropdownMenu = DropdownMenuPrimitive.Root;
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+const DropdownMenuSubTrigger = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={classNames(
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none ",
+      "focus:bg-brand-300 data-[state=open]:bg-brand-300 ",
+      "dark:focus:bg-brand-800 dark:data-[state=open]:bg-brand-800 ",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRightIcon className="ml-auto h-4 w-4" />
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuSubContent = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubContent
+    ref={ref}
+    className={classNames(
+      "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg",
+      "bg-noir-100 text-noir-800",
+      "dark:bg-noir-800 dark:text-noir-100",
+
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuSubContent.displayName =
+  DropdownMenuPrimitive.SubContent.displayName;
+
+const DropdownMenuContent = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={classNames(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md",
+        "dark:border-noir-600 dark:bg-noir-800 dark:text-noir-100",
+        "border-noir-600 bg-noir-100 text-noir-800",
+        className,
+      )}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Portal>
+));
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.Item>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={classNames(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "hover:bg-brand-100 hover:text-brand-800 focus:bg-brand-100 focus:text-brand-800",
+      "dark:focus:bg-brand-800 dark:focus:text-brand-100",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuCheckboxItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={classNames(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "bg-noir-100 text-noir-800 focus:bg-brand-100 focus:text-brand-800",
+      "dark:bg-noir-800 dark:text-noir-100 dark:focus:bg-brand-800 dark:focus:text-brand-100",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <CheckIcon className="h-4 w-4" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName =
+  DropdownMenuPrimitive.CheckboxItem.displayName;
+
+const DropdownMenuRadioItem = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={classNames(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "dark:focus:bg-brand-800 dark:focus:text-brand-100",
+      "focus:bg-brand-100 focus:text-brand-800",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <CheckCircleIcon
+          className={classNames(
+            "h-3 w-3",
+            "dark:fill-brand-600",
+            "fill-brand-500 ",
+          )}
+        />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
+
+const DropdownMenuLabel = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.Label>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={classNames(
+      "px-2 py-1.5 text-sm font-semibold",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+
+const DropdownMenuSeparator = forwardRef<
+  ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator
+    ref={ref}
+    className={classNames(
+      "-mx-1 my-1 h-px",
+      "bg-noir-600",
+      "dark:bg-noir-300",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+
+const DropdownMenuShortcut = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={classNames(
+        "ml-auto text-xs tracking-widest opacity-60",
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
+
+export {
+  Dropdown,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 };
