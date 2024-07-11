@@ -1,3 +1,4 @@
+import { Card } from "@ui/Card";
 import { Minimap } from "./Minimap";
 import { Samtools } from "./Samtools";
 
@@ -6,9 +7,17 @@ export default {
 };
 
 export const _Samtools = () => {
-  return <Samtools />;
+  return (
+    <Card className="max-w-3xl">
+      <Samtools />
+    </Card>
+  );
 };
 
 export const _Minimap = () => {
-  return <Minimap />;
+  return (
+    <Card className="max-w-3xl">
+      <Minimap />
+    </Card>
+  );
 };

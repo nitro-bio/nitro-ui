@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { FileUpload } from "..";
+import { AriadneSelection, FileUpload, LinearViewer } from "..";
 import { useMinimap } from "./hooks";
+import { MinimapOutput } from "./schemas";
 export const Minimap = () => {
   const [files, setFiles] = useState<File[] | null>(null);
   const pushFiles = (f: File[]) => {
     setFiles((prev) => (prev ? [...prev, ...f] : f));
   };
-  const { loaded, output, mounted } = useMinimap({ files });
+  const { loaded, minimapOutput, mounted } = useMinimap({ files });
   if (!files) {
     return (
       <FileUpload
@@ -31,8 +32,27 @@ export const Minimap = () => {
   if (!mounted) {
     return <div>Mounting files...</div>;
   }
-  if (output.length === 0) {
+  if (!minimapOutput) {
     return <div>No output</div>;
   }
-  return <div className="whitespace-pre font-mono">{output}</div>;
+  return <OutputViz minimapOutput={minimapOutput} />;
+};
+
+const OutputViz = ({ minimapOutput }: { minimapOutput: MinimapOutput }) => {
+  const [selection, setSelection] = useState<AriadneSelection | null>(null);
+  return (
+    <div className="whitespace-pre font-mono">
+      <LinearViewer
+        sequences={[
+          minimapOutput.alignments[0].aligned_sequences.query,
+          minimapOutput.alignments[0].aligned_sequences.ref,
+        ]}
+        annotations={[]}
+        selection={selection}
+        setSelection={setSelection}
+        sequenceClassName={() => "text-brand-400"}
+        mismatchClassName={() => "stroke-red-500 w-px"}
+      />
+    </div>
+  );
 };

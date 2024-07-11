@@ -78,22 +78,11 @@ export const validatedSequenceStringSchema = z.union([
     z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema]),
   ),
 ]);
-export const annotatedNuclSchema = z.object({
-  base: z.union([nuclSchema, GapSchema, SpaceSchema, UnknownSchema]),
+export const annotatedBaseSchema = z.object({
+  base: z.string().length(1),
   annotations: z.array(stackedAnnotationSchema),
   index: z.number(),
 });
-
-export const annotatedAASchema = z.object({
-  base: z.union([aaSchema, GapSchema, SpaceSchema, UnknownSchema]),
-  annotations: z.array(stackedAnnotationSchema),
-  index: z.number(),
-});
-
-export const annotatedBaseSchema = z.union([
-  annotatedNuclSchema,
-  annotatedAASchema,
-]);
 
 export const annotatedSequenceSchema = z.array(annotatedBaseSchema);
 

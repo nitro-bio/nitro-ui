@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Aioli from "@biowasm/aioli";
+import { parseMinimap2Output } from "./utils";
+import { MinimapOutput } from "./schemas";
 
 const useAioli = (packages: string[]) => {
   const [loaded, setLoaded] = useState(false);
@@ -81,7 +83,7 @@ export const useMinimap = ({ files }: { files: File[] | null }) => {
   const { loaded, cli } = useAioli(["minimap2/2.22"]);
   const { mounted, paths } = useMountFiles({ files, cli });
 
-  const [output, setOutput] = useState<string[]>([]);
+  const [output, setOutput] = useState<MinimapOutput | null>(null);
   useEffect(
     function runMinimap() {
       const run = async () => {
@@ -89,15 +91,21 @@ export const useMinimap = ({ files }: { files: File[] | null }) => {
           return;
         }
         if (cli.current) {
-          const result = await cli.current?.exec(
+          const raw: string = await cli.current?.exec(
             `minimap2 -a ${paths[0]} ${paths[1]}`,
           );
-          setOutput(result);
+          const parsed = parseMinimap2Output(raw);
+          console.log(parsed);
+          setOutput(parsed);
         }
       };
       run();
     },
     [paths],
   );
-  return { loaded, mounted, output };
+  return {
+    loaded,
+    mounted,
+    minimapOutput: output,
+  };
 };
