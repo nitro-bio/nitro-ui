@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
 import Aioli from "@biowasm/aioli";
-import { parseMinimap2Output } from "./utils";
-import { MinimapOutput } from "./schemas";
+import { useEffect, useRef, useState } from "react";
 
-const useAioli = (packages: string[]) => {
+export const useAioli = (packages: string[]) => {
   const [loaded, setLoaded] = useState(false);
   const cli = useRef<Aioli | null>(null);
   useEffect(
@@ -21,7 +19,7 @@ const useAioli = (packages: string[]) => {
   return { loaded, cli };
 };
 
-const useMountFiles = ({
+export const useMountFiles = ({
   files,
   cli,
 }: {
@@ -42,6 +40,7 @@ const useMountFiles = ({
       const mount = async () => {
         const _paths = await cli.current!.mount(files);
         setPaths(_paths);
+        console.log(_paths, "mounted");
         setMounted(true);
       };
       mount();
@@ -77,35 +76,4 @@ export const useSamtools = ({ files }: { files: File[] | null }) => {
     [paths],
   );
   return { loaded, mounted, output };
-};
-
-export const useMinimap = ({ files }: { files: File[] | null }) => {
-  const { loaded, cli } = useAioli(["minimap2/2.22"]);
-  const { mounted, paths } = useMountFiles({ files, cli });
-
-  const [output, setOutput] = useState<MinimapOutput | null>(null);
-  useEffect(
-    function runMinimap() {
-      const run = async () => {
-        if (!mounted) {
-          return;
-        }
-        if (cli.current) {
-          const raw: string = await cli.current?.exec(
-            `minimap2 -a ${paths[0]} ${paths[1]}`,
-          );
-          const parsed = parseMinimap2Output(raw);
-          console.log(parsed);
-          setOutput(parsed);
-        }
-      };
-      run();
-    },
-    [paths],
-  );
-  return {
-    loaded,
-    mounted,
-    minimapOutput: output,
-  };
 };

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { AriadneSelection, FileUpload, LinearViewer } from "..";
+import { AriadneSelection, LinearViewer } from "@Ariadne/index";
 import { useMinimap } from "./hooks";
 import { MinimapOutput } from "./schemas";
-export const Minimap = () => {
+import { FileUpload } from "@ui/FileUpload";
+export const Minimap = ({ endpoint }: { endpoint?: string }) => {
   const [files, setFiles] = useState<File[] | null>(null);
   const pushFiles = (f: File[]) => {
     setFiles((prev) => (prev ? [...prev, ...f] : f));
   };
-  const { loaded, minimapOutput, mounted } = useMinimap({ files });
+  const { loaded, minimapOutput, mounted } = useMinimap({ files, endpoint });
   if (!files) {
     return (
       <FileUpload

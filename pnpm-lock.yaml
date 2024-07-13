@@ -29,6 +29,9 @@ importers:
       '@rdkit/rdkit':
         specifier: 2023.9.2-1.0.0
         version: 2023.9.2-1.0.0
+      '@tanstack/react-query':
+        specifier: ^5.51.1
+        version: 5.51.1(react@18.2.0)
       '@tanstack/react-table':
         specifier: ^8.16.0
         version: 8.16.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -74,6 +77,9 @@ importers:
       vite-raw-plugin:
         specifier: ^1.0.2
         version: 1.0.2
+      wretch:
+        specifier: ^2.9.0
+        version: 2.9.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2037,6 +2043,14 @@ packages:
     resolution: {integrity: sha512-Pe8BuPJQJd3FfRnm6H0ulKIGoMEQS+Vq01R6M5aCrFB/ccR/shT+0kXLjouGC1gFLm9hopTFN+DMP0pfwRWzPw==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
+
+  '@tanstack/query-core@5.51.1':
+    resolution: {integrity: sha512-fJBMQMpo8/KSsWW5ratJR5+IFr7YNJ3K2kfP9l5XObYHsgfVy1w3FJUWU4FT2fj7+JMaEg33zOcNDBo0LMwHnw==}
+
+  '@tanstack/react-query@5.51.1':
+    resolution: {integrity: sha512-s47HKFnQ4HOJAHoIiXcpna/roMMPZJPy6fJ6p4ZNVn8+/onlLBEDd1+xc8OnDuwgvecqkZD7Z2mnSRbcWefrKw==}
+    peerDependencies:
+      react: ^18.0.0
 
   '@tanstack/react-table@8.16.0':
     resolution: {integrity: sha512-rKRjnt8ostqN2fercRVOIH/dq7MAmOENCMvVlKx6P9Iokhh6woBGnIZEkqsY/vEJf1jN3TqLOb34xQGLVRuhAg==}
@@ -5334,6 +5348,7 @@ packages:
 
   rimraf@2.6.3:
     resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rimraf@2.7.1:
@@ -5342,6 +5357,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rollup@3.29.4:
@@ -6202,6 +6218,10 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+
+  wretch@2.9.0:
+    resolution: {integrity: sha512-kKp1xWQO+Vh9I6RJq7Yers2KKrmF7LXB00c9knMDn3IdB7etcQOarrsHArpj1sZ1Dlav8ss6R1DuUpDSTqmQew==}
+    engines: {node: '>=14'}
 
   write-file-atomic@2.4.3:
     resolution: {integrity: sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ==}
@@ -8587,6 +8607,13 @@ snapshots:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.1
+
+  '@tanstack/query-core@5.51.1': {}
+
+  '@tanstack/react-query@5.51.1(react@18.2.0)':
+    dependencies:
+      '@tanstack/query-core': 5.51.1
+      react: 18.2.0
 
   '@tanstack/react-table@8.16.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -13556,6 +13583,8 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
+
+  wretch@2.9.0: {}
 
   write-file-atomic@2.4.3:
     dependencies:
