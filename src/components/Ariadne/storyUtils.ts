@@ -70,6 +70,15 @@ export const generateRandomAnnotations = ({
   return annotations;
 };
 
+// This method's behavior suprised me. It is named generateRandomSequences
+// which suggested to me that all of the sequences would be random, however
+// it looks like the root sequence is generated randomly and then the other
+// sequences have a 10% chance of being different from the root sequence.
+// Suggestion: rename this method generateRandomAlignedSequences and add a
+// optional parameter to vary the percent identity between root sequence and
+// other sequences.
+// Additionally create another method in this file called generateRandomSequences
+// that generates truly random sequences.
 export const generateRandomSequences = ({
   maxSequences,
   maxLength,
