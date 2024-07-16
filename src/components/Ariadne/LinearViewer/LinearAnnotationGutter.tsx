@@ -3,6 +3,31 @@ import { classNames } from "@utils/stringUtils";
 import { Fragment } from "react";
 import { AnnotatedSequence, Annotation, StackedAnnotation } from "../types";
 
+/*
+I personally like to define the props interface outside of the component. I think its a bit more readable,
+but thats personal preference. The other advantage is that for complicated interfaces you can export them
+and use them as a type check in other files.
+
+example:
+
+interface iLinearAnnotationGutterProps {
+  stackedAnnotations: StackedAnnotation[];
+  sequence: AnnotatedSequence;
+  containerClassName?: string;
+}
+
+export const LinearAnnotationGutter = (props: iLinearAnnotationGutterProps) => {
+  ...
+
+OR
+
+export const LinearAnnotationGutter = ({
+  stackedAnnotations,
+  sequence,
+  containerClassName,
+}: iLinearAnnotationGutterProps) => {
+  ...
+*/
 export const LinearAnnotationGutter = ({
   stackedAnnotations,
   sequence,
