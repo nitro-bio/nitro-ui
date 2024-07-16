@@ -118,6 +118,9 @@ export const zipArrays = <T1, T2>(keys: T1[], values: T2[]) => {
   ) as { T1: T2 };
 };
 
+// It seems this is used more broadly than just genbank parsing
+// maybe it should be moved to the general utils.ts?
+// It is used in the LinearViewer component
 export const stackAnnsByType = (
   annotations: Annotation[],
 ): StackedAnnotation[] => {

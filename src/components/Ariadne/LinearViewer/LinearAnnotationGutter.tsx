@@ -25,6 +25,10 @@ export const LinearAnnotationGutter = ({
       )}
     >
       {stacks.map((annotations, stackIdx) => (
+        // When there are multiple annotations in the same stack (or of the same type in the LinearViewer)
+        // they seem to display on top of each other. This is probably less of a problem in real sequences
+        // rather than the small random sequences generated in the storybook. Is there some way we can make
+        // it so they display a bit more gracefully?
         <div key={`annotation-stack-${stackIdx}`} className="relative h-8">
           {annotations.map((annotation) => (
             <LinearAnnotation
