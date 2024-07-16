@@ -7,7 +7,7 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "storybook-tailwind-dark-mode",
     "@storybook/addon-mdx-gfm",
-    "storybook-addon-performance"
+    "storybook-addon-performance",
   ],
   framework: {
     name: "@storybook/react-vite",
