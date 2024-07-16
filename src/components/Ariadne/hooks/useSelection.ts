@@ -3,6 +3,15 @@ import { Angle, Coor } from "@Ariadne/types";
 import { inRange } from "@Ariadne/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { useStateRef } from "./useStateRef";
+
+// This is a cool hook!
+// It would be neat if something like this could be also created for the SequenceViewer someday.
+// A little more explanation of what this does would be helpful.
+// It is clearly placing a number of mouse handlers on the ref object,
+// but giving a little more context about what sort of element you would use this on
+// and what it would do would be helpful.
+
+
 // for cartesian coordinates
 export const useLinearSelectionRect = <
   T extends {

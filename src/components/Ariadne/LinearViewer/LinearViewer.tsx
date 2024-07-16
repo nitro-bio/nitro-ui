@@ -106,6 +106,9 @@ export const LinearViewer = (props: Props) => {
   );
 };
 
+
+// The names sequence and otherSequences are a bit confusing. Consider ranaming sequence to "baseSequence"
+// and otherSequences to "alignedSequences"? I think its probably fine as-is, but might improve readability.
 const SequenceLine = ({
   rootSequence,
   sequence,
@@ -195,6 +198,8 @@ const SequenceLine = ({
   );
 };
 
+// I think this component is perhaps also large enough for a dedicated interface props definition.
+// Unless its your pattern to only do so with components that you plan to export.
 const LinearSelection = ({
   selection,
   selectionRef,
