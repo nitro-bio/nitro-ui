@@ -17,11 +17,11 @@ const buttonVariants = cva(
           "dark:bg-red-700 dark:text-red-100 dark:hover:bg-red-700/90",
         ),
         outline: classNames(
-          "border border-input",
+          "border",
           "hover:bg-noir-100 hover:text-noir-800",
-          "dark:hover:bg-noir-700 dark:hover:text-noir-100",
+          "dark:hover:bg-noir-700 dark:hover:text-noir-100 dark:border-noir-100",
+          "border-noir-800 ",
         ),
-
         accent: classNames(
           "bg-accent-300 text-accent-800 hover:bg-accent-300/80",
           "dark:bg-accent-800 dark:text-accent-300 dark:hover:bg-accent-800/80",

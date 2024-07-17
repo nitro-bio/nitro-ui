@@ -52,6 +52,18 @@ const LinearStory = ({
     initialSelection ?? null,
   );
 
+  const classNameBySequenceIdx = ({ sequenceIdx }: { sequenceIdx: number }) => {
+    if (sequenceIdx === 0) {
+      return "dark:text-brand-300 text-brand-600";
+    } else if (sequenceIdx === 1) {
+      return "dark:text-indigo-300 text-indigo-600";
+    } else if (sequenceIdx === 2) {
+      return "dark:text-amber-300 text-amber-600";
+    } else {
+      return "dark:text-brand-300/50 text-brand-600/50";
+    }
+  };
+
   return (
     <Card className="w-full max-w-3xl px-8">
       <LinearViewer

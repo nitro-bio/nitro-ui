@@ -1,7 +1,7 @@
 import { ABData, ABViewer } from "@Ariadne/ABViewer";
 import { ReferenceTicks } from "@Ariadne/ReferenceTicks";
 import { SequenceViewer } from "@Ariadne/SequenceViewer";
-import { AnnotatedAA, AnnotatedNucl, AriadneSelection } from "@Ariadne/types";
+import { AnnotatedBase, AriadneSelection } from "@Ariadne/types";
 import { getAnnotatedSequence } from "@Ariadne/utils";
 import { useMemo } from "react";
 
@@ -13,7 +13,7 @@ interface HeadTailViewerProps {
   className?: string;
   charClassName?: (args: {
     sequenceIdx: number;
-    base: AnnotatedNucl | AnnotatedAA;
+    base: AnnotatedBase;
   }) => string;
 }
 
