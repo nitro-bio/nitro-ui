@@ -4,9 +4,7 @@ import { classNames } from "@utils/stringUtils";
 import { stackAnnsByType } from "@Ariadne/genbankUtils";
 import { useMemo } from "react";
 import type {
-  AnnotatedAA,
   AnnotatedBase,
-  AnnotatedNucl,
   Annotation,
   AriadneSelection,
   StackedAnnotation,
@@ -29,7 +27,7 @@ export const SequenceViewer = ({
     base,
     sequenceIdx,
   }: {
-    base: AnnotatedAA | AnnotatedNucl;
+    base: AnnotatedBase;
     sequenceIdx: number;
   }) => string;
   selectionClassName?: string;

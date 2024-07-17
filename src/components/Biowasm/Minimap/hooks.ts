@@ -29,7 +29,7 @@ export const useMinimap = ({
       console.log(`Minimap request using CLI`);
       if (!mounted || !cli.current) throw new Error("CLI not ready");
       setLocalLoading(true);
-      const raw: string = await cli.current.exec(
+      const raw: string[] = await cli.current.exec(
         `minimap2 -a ${paths[0]} ${paths[1]}`,
       );
       setLocalLoading(false);

@@ -66,7 +66,7 @@ export const useSamtools = ({ files }: { files: File[] | null }) => {
           const result = await cli.current?.exec("samtools", [
             "view",
             "-h",
-            paths[0], // just the first file for now
+            paths[0], // TODO: run for all files
           ]);
           setOutput(result);
         }
