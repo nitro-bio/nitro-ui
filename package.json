@@ -3,10 +3,11 @@
   "private": false,
   "version": "0.1.62",
   "scripts": {
+    "build:ci": "vite build && pnpm build-css",
     "build": "pnpm lint && vite build && pnpm build-css",
     "build-css": "npx tailwindcss -o ./nitro.css --minify && mv ./nitro.css ./dist/nitro.css",
     "dev": "pnpm storybook dev -p 6006",
-    "build-storybook": "pnpm build && storybook build",
+    "build-storybook": "storybook build",
     "format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\" --config package.json",
     "format:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\" --config package.json",
     "lint": "tsc && eslint . --ext .js,.jsx,.ts,.tsx",
