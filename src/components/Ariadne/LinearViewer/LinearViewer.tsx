@@ -3,11 +3,10 @@ import { getAnnotatedSequence, getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  AnnotatedAA,
-  AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
   Annotation,
+  AnnotatedBase,
 } from "../types";
 import { stackAnnsByType } from "@Ariadne/genbankUtils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
@@ -20,8 +19,8 @@ export interface Props {
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
   containerClassName?: string;
-  sequenceClassName: (sequenceIdx: number) => string;
-  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
 }
 
 export const LinearViewer = (props: Props) => {
@@ -118,8 +117,8 @@ const SequenceLine = ({
   sequence: AnnotatedSequence;
   sequenceIdx: number;
   otherSequences: AnnotatedSequence[];
-  sequenceClassName: (sequenceIdx: number) => string;
-  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
 }) => {
   const start = sequence[0]?.index;
   if (start === undefined) {
@@ -153,7 +152,7 @@ const SequenceLine = ({
   });
   mismatchClassName =
     mismatchClassName ??
-    function mismatchClassName(mismatch: AnnotatedAA | AnnotatedNucl) {
+    function mismatchClassName(mismatch: AnnotatedBase) {
       if (mismatch.base === "-") {
         return "fill-red-600 stroke-red-600";
       } else {
@@ -164,7 +163,7 @@ const SequenceLine = ({
   return (
     <>
       <line
-        className={classNames("", sequenceClassName(sequenceIdx))}
+        className={classNames("", sequenceClassName({ sequenceIdx }))}
         x1={`${startPerc * 100}%`}
         y1={`${sequenceIdx * 10 + 10}`}
         x2={`${endPerc * 100}%`}

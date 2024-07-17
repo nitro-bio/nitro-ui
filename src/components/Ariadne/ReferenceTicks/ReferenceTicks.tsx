@@ -1,4 +1,4 @@
-import { AnnotatedAA, AnnotatedNucl, AnnotatedSequence } from "@Ariadne/types";
+import { AnnotatedBase, AnnotatedSequence } from "@Ariadne/types";
 import { classNames } from "@utils/stringUtils";
 
 export const ReferenceTicks = ({
@@ -10,7 +10,7 @@ export const ReferenceTicks = ({
 }) => {
   return (
     <div className={classNames("overflow-hiddentext-white flex", className)}>
-      {sequence.map((nucl: AnnotatedNucl | AnnotatedAA, i: number) => {
+      {sequence.map((nucl: AnnotatedBase, i: number) => {
         const showTicks = nucl.base !== "-" && (nucl.index + 1) % 10 === 0; // we don't want to show ticks for gaps
         return (
           <div

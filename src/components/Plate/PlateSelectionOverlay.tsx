@@ -57,7 +57,7 @@ export const PlateSelectionOverlay = ({
     if (intersecting.size === 0) {
       return;
     }
-    console.log("intersecting", intersecting);
+
     toggleSelection(intersecting);
   };
   const { start, end } = useMouseRect({

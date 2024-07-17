@@ -1,4 +1,4 @@
-import { AnnotatedAA, AnnotatedNucl, AnnotatedSequence } from "@Ariadne/types";
+import { AnnotatedBase, AnnotatedSequence } from "@Ariadne/types";
 import { classNames } from "@utils/stringUtils";
 import { z } from "zod";
 
@@ -110,7 +110,7 @@ export const ABViewer = ({
 
   return (
     <div className={classNames("flex overflow-hidden", className)}>
-      {sequence.map((nucl: AnnotatedNucl | AnnotatedAA, i: number) => {
+      {sequence.map((nucl: AnnotatedBase, i: number) => {
         const nuclDatum = data.find((d) => d.pos === nucl.index + 1);
         if (!nuclDatum) return null;
 
