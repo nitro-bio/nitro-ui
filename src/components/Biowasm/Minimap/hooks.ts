@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { useAioli, useMountFiles } from "../hooks";
-import { w } from "@utils/wretch";
-import { MinimapOutput, MinimapOutputSchema } from "./schemas";
-import { parseMinimap2Output } from "./utils";
 import { useQuery } from "@tanstack/react-query";
+import { w } from "@utils/wretch";
+import { useState } from "react";
+import { useAioli, useMountFiles } from "../hooks";
+import { parseMinimap2Output } from "./utils";
 
 export const useMinimap = ({
   files,
   endpoint,
 }: {
-  files: File[] | null;
+  files: [File, File] | null;
   endpoint?: string;
 }) => {
   const [localLoading, setLocalLoading] = useState(false);
@@ -17,14 +16,14 @@ export const useMinimap = ({
   const { mounted, paths } = useMountFiles({ files, cli });
 
   const queryFn = async () => {
-    if (endpoint) {
+    if (endpoint && files) {
       console.log(`Minimap request using endpoint: ${endpoint}`);
-      const raw = await w
+      const raw: string = await w
         .url(endpoint)
-        .formData({ ...files })
+        .formData({ first_file: files[0], second_file: files[1] })
         .post()
         .json();
-      return MinimapOutputSchema.parse(raw);
+      return parseMinimap2Output(raw);
     } else {
       console.log(`Minimap request using CLI`);
       if (!mounted || !cli.current) throw new Error("CLI not ready");
@@ -34,6 +33,7 @@ export const useMinimap = ({
           `minimap2 -a ${paths[0]} ${paths[1]}`,
         );
         setLocalLoading(false);
+        console.log("raw", raw);
         return parseMinimap2Output(raw);
       } catch (e) {
         console.error(e);
