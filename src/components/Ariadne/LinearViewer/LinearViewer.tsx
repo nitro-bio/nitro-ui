@@ -9,7 +9,7 @@ import {
   AriadneSelection,
   Annotation,
 } from "../types";
-import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { stackAnnsByType } from "@Ariadne/utils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export interface Props {

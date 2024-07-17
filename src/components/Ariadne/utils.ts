@@ -7,6 +7,7 @@ import {
 import type {
   AnnotatedSequence,
   Annotation,
+  AnnotationType,
   AriadneSelection,
   StackedAnnotation,
 } from "./types";
@@ -375,6 +376,36 @@ export const stringToAnnotatedSequence = ({
     stackedAnnotations,
   });
   return annotatedSequence;
+};
+
+export const stackAnnsByType = (
+  annotations: Annotation[],
+): StackedAnnotation[] => {
+  // create a map of annotation type to list
+  const annotationMap = annotations.reduce(
+    (acc: { [key: AnnotationType]: Annotation[] }, annotation: Annotation) => {
+      if (acc[annotation.type] === undefined) {
+        acc[annotation.type] = [];
+      }
+      acc[annotation.type]!.push(annotation);
+      return acc;
+    },
+    {} as { [key: AnnotationType]: Annotation[] },
+  );
+
+  const stacks = Object.values(annotationMap)
+    .map((stack, stackIdx) => {
+      return stack.map((annotation: Annotation) => {
+        const res: StackedAnnotation = {
+          ...annotation,
+          stack: stackIdx,
+        };
+        return res;
+      });
+    })
+    .flat();
+
+  return stacks;
 };
 
 interface FastqRecord {

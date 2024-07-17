@@ -1,7 +1,7 @@
 import { baseInSelection, getAnnotatedSequence } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 
-import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { stackAnnsByType } from "@Ariadne/utils";
 import { useMemo } from "react";
 import type {
   AnnotatedAA,
