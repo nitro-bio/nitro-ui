@@ -8,6 +8,7 @@ import type {
   Annotation,
   AriadneSelection,
   StackedAnnotation,
+  ValidatedSequence,
 } from "../types";
 
 export const SequenceViewer = ({
@@ -19,7 +20,7 @@ export const SequenceViewer = ({
   selectionClassName,
   noValidate,
 }: {
-  sequences: string[];
+  sequences: ValidatedSequence[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
   containerClassName?: string;
@@ -30,7 +31,7 @@ export const SequenceViewer = ({
     base: AnnotatedBase;
     sequenceIdx: number;
   }) => string;
-  selectionClassName?: string;
+  selectionClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   noValidate?: boolean;
 }) => {
   const stackedAnnotations = useMemo(
@@ -63,6 +64,7 @@ export const SequenceViewer = ({
     }
     return classNames(
       "text-xs",
+      // don't allow selection of indices
       "dark:group-hover:text-zinc-300 group-hover:text-zinc-800",
       baseInSelection(base.index, selection)
         ? "text-brand-700 dark:text-brand-300"
@@ -100,7 +102,7 @@ export const SequenceViewer = ({
                         char={`| ${base.index}`}
                         index={baseIdx}
                         charClassName={classNames(
-                          "absolute -top-4 left-0 z-10",
+                          "absolute -top-4 left-0",
                           "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
                           indicesClassName({
                             base,
@@ -118,7 +120,7 @@ export const SequenceViewer = ({
                           }),
                           baseInSelection(baseIdx, selection) &&
                             base.base !== " " &&
-                            selectionClassName,
+                            selectionClassName({ sequenceIdx }),
                         )}
                       />
                     </div>
@@ -179,7 +181,7 @@ const SequenceAnnotation = ({
             >
               <div
                 className={classNames(
-                  "absolute -top-28 z-10 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
+                  "absolute -top-28 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
                   annotation.className,
                 )}
               >
@@ -204,12 +206,18 @@ interface CharProps {
 }
 
 const CharComponent = ({ char, charClassName }: CharProps) => {
+  // don't allow selection of chars
+  const sharedClassName = "select-none font-mono";
   if (char === " ") {
     return (
-      <div className={classNames(charClassName, "font-mono opacity-20")}>.</div>
+      <div className={classNames(sharedClassName, charClassName, "opacity-20")}>
+        .
+      </div>
     );
   }
   return (
-    <div className={classNames(charClassName, "mr-px font-mono")}>{char}</div>
+    <div className={classNames(sharedClassName, charClassName, "mr-px")}>
+      {char}
+    </div>
   );
 };

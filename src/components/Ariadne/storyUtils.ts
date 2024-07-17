@@ -1,5 +1,5 @@
-import { getRndInteger } from "../..";
-import { Annotation } from "./types";
+import { getRndInteger, validatedSequenceStringSchema } from "../..";
+import { Annotation, ValidatedSequence } from "./types";
 
 const annotationTypes = [
   "CDS",
@@ -79,7 +79,7 @@ export const generateRandomSequences = ({
   maxLength: number;
   annotationOnClick?: (annotation: Annotation) => void;
 }): {
-  sequences: string[];
+  sequences: ValidatedSequence[];
   annotations: Annotation[];
 } => {
   const bases = ["A", "C", "G", "T"];
@@ -114,7 +114,31 @@ export const generateRandomSequences = ({
     sequences.push(sequence);
   });
   return {
-    sequences: sequences.map((seq) => seq.join("")),
+    sequences: sequences.map((seq) => validatedSequenceStringSchema.parse(seq)),
     annotations,
   };
+};
+
+export const classNamesBySequenceIdx = (sequenceIdx: number) => {
+  if (sequenceIdx === 0) {
+    return {
+      charClassName: "dark:text-brand-300 text-brand-600",
+      selectionClassName: "bg-brand-400/20",
+    };
+  } else if (sequenceIdx === 1) {
+    return {
+      charClassName: "dark:text-indigo-300 text-indigo-600",
+      selectionClassName: "bg-indigo-400/20",
+    };
+  } else if (sequenceIdx === 2) {
+    return {
+      charClassName: "dark:text-amber-300 text-amber-600",
+      selectionClassName: "bg-amber-400/20",
+    };
+  } else {
+    return {
+      charClassName: "dark:text-noir-300 text-noir-600",
+      selectionClassName: "bg-noir-400/20",
+    };
+  }
 };
