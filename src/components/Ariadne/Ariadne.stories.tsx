@@ -34,7 +34,7 @@ const AriadneStory = ({
     <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
       <div className="h-full overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
         <SeqMetadataBar
-          className="sticky top-0 z-[1] bg-white px-1 dark:bg-noir-800 "
+          className="sticky top-0 z-[1] hidden bg-white px-1 dark:bg-noir-800"
           sequences={sequences}
           selection={selection}
           setSelection={setSelection}
