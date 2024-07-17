@@ -106,6 +106,16 @@ export const LinearViewer = (props: Props) => {
   );
 };
 
+interface SequenceLineProps {
+  rootSequence: AnnotatedSequence;
+  baseSequence: AnnotatedSequence;
+  sequenceIdx: number;
+  alignedSequences: AnnotatedSequence[];
+  sequenceClassName: (sequenceIdx: number) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
+
+}
+
 const SequenceLine = ({
   rootSequence,
   baseSequence,
@@ -113,14 +123,7 @@ const SequenceLine = ({
   alignedSequences,
   sequenceClassName,
   mismatchClassName,
-}: {
-  rootSequence: AnnotatedSequence;
-  baseSequence: AnnotatedSequence;
-  sequenceIdx: number;
-  alignedSequences: AnnotatedSequence[];
-  sequenceClassName: (sequenceIdx: number) => string;
-  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
-}) => {
+}: SequenceLineProps) => {
   const start = baseSequence[0]?.index;
   if (start === undefined) {
     throw new Error(`Sequence must have at least one base ${baseSequence}`);
