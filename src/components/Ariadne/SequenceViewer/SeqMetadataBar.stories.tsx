@@ -32,6 +32,7 @@ export const Default = () => {
         sequences={sequences}
         selection={selection}
         setSelection={setSelection}
+        sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
       />
     </Card>
   );

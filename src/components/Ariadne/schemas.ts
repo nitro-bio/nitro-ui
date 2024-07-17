@@ -70,14 +70,6 @@ export const GapSchema = z.literal("-");
 export const StopSchema = z.literal("*");
 export const SpaceSchema = z.literal(" ");
 export const UnknownSchema = z.literal("?");
-export const validatedSequenceStringSchema = z.union([
-  z.array(
-    z.union([nuclSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema]),
-  ),
-  z.array(
-    z.union([aaSchema, GapSchema, StopSchema, SpaceSchema, UnknownSchema]),
-  ),
-]);
 export const annotatedBaseSchema = z.object({
   base: z.string().length(1),
   annotations: z.array(stackedAnnotationSchema),

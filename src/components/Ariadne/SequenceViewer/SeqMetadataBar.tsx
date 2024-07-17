@@ -1,4 +1,4 @@
-import { AriadneSelection, ValidatedSequence } from "@Ariadne/types";
+import { AriadneSelection } from "@Ariadne/types";
 import {
   ArrowsRightLeftIcon,
   CheckIcon,
@@ -17,7 +17,7 @@ export const SeqMetadataBar = ({
   className,
 }: {
   className?: string;
-  sequences: ValidatedSequence[];
+  sequences: string[];
   sequenceLabels: string[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
@@ -150,7 +150,7 @@ export function ButtonBar({
 }: {
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
-  currentSequence: ValidatedSequence;
+  currentSequence: string;
 }) {
   return (
     <div className="my-auto flex gap-2">
@@ -216,7 +216,7 @@ export function CopyButton({
   sequence,
   selection,
 }: {
-  sequence: ValidatedSequence;
+  sequence: string;
   selection: AriadneSelection | null;
 }) {
   const [buttonState, setButtonState] = useState<
@@ -224,7 +224,7 @@ export function CopyButton({
   >("Ready");
 
   const copyToClipboard = useCallback(() => {
-    let seqToCopy = sequence.join("");
+    let seqToCopy = sequence;
     if (selection) {
       if (selection.direction === "forward") {
         seqToCopy = seqToCopy?.slice(selection.start, selection.end + 1);

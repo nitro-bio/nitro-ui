@@ -8,7 +8,7 @@ export const useMinimap = ({
   files,
   endpoint,
 }: {
-  files: [File, File] | null;
+  files: File[] | null;
   endpoint?: string;
 }) => {
   const [localLoading, setLocalLoading] = useState(false);
@@ -17,6 +17,9 @@ export const useMinimap = ({
 
   const queryFn = async () => {
     if (endpoint && files) {
+      if (files.length !== 2) {
+        throw new Error("currently only support exactly 2 files");
+      }
       console.log(`Minimap request using endpoint: ${endpoint}`);
       const raw: string = await w
         .url(endpoint)

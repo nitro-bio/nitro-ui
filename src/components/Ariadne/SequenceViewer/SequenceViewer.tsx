@@ -8,7 +8,6 @@ import type {
   Annotation,
   AriadneSelection,
   StackedAnnotation,
-  ValidatedSequence,
 } from "../types";
 
 export const SequenceViewer = ({
@@ -20,7 +19,7 @@ export const SequenceViewer = ({
   selectionClassName,
   noValidate,
 }: {
-  sequences: ValidatedSequence[];
+  sequences: string[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
   containerClassName?: string;
@@ -31,7 +30,7 @@ export const SequenceViewer = ({
     base: AnnotatedBase;
     sequenceIdx: number;
   }) => string;
-  selectionClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
+  selectionClassName?: string;
   noValidate?: boolean;
 }) => {
   const stackedAnnotations = useMemo(
@@ -120,7 +119,7 @@ export const SequenceViewer = ({
                           }),
                           baseInSelection(baseIdx, selection) &&
                             base.base !== " " &&
-                            selectionClassName({ sequenceIdx }),
+                            selectionClassName,
                         )}
                       />
                     </div>

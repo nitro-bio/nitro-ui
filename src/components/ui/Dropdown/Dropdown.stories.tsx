@@ -1,11 +1,6 @@
 import { CreditCardIcon, UserIcon } from "@heroicons/react/20/solid";
 import { Card } from "@ui/Card";
-import {
-  Dropdown,
-  DropdownBaseGroup,
-  DropdownCheckboxGroup,
-  DropdownRadioGroup,
-} from "@ui/Dropdown/Dropdown";
+import { Dropdown, DropdownRadioGroup } from "@ui/Dropdown/Dropdown";
 import { useState } from "react";
 
 export default {

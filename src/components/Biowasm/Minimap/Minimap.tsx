@@ -70,11 +70,11 @@ const OutputViz = ({ minimapOutput }: { minimapOutput: MinimapOutput }) => {
       }
       if (base.base === "X") {
         return "text-red-400";
+      } else {
+        return "text-gray-400";
       }
     }
-    if (sequenceIdx === 2) {
-      return "text-brand-400";
-    }
+    return "text-brand-400";
   };
   return (
     <div className="whitespace-pre font-mono">

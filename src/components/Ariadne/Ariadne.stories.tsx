@@ -6,7 +6,6 @@ import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
 import { classNamesBySequenceIdx, generateRandomSequences } from "./storyUtils";
 import { AriadneSelection } from "./types";
-import { classNames } from "@utils/stringUtils";
 import { SeqMetadataBar } from "./SequenceViewer/SeqMetadataBar";
 
 export default {
@@ -45,11 +44,11 @@ const AriadneStory = ({
           sequences={sequences}
           selection={selection}
           charClassName={({ sequenceIdx }) =>
-            classNamesBySequenceIdx(sequenceIdx).charClassName
+            classNamesBySequenceIdx({ sequenceIdx }).charClassName
           }
-          selectionClassName={({ sequenceIdx }) => {
-            return classNamesBySequenceIdx(sequenceIdx).selectionClassName;
-          }}
+          selectionClassName={
+            classNamesBySequenceIdx({ sequenceIdx: 0 }).selectionClassName
+          }
           annotations={annotations}
         />
       </div>
@@ -57,7 +56,9 @@ const AriadneStory = ({
         {sequences.map((sequence, idx) => (
           <CircularViewer
             key={idx}
-            containerClassName={classNamesBySequenceIdx(idx).charClassName}
+            containerClassName={
+              classNamesBySequenceIdx({ sequenceIdx: idx }).charClassName
+            }
             sequence={sequence}
             annotations={annotations}
             selection={selection}
@@ -73,7 +74,7 @@ const AriadneStory = ({
           annotations={annotations}
           setSelection={setSelection}
           sequenceClassName={({ sequenceIdx }) => {
-            return classNamesBySequenceIdx(sequenceIdx).charClassName;
+            return classNamesBySequenceIdx({ sequenceIdx }).charClassName;
           }}
         />
       </div>

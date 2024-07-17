@@ -1,15 +1,11 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import {
-  annotatedSequenceSchema,
-  validatedSequenceStringSchema,
-} from "./schemas";
+import { annotatedSequenceSchema } from "./schemas";
 import type {
   AnnotatedSequence,
   Annotation,
   AriadneSelection,
   StackedAnnotation,
-  ValidatedSequence,
 } from "./types";
 
 export const getComplement = (sequence: string) => {
@@ -39,7 +35,7 @@ export const getAnnotatedSequence = ({
   stackedAnnotations,
   noValidate,
 }: {
-  sequence: ValidatedSequence;
+  sequence: string;
   stackedAnnotations: Annotation[];
   noValidate?: boolean;
 }): AnnotatedSequence => {
@@ -68,7 +64,10 @@ export const getAnnotatedSequence = ({
       complement: getComplement(base),
     };
   };
-  const raw = sequence.map(mapFn).filter((x) => x.base !== " "); // remove padding
+  const raw = sequence
+    .split("")
+    .map(mapFn)
+    .filter((x) => x.base !== " "); // remove padding
   const annotatedSequence = annotatedSequenceSchema.safeParse(raw);
   if (noValidate) {
     if (annotatedSequence.success === false) {
@@ -364,10 +363,9 @@ export const stringToAnnotatedSequence = ({
   sequence: string;
   annotations?: Annotation[];
 }): AnnotatedSequence => {
-  const validatedSequence = validatedSequenceStringSchema.parse(sequence);
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
   const annotatedSequence = getAnnotatedSequence({
-    sequence: validatedSequence,
+    sequence,
     stackedAnnotations,
   });
   return annotatedSequence;

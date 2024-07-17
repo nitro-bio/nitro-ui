@@ -68,7 +68,8 @@ export const useSamtools = ({ files }: { files: File[] | null }) => {
             "-h",
             paths[0], // TODO: run for all files
           ]);
-          setOutput(result);
+          // TODO: fix type hack
+          setOutput(result as unknown as string[]);
         }
       };
       run();
