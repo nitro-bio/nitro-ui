@@ -1,5 +1,5 @@
 import { CircularViewer } from "@Ariadne/CircularViewer";
-import { generateRandomSequences } from "@Ariadne/storyUtils";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { useEffect } from "react";
 import {
   AriadneStreamlitSchema,
@@ -52,7 +52,7 @@ const useRandomAriadneDataStreamlit = ({
 }) => {
   useEffect(function initializeStreamlitData() {
     const selection = null;
-    const { sequences, annotations } = generateRandomSequences({
+    const { sequences, annotations } = generateRandomAlignedSequences({
       maxSequences,
       maxLength,
     });

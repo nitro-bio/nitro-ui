@@ -70,7 +70,7 @@ export const generateRandomAnnotations = ({
   return annotations;
 };
 
-export const generateRandomSequences = ({
+export const generateRandomAlignedSequences = ({
   maxSequences,
   maxLength,
   annotationOnClick,

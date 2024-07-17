@@ -1,4 +1,4 @@
-import { generateRandomSequences } from "@Ariadne/storyUtils";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
@@ -32,7 +32,7 @@ const SequenceStory = ({
   );
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: numSequences,
         maxLength: 100,
       }),

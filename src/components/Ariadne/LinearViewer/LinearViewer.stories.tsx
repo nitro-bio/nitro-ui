@@ -1,4 +1,4 @@
-import { generateRandomSequences } from "@Ariadne/storyUtils";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import {
   Annotation,
   AriadneSelection,
@@ -26,7 +26,7 @@ const LinearStory = ({
 }) => {
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: 5,
         maxLength: 100,
       }),
