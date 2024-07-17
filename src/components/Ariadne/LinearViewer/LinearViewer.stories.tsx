@@ -130,6 +130,7 @@ export const LinearViewerStoryLongSequence = () => {
       }),
     [],
   );
+  const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
     <Card className="w-full max-w-3xl px-8">
@@ -137,8 +138,8 @@ export const LinearViewerStoryLongSequence = () => {
         containerClassName="text-brand-400 "
         sequences={sequences}
         annotations={annotations}
-        selection={null}
-        setSelection={() => {}}
+        selection={selection}
+        setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
       />
     </Card>
@@ -153,6 +154,7 @@ export const LinearViewerStoryLongSequenceManyMismatches = () => {
       }),
     [],
   );
+  const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
     <Card className="w-full max-w-3xl px-8">
@@ -160,8 +162,8 @@ export const LinearViewerStoryLongSequenceManyMismatches = () => {
         containerClassName="text-brand-400 "
         sequences={sequences}
         annotations={annotations}
-        selection={null}
-        setSelection={() => {}}
+        selection={selection}
+        setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
       />
     </Card>
