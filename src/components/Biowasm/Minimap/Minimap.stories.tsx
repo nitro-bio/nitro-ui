@@ -8,7 +8,11 @@ export default {
 
 export const MinimapInternal = () => {
   return (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
       <Card className="max-w-3xl">
         <Minimap />
       </Card>

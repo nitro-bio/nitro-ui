@@ -11,7 +11,8 @@ import {
   SamHeaderSchema,
 } from "./schemas";
 
-export const parseMinimap2Output = (lines: string[]): MinimapOutput => {
+export const parseMinimap2Output = (output: string): MinimapOutput => {
+  const lines = output.trim().split("\n");
   const logs: LogMessage[] = [];
   const headers: SamHeader[] = [];
   const alignments: SamAlignmentRecord[] = [];

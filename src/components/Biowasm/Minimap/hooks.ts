@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAioli, useMountFiles } from "../hooks";
 import { w } from "@utils/wretch";
-import { MinimapOutputSchema } from "./schemas";
+import { MinimapOutput, MinimapOutputSchema } from "./schemas";
 import { parseMinimap2Output } from "./utils";
 import { useQuery } from "@tanstack/react-query";
 
@@ -29,18 +29,24 @@ export const useMinimap = ({
       console.log(`Minimap request using CLI`);
       if (!mounted || !cli.current) throw new Error("CLI not ready");
       setLocalLoading(true);
-      const raw: string[] = await cli.current.exec(
-        `minimap2 -a ${paths[0]} ${paths[1]}`,
-      );
-      setLocalLoading(false);
-      return parseMinimap2Output(raw);
+      try {
+        const raw: string = await cli.current.exec(
+          `minimap2 -a ${paths[0]} ${paths[1]}`,
+        );
+        setLocalLoading(false);
+        return parseMinimap2Output(raw);
+      } catch (e) {
+        console.error(e);
+        setLocalLoading(false);
+        throw e;
+      }
     }
   };
 
   const { data, isFetching, error } = useQuery({
     queryKey: ["minimap2", files, endpoint],
-    enabled: !!files,
     queryFn,
+    enabled: loaded && mounted && files !== null,
   });
 
   return {
