@@ -145,7 +145,6 @@ const SequenceLine = ({
   const startPerc = start / maxEnd;
   const endPerc = end / maxEnd;
 
-  // mismatches
   const mismatches = sequence.filter((base) => {
     const rootBase = rootSequence.at(base.index);
     return rootBase && rootBase.base !== base.base;
@@ -160,6 +159,7 @@ const SequenceLine = ({
       }
     };
 
+  var lastXPerc = -1;
   return (
     <>
       <line
@@ -171,9 +171,17 @@ const SequenceLine = ({
         strokeWidth={5}
         stroke="currentColor"
       />
-      {mismatches.map((base) => {
+      {mismatches.map((base, index) => {
         const xPerc = (base.index / maxEnd) * 100;
         const width = Math.max((1 / sequence.length) * 100, 0.25);
+        const diff = xPerc - lastXPerc;
+        if (diff < 0.01) {
+          // Displaying every mismatch is not particularly helpful because
+          // the user will not be able to see them. Here we choose a reasonable
+          // threshold and only display elements that are sufficiently far apart.
+          return null
+        }
+        lastXPerc = xPerc;
 
         return (
           <g
