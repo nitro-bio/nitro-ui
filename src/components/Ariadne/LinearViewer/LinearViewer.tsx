@@ -3,11 +3,10 @@ import { getAnnotatedSequence, getSubsequenceLength } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  AnnotatedAA,
-  AnnotatedNucl,
   AnnotatedSequence,
   AriadneSelection,
   Annotation,
+  AnnotatedBase,
 } from "../types";
 import { stackAnnsByType } from "@Ariadne/utils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
@@ -20,8 +19,8 @@ export interface Props {
   onDoubleClick?: () => void;
   selectionClassName?: (selection: AriadneSelection) => string;
   containerClassName?: string;
-  sequenceClassName: (sequenceIdx: number) => string;
-  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
 }
 
 export const LinearViewer = (props: Props) => {
@@ -53,7 +52,7 @@ export const LinearViewer = (props: Props) => {
     [sequences, stackedAnnotations],
   );
 
-  const rootSequence = annotatedSequences[0];
+  const baseSequence = annotatedSequences[0];
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
@@ -81,7 +80,6 @@ export const LinearViewer = (props: Props) => {
                 baseSequence={sequence}
                 alignedSequences={annotatedSequences.filter((_, j) => j !== i)}
                 sequenceIdx={i}
-                rootSequence={rootSequence}
                 mismatchClassName={mismatchClassName}
               />
             </g>
@@ -92,14 +90,14 @@ export const LinearViewer = (props: Props) => {
           selectionRef={selectionRef}
           selection={selection}
           setSelection={setSelection}
-          sequence={rootSequence}
+          sequence={baseSequence}
         />
       </svg>
       {stackedAnnotations.length > 0 && (
         <LinearAnnotationGutter
           containerClassName=""
           stackedAnnotations={stackedAnnotations}
-          sequence={rootSequence}
+          sequence={baseSequence}
         />
       )}
     </div>
@@ -107,17 +105,14 @@ export const LinearViewer = (props: Props) => {
 };
 
 interface SequenceLineProps {
-  rootSequence: AnnotatedSequence;
   baseSequence: AnnotatedSequence;
   sequenceIdx: number;
   alignedSequences: AnnotatedSequence[];
-  sequenceClassName: (sequenceIdx: number) => string;
-  mismatchClassName?: (mismatchedBase: AnnotatedAA | AnnotatedNucl) => string;
-
+  sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
+  mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
 }
 
 const SequenceLine = ({
-  rootSequence,
   baseSequence,
   sequenceIdx,
   alignedSequences,
@@ -151,12 +146,12 @@ const SequenceLine = ({
 
   // mismatches
   const mismatches = baseSequence.filter((base) => {
-    const rootBase = rootSequence.at(base.index);
+    const rootBase = baseSequence.at(base.index);
     return rootBase && rootBase.base !== base.base;
   });
   mismatchClassName =
     mismatchClassName ??
-    function mismatchClassName(mismatch: AnnotatedAA | AnnotatedNucl) {
+    function mismatchClassName(mismatch: AnnotatedBase) {
       if (mismatch.base === "-") {
         return "fill-red-600 stroke-red-600";
       } else {
@@ -167,7 +162,7 @@ const SequenceLine = ({
   return (
     <>
       <line
-        className={classNames("", sequenceClassName(sequenceIdx))}
+        className={classNames("", sequenceClassName({ sequenceIdx }))}
         x1={`${startPerc * 100}%`}
         y1={`${sequenceIdx * 10 + 10}`}
         x2={`${endPerc * 100}%`}

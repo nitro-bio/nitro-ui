@@ -3,7 +3,7 @@ import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
-import type { AnnotatedAA, AnnotatedNucl, AriadneSelection } from "../types";
+import type { AnnotatedBase, AriadneSelection } from "../types";
 
 export default {
   title: "Ariadne/SequenceViewer",
@@ -23,7 +23,7 @@ const SequenceStory = ({
     base,
     sequenceIdx,
   }: {
-    base: AnnotatedAA | AnnotatedNucl;
+    base: AnnotatedBase;
     sequenceIdx: number;
   }) => string;
 }) => {

@@ -1,11 +1,6 @@
 import { CreditCardIcon, UserIcon } from "@heroicons/react/20/solid";
 import { Card } from "@ui/Card";
-import {
-  Dropdown,
-  DropdownBaseGroup,
-  DropdownCheckboxGroup,
-  DropdownRadioGroup,
-} from "@ui/Dropdown/Dropdown";
+import { Dropdown, DropdownRadioGroup } from "@ui/Dropdown/Dropdown";
 import { useState } from "react";
 
 export default {
@@ -29,7 +24,7 @@ export function DropdownMenuDemo() {
   const isChecked = (val: "Profile" | "Billing") =>
     checkboxValues.includes(val);
 
-  const baseGroup: DropdownBaseGroup = {
+  const baseGroup = {
     label: "Base",
     type: "base" as const,
     items: [
@@ -47,7 +42,7 @@ export function DropdownMenuDemo() {
       },
     ],
   };
-  const checkboxGroup: DropdownCheckboxGroup = {
+  const checkboxGroup = {
     label: "Radio",
     type: "checkbox" as const,
     items: [

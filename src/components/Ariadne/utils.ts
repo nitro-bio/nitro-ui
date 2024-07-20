@@ -1,9 +1,6 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { genbankToAnnotatedSequence } from "./genbankUtils";
-import {
-  annotatedSequenceSchema,
-  validatedSequenceStringSchema,
-} from "./schemas";
+import { annotatedSequenceSchema } from "./schemas";
 import type {
   AnnotatedSequence,
   Annotation,
@@ -367,12 +364,9 @@ export const stringToAnnotatedSequence = ({
   sequence: string;
   annotations?: Annotation[];
 }): AnnotatedSequence => {
-  const validatedSequence = validatedSequenceStringSchema.parse(
-    sequence.split(""),
-  );
   const stackedAnnotations = getStackedAnnotations(annotations ?? []);
   const annotatedSequence = getAnnotatedSequence({
-    sequence: validatedSequence.join(""),
+    sequence,
     stackedAnnotations,
   });
   return annotatedSequence;

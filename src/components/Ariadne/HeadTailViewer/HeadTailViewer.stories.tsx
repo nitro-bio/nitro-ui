@@ -1,4 +1,4 @@
-import { AnnotatedAA, AnnotatedNucl } from "@Ariadne/types";
+import { AnnotatedBase } from "@Ariadne/types";
 import { Card } from "@ui/Card";
 
 import { getABData } from "@Ariadne/ABViewer/ABViewer";
@@ -32,7 +32,7 @@ export const Default = () => {
     sequenceIdx,
   }: {
     sequenceIdx: number;
-    base: AnnotatedNucl | AnnotatedAA;
+    base: AnnotatedBase;
   }): string => {
     const className = [""];
     if (sequenceIdx == 0) {
@@ -50,11 +50,9 @@ export const Default = () => {
         className.push("text-blue-300");
       }
     } else {
-      const seqBase = annotatedSequences[1].find(
-        (b: AnnotatedAA | AnnotatedNucl) => {
-          return b.index === base.index;
-        },
-      );
+      const seqBase = annotatedSequences[1].find((b: AnnotatedBase) => {
+        return b.index === base.index;
+      });
       if (!seqBase) {
         className.push("text-noir-100");
       } else if (seqBase.base !== base.base) {

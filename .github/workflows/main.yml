@@ -21,7 +21,7 @@ jobs:
       - name: Run Tests
         run: pnpm run test
       - name: Build component Library
-        run: pnpm run build
+        run: pnpm run build:ci
       - name: Build Storybook
         run: pnpm run build-storybook
         env:
