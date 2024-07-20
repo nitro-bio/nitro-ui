@@ -39,6 +39,7 @@ const LinearStory = ({
       }),
     [],
   );
+
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
