@@ -3,15 +3,17 @@ import { classNames } from "@utils/stringUtils";
 import { Fragment } from "react";
 import { AnnotatedSequence, Annotation, StackedAnnotation } from "../types";
 
+export interface LinearAnnotationGutterProps {
+  stackedAnnotations: StackedAnnotation[];
+  sequence: AnnotatedSequence;
+  containerClassName?: string;
+}
+
 export const LinearAnnotationGutter = ({
   stackedAnnotations,
   sequence,
   containerClassName,
-}: {
-  stackedAnnotations: StackedAnnotation[];
-  sequence: AnnotatedSequence;
-  containerClassName?: string;
-}) => {
+}: LinearAnnotationGutterProps) => {
   const stacks: StackedAnnotation[][] = [];
   stackedAnnotations.forEach((ann) => {
     stacks[ann.stack] = stacks[ann.stack] || [];

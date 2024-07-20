@@ -1,9 +1,5 @@
-import { generateRandomSequences } from "@Ariadne/storyUtils";
-import {
-  Annotation,
-  AriadneSelection,
-  StackedAnnotation,
-} from "@Ariadne/types";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
+import { AriadneSelection } from "@Ariadne/types";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 import { LinearViewer } from ".";
@@ -16,7 +12,7 @@ export default {
   },
 };
 
-const classNameBySequenceIdx = (sequenceIdx: number) => {
+const classNameBySequenceIdx = ({ sequenceIdx }: { sequenceIdx: number }) => {
   if (sequenceIdx === 0) {
     return "dark:text-brand-300 text-brand-600";
   } else if (sequenceIdx === 1) {
@@ -31,20 +27,15 @@ const classNameBySequenceIdx = (sequenceIdx: number) => {
 const LinearStory = ({
   initialSelection,
   selectionClassName,
-  numSequences,
-  maxSequenceLength,
 }: {
   initialSelection?: AriadneSelection;
-  numSequences?: number;
-  maxSequenceLength?: number;
   selectionClassName?: (selection: AriadneSelection) => string;
-  customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }) => {
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
-        maxSequences: numSequences || 5,
-        maxLength: maxSequenceLength || 100,
+      generateRandomAlignedSequences({
+        maxSequences: 5,
+        maxLength: 100,
       }),
     [],
   );
@@ -136,7 +127,7 @@ export const LinearViewerStorySelectionClassName = () => {
 export const LinearViewerStoryLongSequence = () => {
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: 1,
         maxLength: 100000,
       }),
@@ -160,7 +151,7 @@ export const LinearViewerStoryLongSequence = () => {
 export const LinearViewerStoryLongSequenceManyMismatches = () => {
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: 4,
         maxLength: 100000,
       }),

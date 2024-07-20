@@ -1,4 +1,4 @@
-import { generateRandomSequences } from "@Ariadne/storyUtils";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { AriadneSelection } from "@Ariadne/types";
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
@@ -24,7 +24,7 @@ const CircularStory = ({
   );
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: numSequences ?? 1,
         maxLength: maxLength ?? 1000,
         annotationOnClick: setSelection,
