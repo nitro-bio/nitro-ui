@@ -3,7 +3,15 @@ import { Angle, Coor } from "@Ariadne/types";
 import { inRange } from "@Ariadne/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { useStateRef } from "./useStateRef";
-// for cartesian coordinates
+
+/* useLinearSelectionRect manages the selection of a LinearSelection within
+ * the LinearViewer.
+ *
+ * ref (RefObject) A reference to the svg containing the LinearSelection.
+ * onMouseUp: Optional handler when user releases the mouse
+ * onMouseDown: Optional handler when user presses the mouse on the LinearSelection.
+ * onMouseMove: Optional handler when user drags.
+ */
 export const useLinearSelectionRect = <
   T extends {
     getBoundingClientRect(): DOMRect;

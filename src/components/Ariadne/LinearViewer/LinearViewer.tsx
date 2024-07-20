@@ -8,7 +8,7 @@ import {
   Annotation,
   AnnotatedBase,
 } from "../types";
-import { stackAnnsByType } from "@Ariadne/genbankUtils";
+import { stackAnnsByType } from "@Ariadne/utils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
 
 export interface Props {
@@ -52,7 +52,7 @@ export const LinearViewer = (props: Props) => {
     [sequences, stackedAnnotations],
   );
 
-  const rootSequence = annotatedSequences[0];
+  const baseSequence = annotatedSequences[0];
   const selectionRef = useRef<SVGSVGElement>(null);
 
   // const numberOfTicks = 5;
@@ -77,10 +77,9 @@ export const LinearViewer = (props: Props) => {
             <g key={`Sequence-${i}`}>
               <SequenceLine
                 sequenceClassName={sequenceClassName}
-                sequence={sequence}
-                otherSequences={annotatedSequences.filter((_, j) => j !== i)}
+                baseSequence={sequence}
+                alignedSequences={annotatedSequences.filter((_, j) => j !== i)}
                 sequenceIdx={i}
-                rootSequence={rootSequence}
                 mismatchClassName={mismatchClassName}
               />
             </g>
@@ -91,50 +90,50 @@ export const LinearViewer = (props: Props) => {
           selectionRef={selectionRef}
           selection={selection}
           setSelection={setSelection}
-          sequence={rootSequence}
+          sequence={baseSequence}
         />
       </svg>
       {stackedAnnotations.length > 0 && (
         <LinearAnnotationGutter
           containerClassName=""
           stackedAnnotations={stackedAnnotations}
-          sequence={rootSequence}
+          sequence={baseSequence}
         />
       )}
     </div>
   );
 };
 
-const SequenceLine = ({
-  rootSequence,
-  sequence,
-  sequenceIdx,
-  otherSequences,
-  sequenceClassName,
-  mismatchClassName,
-}: {
-  rootSequence: AnnotatedSequence;
-  sequence: AnnotatedSequence;
+interface SequenceLineProps {
+  baseSequence: AnnotatedSequence;
   sequenceIdx: number;
-  otherSequences: AnnotatedSequence[];
+  alignedSequences: AnnotatedSequence[];
   sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
-}) => {
-  const start = sequence[0]?.index;
+}
+
+const SequenceLine = ({
+  baseSequence,
+  sequenceIdx,
+  alignedSequences,
+  sequenceClassName,
+  mismatchClassName,
+}: SequenceLineProps) => {
+  const start = baseSequence[0]?.index;
   if (start === undefined) {
-    throw new Error(`Sequence must have at least one base ${sequence}`);
+    throw new Error(`Sequence must have at least one base ${baseSequence}`);
   }
-  const end = sequence[sequence.length - 1]?.index;
+  const end = baseSequence[baseSequence.length - 1]?.index;
   if (end === undefined) {
-    throw new Error(`Sequence must have at least one base ${sequence}`);
+    throw new Error(`Sequence must have at least one base ${baseSequence}`);
   }
 
   let maxEnd = end;
-  otherSequences.forEach((otherSequence) => {
-    const otherEnd = otherSequence.at(otherSequence.length - 1)?.index;
+  alignedSequences.forEach((alignedSequence) => {
+    const otherEnd = alignedSequence.at(alignedSequence.length - 1)?.index;
     if (otherEnd === undefined) {
       throw new Error(
-        `otherSequence must have at least one base ${otherSequence}`,
+        `otherSequence must have at least one base ${alignedSequence}`,
       );
     }
 
@@ -146,8 +145,8 @@ const SequenceLine = ({
   const endPerc = end / maxEnd;
 
   // mismatches
-  const mismatches = sequence.filter((base) => {
-    const rootBase = rootSequence.at(base.index);
+  const mismatches = baseSequence.filter((base) => {
+    const rootBase = baseSequence.at(base.index);
     return rootBase && rootBase.base !== base.base;
   });
   mismatchClassName =
@@ -173,7 +172,7 @@ const SequenceLine = ({
       />
       {mismatches.map((base) => {
         const xPerc = (base.index / maxEnd) * 100;
-        const width = Math.max((1 / sequence.length) * 100, 0.25);
+        const width = Math.max((1 / baseSequence.length) * 100, 0.25);
 
         return (
           <g

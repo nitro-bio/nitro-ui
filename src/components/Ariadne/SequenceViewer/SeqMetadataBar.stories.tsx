@@ -1,4 +1,4 @@
-import { generateRandomSequences } from "@Ariadne/storyUtils";
+import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
@@ -19,7 +19,7 @@ export const Default = () => {
   });
   const { sequences } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: 5,
         maxLength: 100,
       }),

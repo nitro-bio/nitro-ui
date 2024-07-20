@@ -1,8 +1,8 @@
 import genbankParser, { ParsedGenbank } from "genbank-parser";
 import { z } from "zod";
 import { annotatedSequenceSchema, annotationTypeSchema } from "./schemas";
-import { Annotation, AnnotationType, StackedAnnotation } from "./types";
-import { safeAnythingToAnnotatedSequences } from "./utils";
+import { Annotation, AnnotationType } from "./types";
+import { safeAnythingToAnnotatedSequences, stackAnnsByType } from "./utils";
 
 export const GenbankFeatureSchema = z.object({
   name: z.string().min(1),
@@ -116,36 +116,6 @@ export const zipArrays = <T1, T2>(keys: T1[], values: T2[]) => {
       return [key, val];
     }),
   ) as { T1: T2 };
-};
-
-export const stackAnnsByType = (
-  annotations: Annotation[],
-): StackedAnnotation[] => {
-  // create a map of annotation type to list
-  const annotationMap = annotations.reduce(
-    (acc: { [key: AnnotationType]: Annotation[] }, annotation: Annotation) => {
-      if (acc[annotation.type] === undefined) {
-        acc[annotation.type] = [];
-      }
-      acc[annotation.type]!.push(annotation);
-      return acc;
-    },
-    {} as { [key: AnnotationType]: Annotation[] },
-  );
-
-  const stacks = Object.values(annotationMap)
-    .map((stack, stackIdx) => {
-      return stack.map((annotation: Annotation) => {
-        const res: StackedAnnotation = {
-          ...annotation,
-          stack: stackIdx,
-        };
-        return res;
-      });
-    })
-    .flat();
-
-  return stacks;
 };
 
 export const parseGenbank = (genbankString: string) => {

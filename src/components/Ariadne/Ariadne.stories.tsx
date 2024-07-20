@@ -4,7 +4,11 @@ import { useMemo, useState } from "react";
 import { CircularViewer } from "./CircularViewer";
 import { LinearViewer } from "./LinearViewer";
 import { SequenceViewer } from "./SequenceViewer";
-import { classNamesBySequenceIdx, generateRandomSequences } from "./storyUtils";
+
+import {
+  classNamesBySequenceIdx,
+  generateRandomAlignedSequences,
+} from "./storyUtils";
 import { AriadneSelection } from "./types";
 import { SeqMetadataBar } from "./SequenceViewer/SeqMetadataBar";
 
@@ -22,7 +26,7 @@ const AriadneStory = ({
   );
   const { sequences, annotations } = useMemo(
     () =>
-      generateRandomSequences({
+      generateRandomAlignedSequences({
         maxSequences: 4,
         maxLength: 300,
         annotationOnClick: setSelection,
