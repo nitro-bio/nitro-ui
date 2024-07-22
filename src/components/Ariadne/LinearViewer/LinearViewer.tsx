@@ -43,7 +43,9 @@ export const LinearViewer = (props: Props) => {
     function memoize() {
       // if a stacking function is provided, use it, otherwise use the default which
       // stacks annotations to prevent overlap.
-      return stackingFn ? stackingFn(annotations) : stackAnnotationsNoOverlap(annotations);
+      return stackingFn
+        ? stackingFn(annotations)
+        : stackAnnotationsNoOverlap(annotations);
     },
     [annotations],
   );
