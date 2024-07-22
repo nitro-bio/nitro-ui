@@ -28,7 +28,6 @@ const classNameBySequenceIdx = ({ sequenceIdx }: { sequenceIdx: number }) => {
   }
 };
 
-
 const LinearStory = ({
   initialSelection,
   selectionClassName,
