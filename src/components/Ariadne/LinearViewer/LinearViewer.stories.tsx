@@ -31,11 +31,11 @@ const classNameBySequenceIdx = (sequenceIdx: number) => {
 const LinearStory = ({
   initialSelection,
   selectionClassName,
-  numSequences,
+  maxSequences,
   maxSequenceLength,
 }: {
   initialSelection?: AriadneSelection;
-  numSequences?: number;
+  maxSequences?: number;
   maxSequenceLength?: number;
   selectionClassName?: (selection: AriadneSelection) => string;
   customStackFn?: (annotations: Annotation[]) => StackedAnnotation[];
@@ -43,7 +43,7 @@ const LinearStory = ({
   const { sequences, annotations } = useMemo(
     () =>
       generateRandomAlignedSequences({
-        maxSequences: 5,
+        maxSequences: maxSequences || 5,
         maxLength: maxSequenceLength || 100,
       }),
     [],
