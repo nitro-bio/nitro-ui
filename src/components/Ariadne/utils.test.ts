@@ -1,7 +1,8 @@
 import { expect, test } from "vitest";
 import { parseGenbank } from "./genbankUtils";
+import { annotationSchema } from "./schemas";
 import { testFastaString, testGenbankString } from "./testData";
-import { safeAnythingToAnnotatedSequences } from "./utils";
+import { safeAnythingToAnnotatedSequences, annotationsHaveOverlap } from "./utils";
 
 test("raw test", async () => {
   expect(
@@ -75,4 +76,54 @@ test("fasta test", async () => {
   });
   expect(res.failures).toEqual([]);
   expect(res.successes.length).toBe(1);
+});
+
+test("annotationsHaveOverlap test forward and forward", async () => {
+  const baseAnn = {
+    type: "test",
+    text: "test",
+  }
+
+
+  const annotations = [
+    {
+      ...baseAnn,
+      start: 0,
+      end: 5,
+      direction: "forward",
+    },
+    {
+      ...baseAnn,
+      start: 3,
+      end: 8,
+      direction: "forward",
+    },
+  ].map(annotationSchema.parse);
+
+  expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
+});
+
+test("annotationsHaveOverlap test forward and reverse", async () => {
+  const baseAnn = {
+    type: "test",
+    text: "test",
+  }
+
+
+  const annotations = [
+    {
+      ...baseAnn,
+      start: 0,
+      end: 5,
+      direction: "forward",
+    },
+    {
+      ...baseAnn,
+      start: 3,
+      end: 8,
+      direction: "reverse",
+    },
+  ].map(annotationSchema.parse);
+
+  expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
 });

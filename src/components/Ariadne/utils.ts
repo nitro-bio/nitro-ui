@@ -378,6 +378,107 @@ export const stringToAnnotatedSequence = ({
   return annotatedSequence;
 };
 
+// Determine if two annotations from the same sequence overlap.
+export const annotationsHaveOverlap = (a1 : Annotation, a2 : Annotation): boolean  => {
+  var a1Start = a1.start
+  var a1End = a1.end;
+  var a2Start = a2.start
+  var a2End = a2.end;
+
+  // Convert annotations to be forward
+  if (a1.direction === 'reverse') {
+    a1Start = a1.end;
+    a1End = a1.start;
+  }
+
+  if (a2.direction === 'reverse') {
+    a2Start = a2.end;
+    a2End = a2.start;
+  }
+
+  if (a1End < a1Start) {
+    // If the first annotation wraps around the end
+
+    // if the second annotation also wraps then there must be overlap
+    if (a2End < a2Start) {
+      return true;
+    }
+
+    // As long as a2 doesn't fall in the gap then there is overlap.
+    return (a2Start <= a1End || a1Start < a2End)
+  }
+
+  if (a1End > a1Start) {
+    // If the the first annotation does not wrap.
+    if (a1Start < a2Start && a2Start < a1End) {
+      // a2 starts in the middle of a1 and ends after a1
+      return true;
+    }
+
+    if (a2Start < a1Start && a2End > a1Start) {
+      // a2 starts before a1 and ends after a1
+      return true;
+    }
+
+  }
+
+  if (a2End < a2Start) {
+    // if second sequence wraps around then..
+    return a1End >= a2End || a2End > a1Start
+  }
+  return false;
+}
+
+// Create StackedAnnotations such that no "stack" or line of annotations have
+// any overlapping annotations.
+export const stackAnnotationsNoOverlap = (
+  annotations: Annotation[],
+): StackedAnnotation[] => {
+  const annotationsByStack = [] as Annotation[][];
+
+  annotations.map((annotation) => {
+    var curStack = 0
+    while (true) {
+      const stackAnns = annotationsByStack[curStack]
+      if (!stackAnns) {
+        annotationsByStack[curStack] = [annotation]
+        return
+      }
+
+      var overlap = false
+      for (let stackedAnn of stackAnns) {
+        if (annotationsHaveOverlap(annotation, stackedAnn)) {
+            overlap = true;
+            break;
+        }
+    }
+
+      if (overlap) {
+        // A overlap was detected so try the next line.
+        curStack += 1
+      } else {
+        // If no overlaps detected on this stack then add the
+        // annotation to this line.
+        annotationsByStack[curStack].push(annotation)
+        return
+      }
+    }
+  });
+
+  // Convert annotations to stacked annotations
+  const stackedAnnotations = [] as StackedAnnotation[];
+  annotationsByStack.forEach((stackedAnns, index) => {
+    stackedAnns.forEach((annotation) => {
+      stackedAnnotations.push({
+        ...annotation,
+        stack: index
+      })
+    })
+  })
+
+  return stackedAnnotations
+};
+
 export const stackAnnsByType = (
   annotations: Annotation[],
 ): StackedAnnotation[] => {
