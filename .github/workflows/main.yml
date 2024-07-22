@@ -1,7 +1,13 @@
 name: Library + Storybook Build
 
-# on all branches
-on: [push]
+# on all branches, on push and PR
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
 
 jobs:
   frontend_compile:
@@ -21,7 +27,7 @@ jobs:
       - name: Run Tests
         run: pnpm run test
       - name: Build component Library
-        run: pnpm run build
+        run: pnpm run build:ci
       - name: Build Storybook
         run: pnpm run build-storybook
         env:

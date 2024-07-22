@@ -84,31 +84,31 @@ export const generateRandomAlignedSequences = ({
 } => {
   const bases = ["A", "C", "G", "T"];
   // generate one sequence of max Length
-  const rootSequence = Array.from(
+  const baseSequence = Array.from(
     { length: maxLength },
     () => bases[getRndInteger(0, bases.length)],
   );
   const annotations = generateRandomAnnotations({
-    sequence: rootSequence.join(""),
+    sequence: baseSequence.join(""),
     maxAnnotations: 3,
     annotationOnClick,
   });
-  const sequences: string[][] = [rootSequence];
+  const sequences: string[][] = [baseSequence];
 
   // generate one sequence of max Length
 
   Array.from({ length: maxSequences - 1 }, () => {
-    const startIdx = getRndInteger(0, rootSequence.length - 10);
-    const endIdx = getRndInteger(startIdx * 1.1, rootSequence.length);
-    const sequence = Array.from({ length: rootSequence.length }, (_, j) => {
+    const startIdx = getRndInteger(0, baseSequence.length - 10);
+    const endIdx = getRndInteger(startIdx * 1.1, baseSequence.length);
+    const sequence = Array.from({ length: baseSequence.length }, (_, j) => {
       if (j < startIdx || j > endIdx) {
-        return " "; // pad subsequence to make it same length as rootSequence
+        return " "; // pad subsequence to make it same length as baseSequence
       }
       if (getRndInteger(0, 100) < 10) {
         const basesPlusDeletion = ["A", "C", "G", "T", "-"];
         return basesPlusDeletion[getRndInteger(0, basesPlusDeletion.length)];
       } else {
-        return rootSequence[j];
+        return baseSequence[j];
       }
     });
     sequences.push(sequence);
@@ -117,4 +117,32 @@ export const generateRandomAlignedSequences = ({
     sequences: sequences.map((seq) => seq.join("")),
     annotations,
   };
+};
+
+export const classNamesBySequenceIdx = ({
+  sequenceIdx,
+}: {
+  sequenceIdx: number;
+}) => {
+  if (sequenceIdx === 0) {
+    return {
+      charClassName: "dark:text-brand-300 text-brand-600",
+      selectionClassName: "bg-brand-400/20",
+    };
+  } else if (sequenceIdx === 1) {
+    return {
+      charClassName: "dark:text-indigo-300 text-indigo-600",
+      selectionClassName: "bg-indigo-400/20",
+    };
+  } else if (sequenceIdx === 2) {
+    return {
+      charClassName: "dark:text-amber-300 text-amber-600",
+      selectionClassName: "bg-amber-400/20",
+    };
+  } else {
+    return {
+      charClassName: "dark:text-noir-300 text-noir-600",
+      selectionClassName: "bg-noir-400/20",
+    };
+  }
 };

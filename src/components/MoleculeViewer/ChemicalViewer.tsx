@@ -79,7 +79,6 @@ const useRDKit = () => {
         window
           .initRDKitModule()
           .then((RDKit) => {
-            console.log("RDKit version: " + RDKit.version());
             window.RDKit = RDKit;
             setLoaded(true);
           })

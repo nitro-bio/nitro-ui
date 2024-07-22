@@ -4,7 +4,6 @@ import { inRange } from "@Ariadne/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { useStateRef } from "./useStateRef";
 
-
 /* useLinearSelectionRect manages the selection of a LinearSelection within
  * the LinearViewer.
  *
