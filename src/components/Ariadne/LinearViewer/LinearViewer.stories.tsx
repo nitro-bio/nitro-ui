@@ -160,7 +160,6 @@ export const LinearViewerStoryManyAnnotations = () => {
   );
 };
 
-
 export const LinearViewerStoryLongSequence = () => {
   const { sequences, annotations } = useMemo(
     () =>
