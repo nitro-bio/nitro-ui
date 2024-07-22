@@ -40,6 +40,7 @@
     "react-render-if-visible": "^2.1.1",
     "react-selectable": "^2.1.1",
     "remark-gfm": "^4.0.0",
+    "storybook-addon-performance": "^0.17.3",
     "uuid": "^9.0.1",
     "vite-raw-plugin": "^1.0.2",
     "wretch": "^2.9.0",

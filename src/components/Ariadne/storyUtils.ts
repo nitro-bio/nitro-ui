@@ -73,10 +73,12 @@ export const generateRandomAnnotations = ({
 export const generateRandomAlignedSequences = ({
   maxSequences,
   maxLength,
+  maxAnnotations,
   annotationOnClick,
 }: {
   maxSequences: number;
   maxLength: number;
+  maxAnnotations?: number;
   annotationOnClick?: (annotation: Annotation) => void;
 }): {
   sequences: string[];
@@ -90,7 +92,7 @@ export const generateRandomAlignedSequences = ({
   );
   const annotations = generateRandomAnnotations({
     sequence: baseSequence.join(""),
-    maxAnnotations: 3,
+    maxAnnotations: maxAnnotations || 3,
     annotationOnClick,
   });
   const sequences: string[][] = [baseSequence];
