@@ -442,10 +442,10 @@ export const stackAnnotationsNoOverlap = (
       var overlap = false
       for (let stackedAnn of stackAnns) {
         if (annotationsHaveOverlap(annotation, stackedAnn)) {
-            overlap = true;
-            break;
+          overlap = true;
+          break;
         }
-    }
+      }
 
       if (overlap) {
         // A overlap was detected so try the next line.
