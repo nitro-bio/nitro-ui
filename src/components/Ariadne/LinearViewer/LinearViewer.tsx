@@ -7,6 +7,7 @@ import {
   AriadneSelection,
   Annotation,
   AnnotatedBase,
+  StackedAnnotation,
 } from "../types";
 import { stackAnnotationsNoOverlap } from "@Ariadne/utils";
 import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
@@ -21,6 +22,7 @@ export interface Props {
   containerClassName?: string;
   sequenceClassName: ({ sequenceIdx }: { sequenceIdx: number }) => string;
   mismatchClassName?: (mismatchedBase: AnnotatedBase) => string;
+  stackingFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }
 
 export const LinearViewer = (props: Props) => {
@@ -34,11 +36,14 @@ export const LinearViewer = (props: Props) => {
     mismatchClassName,
     containerClassName,
     sequenceClassName,
+    stackingFn,
   } = props;
 
   const stackedAnnotations = useMemo(
     function memoize() {
-      return stackAnnotationsNoOverlap(annotations);
+      // if a stacking function is provided, use it, otherwise use the default which
+      // stacks annotations to prevent overlap.
+      return stackingFn ? stackingFn(annotations) : stackAnnotationsNoOverlap(annotations);
     },
     [annotations],
   );

@@ -7,6 +7,7 @@ import {
 import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 import { LinearViewer } from ".";
+import { stackAnnsByType } from "@Ariadne/utils";
 
 export default {
   title: "Ariadne/LinearViewer",
@@ -192,6 +193,33 @@ export const LinearViewerStoryLongSequenceManyMismatches = () => {
         selection={selection}
         setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
+      />
+    </Card>
+  );
+};
+
+export const LinearViewerStoryStackAnnotationsByType = () => {
+  const { sequences, annotations } = useMemo(
+    () =>
+      generateRandomAlignedSequences({
+        maxSequences: 4,
+        maxLength: 10000,
+        maxAnnotations: 10,
+      }),
+    [],
+  );
+  const [selection, setSelection] = useState<AriadneSelection | null>(null);
+
+  return (
+    <Card className="w-full max-w-3xl px-8">
+      <LinearViewer
+        containerClassName="text-brand-400 "
+        sequences={sequences}
+        annotations={annotations}
+        selection={selection}
+        setSelection={setSelection}
+        sequenceClassName={classNameBySequenceIdx}
+        stackingFn={stackAnnsByType}
       />
     </Card>
   );
