@@ -20,6 +20,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/no-empty-function": "off",
+    "no-constant-condition": "warn",
   },
   ignorePatterns: [
     "storybook-static",

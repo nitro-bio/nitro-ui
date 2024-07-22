@@ -2,7 +2,11 @@ import { expect, test } from "vitest";
 import { parseGenbank } from "./genbankUtils";
 import { annotationSchema } from "./schemas";
 import { testFastaString, testGenbankString } from "./testData";
-import { safeAnythingToAnnotatedSequences, annotationsHaveOverlap } from "./utils";
+import {
+  safeAnythingToAnnotatedSequences,
+  annotationsHaveOverlap,
+} from "./utils";
+import { z } from "zod";
 
 test("raw test", async () => {
   expect(
@@ -82,10 +86,9 @@ test("annotationsHaveOverlap test forward and forward", async () => {
   const baseAnn = {
     type: "test",
     text: "test",
-  }
+  };
 
-
-  const annotations = [
+  const annotations = z.array(annotationSchema).parse([
     {
       ...baseAnn,
       start: 0,
@@ -98,7 +101,7 @@ test("annotationsHaveOverlap test forward and forward", async () => {
       end: 8,
       direction: "forward",
     },
-  ].map(annotationSchema.parse);
+  ]);
 
   expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
 });
@@ -107,10 +110,9 @@ test("annotationsHaveOverlap test forward and reverse", async () => {
   const baseAnn = {
     type: "test",
     text: "test",
-  }
+  };
 
-
-  const annotations = [
+  const annotations = z.array(annotationSchema).parse([
     {
       ...baseAnn,
       start: 0,
@@ -123,7 +125,7 @@ test("annotationsHaveOverlap test forward and reverse", async () => {
       end: 8,
       direction: "reverse",
     },
-  ].map(annotationSchema.parse);
+  ]);
 
   expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
 });
