@@ -25,6 +25,8 @@ export interface Props {
   stackingFn?: (annotations: Annotation[]) => StackedAnnotation[];
 }
 
+const MISMATCH_DIST_PERC_THRESHOLD = 0.01;
+
 export const LinearViewer = (props: Props) => {
   const {
     sequences,
@@ -160,12 +162,13 @@ const SequenceLine = ({
     mismatchClassName ??
     function mismatchClassName(mismatch: AnnotatedBase) {
       if (mismatch.base === "-") {
-        return "fill-red-600 stroke-red-600";
+        return "fill-black stroke-black opacity-80";
       } else {
-        return "fill-noir-800 stroke-noir-800";
+        return "dark:fill-red-600 dark:stroke-red-600 fill-red-700 stroke-red-700";
       }
     };
 
+  let lastXPerc = -1;
   return (
     <>
       <line
@@ -179,8 +182,15 @@ const SequenceLine = ({
       />
       {mismatches.map((base) => {
         const xPerc = (base.index / maxEnd) * 100;
-        const width = Math.max((1 / baseSequence.length) * 100, 0.25);
-
+        const width = Math.max((1 / baseSequence.length) * 100, 0.01);
+        const diff = xPerc - lastXPerc;
+        if (diff < MISMATCH_DIST_PERC_THRESHOLD) {
+          // Displaying every mismatch is not particularly helpful because
+          // the user will not be able to see them. Here we choose a reasonable
+          // threshold and only display elements that are sufficiently far apart.
+          return null;
+        }
+        lastXPerc = xPerc;
         return (
           <g
             className={classNames(mismatchClassName?.(base) || "bg-red-400")}
