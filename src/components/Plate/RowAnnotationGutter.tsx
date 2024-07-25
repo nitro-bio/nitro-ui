@@ -17,44 +17,51 @@ export const RowAnnotationGutter = ({rowAnnotations} : {
   const numRowAnnotationCols = rowAnnotations.length > 0 ? Math.ceil(rowAnnotations.length / 8) : 0;
 
   return (
-        <div
-            className={classNames(
-              "grid",
-              wells > 96 && "content-between py-1",
-              numRowAnnotationCols > 1 && `col-span-${numRowAnnotationCols}`,
-              "text-noir-600 dark:text-noir-300",
-            )}
-          >
-            {Array.from({length : rows}).map((_, index) => {
-                // Minimum columns is 2
-                const numCols = Math.floor(rowAnnotations?.length / 8) * 8 + 8
+    <>
+      <div
+          className={classNames(
+            "grid",
+            wells > 96 && "content-between py-1",
+            numRowAnnotationCols > 1 && `col-span-${numRowAnnotationCols}`,
+            "text-noir-600 dark:text-noir-300",
+          )}
+      >
+        {Array.from({length : rows}).map((_, index) => {
+            // Minimum columns is 2
+            const numCols = Math.floor(rowAnnotations?.length / 8) * 8 + 8
 
-                return (
-                  <div className='grid' style={{
-                    gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`
-                  }}>
-                    {rowAnnotations.map((rowAnn) => {
-                      if (rowAnn.rows.includes(index)) {
-                        return (
-                          <div
-                            key={index}
-                            className={rowAnn.className + " " + (activeAnn === rowAnn ? "opacity-100" : "opacity-50")}
-                            onMouseEnter={() => {
-                              setActiveAnn(rowAnn)
-                            }}
-                            onMouseLeave={() => {
-                              setActiveAnn(null)
-                            }}
-                          ></div>);
-                      } else {
-                        return (<div key={index}></div>);
-                      }
-                    })}
-                  </div>
-                );
-              }
-            )}
+            return (
+              <div className='grid' style={{
+                gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`
+              }}>
+                {rowAnnotations.map((rowAnn) => {
+                  if (rowAnn.rows.includes(index)) {
+                    return (
+                      <div
+                        key={index}
+                        className={rowAnn.className + " " + (activeAnn === rowAnn ? "opacity-100" : "opacity-50")}
+                        onMouseEnter={() => {
+                          setActiveAnn(rowAnn)
+                        }}
+                        onMouseLeave={() => {
+                          setActiveAnn(null)
+                        }}
+                      ></div>);
+                  } else {
+                    return (<div key={index}></div>);
+                  }
+                })}
+              </div>
+            );
+          }
+        )}
 
-          </div>
+      </div>
+      {activeAnn && (
+        <div className="absolute top-0 left-0 z-50 bg-noir-800 text-white p-2 rounded-lg">
+          <div>{activeAnn.label}</div>
+        </div>
+      )}
+    </>
   );
 }
