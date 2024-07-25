@@ -42,33 +42,30 @@ export const Plate = ({
   var numRowAnnotationCols = 0;
   // If there are row annotations, add a column to display them.
   if (rowAnnotations && rowAnnotations.length > 0) {
-
     // The number of columns that the row annotations will span
     numRowAnnotationCols = Math.ceil(rowAnnotations.length / 8);
 
     // Each column can support up to 8 row annotations
-    numCols += numRowAnnotationCols
+    numCols += numRowAnnotationCols;
   }
 
   // Add the number of columns for the wells
   switch (wells) {
     case 24:
-      numCols += 6
+      numCols += 6;
       break;
     case 48:
-      numCols += 8
+      numCols += 8;
       break;
     case 96:
-      numCols += 12
+      numCols += 12;
       break;
     case 384:
-      numCols += 24
+      numCols += 24;
       break;
     default:
       throw new Error("Invalid number of wells");
   }
-
-
 
   const handleSelection = (selectedKeys: string[]) => {
     const selectedWells = new Set([
@@ -122,11 +119,14 @@ export const Plate = ({
           gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
         }}
       >
-        <div className="col-span-full grid grid-cols-subgrid" style={{
-          // The column labels typically start at column 2, but if there
-          // are row annotations, they start at column 3 or more
-          gridColumnStart: numRowAnnotationCols + 2,
-        }}>
+        <div
+          className="col-span-full grid grid-cols-subgrid"
+          style={{
+            // The column labels typically start at column 2, but if there
+            // are row annotations, they start at column 3 or more
+            gridColumnStart: numRowAnnotationCols + 2,
+          }}
+        >
           {colLabels.map((colLabel) => (
             <button
               key={colLabel}
@@ -179,17 +179,16 @@ export const Plate = ({
 
         {/* Display Row Annotations */}
 
-
         {rowAnnotations && (
-          <RowAnnotationGutter
-            rowAnnotations={rowAnnotations}
-            wells={wells}
-          />
+          <RowAnnotationGutter rowAnnotations={rowAnnotations} wells={wells} />
         )}
 
-        <div className="col-span-full grid grid-cols-subgrid gap-2" style={{
-          gridColumnStart: numRowAnnotationCols + 2,
-        }}>
+        <div
+          className="col-span-full grid grid-cols-subgrid gap-2"
+          style={{
+            gridColumnStart: numRowAnnotationCols + 2,
+          }}
+        >
           {Array.from({ length: wells }).map((_, i) => {
             const isSelected = selection?.wells.includes(i) ?? false;
             return (
