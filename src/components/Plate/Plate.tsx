@@ -10,7 +10,7 @@ export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
 
 export interface PlateProps {
   wells: 24 | 96 | 48 | 384;
-  rowAnnotations: RowAnnotation[];
+  rowAnnotations?: RowAnnotation[];
   selection: PlateSelection | null;
   setSelection: (selection: PlateSelection | null) => void;
   className?: string;
@@ -36,9 +36,15 @@ export const Plate = ({
   // Num cols starts with one to support the row label column
   var numCols = 1;
 
+  var numRowAnnotationCols = 0;
   // If there are row annotations, add a column to display them.
   if (rowAnnotations && rowAnnotations.length > 0) {
-    numCols += 1;
+
+    // The number of columns that the row annotations will span
+    numRowAnnotationCols = Math.ceil(rowAnnotations.length / 8);
+
+    // Each column can support up to 8 row annotations
+    numCols += numRowAnnotationCols
   }
 
   // Add the number of columns for the wells
@@ -100,10 +106,8 @@ export const Plate = ({
   };
 
   const hasRowAnnotations = rowAnnotations && rowAnnotations.length > 0;
-  const colLabelClass = classNames(
-    "col-span-full grid grid-cols-subgrid",
-    hasRowAnnotations ? "col-start-3" : "col-start-2"
-  );
+
+  console.log('numRowAnnotations', rowAnnotations?.length, 'numRowAnnotationCols', numRowAnnotationCols)
 
   const cellGridClass = classNames(
     "col-span-full grid grid-cols-subgrid gap-2",
@@ -124,8 +128,15 @@ export const Plate = ({
           wells > 96 && "px-4",
           gridClass,
         )}
+        style={{
+          gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
+        }}
       >
-        <div className={colLabelClass}>
+        <div className="col-span-full grid grid-cols-subgrid" style={{
+          // The column labels typically start at column 2, but if there
+          // are row annotations, they start at column 3 or more
+          gridColumnStart: numRowAnnotationCols + 2,
+        }}>
           {colLabels.map((colLabel) => (
             <button
               key={colLabel}
@@ -176,30 +187,43 @@ export const Plate = ({
           ))}
         </div>
 
+        {/* Display Row Annotations */}
+
+
         {rowAnnotations && (
           <div
             className={classNames(
               "grid grid-cols-subgrid",
               wells > 96 && "content-between py-1",
+              numRowAnnotationCols > 1 && `col-span-${numRowAnnotationCols}`,
               "text-noir-600 dark:text-noir-300",
             )}
           >
-            {rowLabels.map((rowLabel, index) => (
-                <div className={"grid grid-cols-4 xxx-grid-cols-" + (rowAnnotations ? rowAnnotations.length : 0).toString()}>
-                  {rowAnnotations.map((rowAnn) => {
-                    if (rowAnn.rows.includes(index)) {
-                      return (<div key={index} className={rowAnn.className}></div>);
-                    } else {
-                      return (<div key={index}></div>);
-                    }
-                  })}
-                </div>
+            {rowLabels.map((rowLabel, index) => {
+                // Minimum columns is 2
+                const numCols = Math.max(rowAnnotations?.length || 0, 8)
 
-            ))}
+                return (
+                  <div className='grid' style={{
+                    gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`
+                  }}>
+                    {rowAnnotations.map((rowAnn) => {
+                      if (rowAnn.rows.includes(index)) {
+                        return (<div key={index} className={rowAnn.className}></div>);
+                      } else {
+                        return (<div key={index}></div>);
+                      }
+                    })}
+                  </div>
+                );
+              }
+            )}
           </div>
         )}
 
-        <div className={cellGridClass}>
+        <div className="col-span-full grid grid-cols-subgrid gap-2" style={{
+          gridColumnStart: numRowAnnotationCols + 2,
+        }}>
           {Array.from({ length: wells }).map((_, i) => {
             const isSelected = selection?.wells.includes(i) ?? false;
             return (
