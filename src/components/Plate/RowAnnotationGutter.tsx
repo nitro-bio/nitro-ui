@@ -19,7 +19,7 @@ export const RowAnnotationGutter = ({rowAnnotations} : {
   return (
         <div
             className={classNames(
-              "grid grid-cols-subgrid",
+              "grid",
               wells > 96 && "content-between py-1",
               numRowAnnotationCols > 1 && `col-span-${numRowAnnotationCols}`,
               "text-noir-600 dark:text-noir-300",
@@ -27,7 +27,7 @@ export const RowAnnotationGutter = ({rowAnnotations} : {
           >
             {Array.from({length : rows}).map((_, index) => {
                 // Minimum columns is 2
-                const numCols = Math.max(rowAnnotations?.length || 0, 8)
+                const numCols = Math.floor(rowAnnotations?.length / 8) * 8 + 8
 
                 return (
                   <div className='grid' style={{
