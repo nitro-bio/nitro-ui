@@ -36,6 +36,13 @@ export const stackedAnnotationSchema = annotationSchema.extend({
   stack: z.number(),
 });
 
+export const rowAnnotationSchema = z.object({
+  rows: z.array(z.number()),
+  label: z.string(),
+  id: z.string(),
+  className: z.string().optional(),
+});
+
 export const nuclSchema = z.union([
   z.literal("A"),
   z.literal("C"),

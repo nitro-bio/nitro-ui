@@ -1,5 +1,6 @@
 import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
+import { RowAnnotation } from "@Ariadne/types";
 import { z } from "zod";
 const PlateSelectionSchema = z.object({
   wells: z.array(z.number()),
@@ -7,20 +8,23 @@ const PlateSelectionSchema = z.object({
 });
 export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
 
-export const Plate = ({
-  wells,
-  className,
-  selection,
-  setSelection,
-  selectionTolerance = 20,
-}: {
+export interface PlateProps {
   wells: 24 | 96 | 48 | 384;
+  rowAnnotations: RowAnnotation[];
   selection: PlateSelection | null;
   setSelection: (selection: PlateSelection | null) => void;
   className?: string;
   selectionTolerance?: number;
-}) => {
-  let gridClass: string;
+}
+
+export const Plate = ({
+  wells,
+  className,
+  rowAnnotations,
+  selection,
+  setSelection,
+  selectionTolerance = 20,
+}: PlateProps) => {
   const { rows, cols } = wellsToRowsCols(wells);
   const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
     (i + 1).toString(),
@@ -29,22 +33,38 @@ export const Plate = ({
     String.fromCharCode(65 + i),
   );
 
+  // Num cols starts with one to support the row label column
+  var numCols = 1;
+
+  // If there are row annotations, add a column to display them.
+  if (rowAnnotations && rowAnnotations.length > 0) {
+    numCols += 1;
+  }
+
+  // Add the number of columns for the wells
   switch (wells) {
     case 24:
-      gridClass = "grid-cols-7 gap-2 ";
+      numCols += 6
+      //gridClass = "grid-cols-7 gap-2 ";
       break;
     case 48:
-      gridClass = "grid-cols-9 gap-2";
+      numCols += 8
+      //gridClass = "grid-cols-9 gap-2";
       break;
     case 96:
-      gridClass = "grid-cols-13 gap-2 ";
+      numCols += 12
+      //gridClass = "grid-cols-14 gap-2 ";
       break;
     case 384:
-      gridClass = "grid-cols-25 gap-2 ";
+      numCols += 24
+      //gridClass = "grid-cols-25 gap-2 ";
       break;
     default:
       throw new Error("Invalid number of wells");
   }
+
+  const gridClass = `grid-cols-${numCols} gap-2`;
+
   const handleSelection = (selectedKeys: string[]) => {
     const selectedWells = new Set([
       ...(selection?.wells ?? []),
@@ -79,6 +99,17 @@ export const Plate = ({
     toggleSelection(indices);
   };
 
+  const hasRowAnnotations = rowAnnotations && rowAnnotations.length > 0;
+  const colLabelClass = classNames(
+    "col-span-full grid grid-cols-subgrid",
+    hasRowAnnotations ? "col-start-3" : "col-start-2"
+  );
+
+  const cellGridClass = classNames(
+    "col-span-full grid grid-cols-subgrid gap-2",
+    hasRowAnnotations ? "col-start-3" : "col-start-2"
+  );
+
   return (
     <SelectableGroup
       onEndSelection={handleSelection}
@@ -94,7 +125,7 @@ export const Plate = ({
           gridClass,
         )}
       >
-        <div className="col-span-full col-start-2 grid grid-cols-subgrid ">
+        <div className={colLabelClass}>
           {colLabels.map((colLabel) => (
             <button
               key={colLabel}
@@ -112,6 +143,14 @@ export const Plate = ({
             </button>
           ))}
         </div>
+
+        {/*
+        <div className={colLabelClass}>
+          {colLabels.map((colLabel) => (
+            <div>G</div>
+          ))}
+        </div>
+        */}
         <div
           className={classNames(
             "col-span-1 grid grid-cols-subgrid gap-2 ",
@@ -137,7 +176,30 @@ export const Plate = ({
           ))}
         </div>
 
-        <div className="col-span-full col-start-2 grid grid-cols-subgrid gap-2 ">
+        {rowAnnotations && (
+          <div
+            className={classNames(
+              "grid grid-cols-subgrid",
+              wells > 96 && "content-between py-1",
+              "text-noir-600 dark:text-noir-300",
+            )}
+          >
+            {rowLabels.map((rowLabel, index) => (
+                <div className={"grid grid-cols-4 xxx-grid-cols-" + (rowAnnotations ? rowAnnotations.length : 0).toString()}>
+                  {rowAnnotations.map((rowAnn) => {
+                    if (rowAnn.rows.includes(index)) {
+                      return (<div key={index} className={rowAnn.className}></div>);
+                    } else {
+                      return (<div key={index}></div>);
+                    }
+                  })}
+                </div>
+
+            ))}
+          </div>
+        )}
+
+        <div className={cellGridClass}>
           {Array.from({ length: wells }).map((_, i) => {
             const isSelected = selection?.wells.includes(i) ?? false;
             return (
