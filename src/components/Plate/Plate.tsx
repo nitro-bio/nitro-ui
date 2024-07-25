@@ -54,25 +54,21 @@ export const Plate = ({
   switch (wells) {
     case 24:
       numCols += 6
-      //gridClass = "grid-cols-7 gap-2 ";
       break;
     case 48:
       numCols += 8
-      //gridClass = "grid-cols-9 gap-2";
       break;
     case 96:
       numCols += 12
-      //gridClass = "grid-cols-14 gap-2 ";
       break;
     case 384:
       numCols += 24
-      //gridClass = "grid-cols-25 gap-2 ";
       break;
     default:
       throw new Error("Invalid number of wells");
   }
 
-  const gridClass = `grid-cols-${numCols} gap-2`;
+
 
   const handleSelection = (selectedKeys: string[]) => {
     const selectedWells = new Set([
@@ -108,15 +104,6 @@ export const Plate = ({
     toggleSelection(indices);
   };
 
-  const hasRowAnnotations = rowAnnotations && rowAnnotations.length > 0;
-
-  console.log('numRowAnnotations', rowAnnotations?.length, 'numRowAnnotationCols', numRowAnnotationCols)
-
-  const cellGridClass = classNames(
-    "col-span-full grid grid-cols-subgrid gap-2",
-    hasRowAnnotations ? "col-start-3" : "col-start-2"
-  );
-
   return (
     <SelectableGroup
       onEndSelection={handleSelection}
@@ -129,7 +116,7 @@ export const Plate = ({
           "grid gap-2  ",
           "text-xs md:text-sm lg:text-base",
           wells > 96 && "px-4",
-          gridClass,
+          `grid-cols-${numCols} gap-2`,
         )}
         style={{
           gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
@@ -194,7 +181,10 @@ export const Plate = ({
 
 
         {rowAnnotations && (
-          <RowAnnotationGutter rowAnnotations={rowAnnotations} />
+          <RowAnnotationGutter
+            rowAnnotations={rowAnnotations}
+            wells={wells}
+          />
         )}
 
         <div className="col-span-full grid grid-cols-subgrid gap-2" style={{

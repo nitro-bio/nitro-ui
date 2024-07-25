@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { Card } from "@ui/Card";
 import { Plate, PlateSelection } from "./Plate";
 import { RowAnnotation } from "@Ariadne/types";
+import { wellsToRowsCols } from "./utils";
 
 export default {
   title: "Plate/Plate",
@@ -60,7 +61,7 @@ const PlateStory = ({
 }) => {
   const { rowAnnotations } = useMemo(() => {
     return {
-      rowAnnotations: generateRandomRowAnnotations(maxRandomRowAnnotations || 0),
+      rowAnnotations: generateRandomRowAnnotations(maxRandomRowAnnotations || 0, wells),
     }
   }, []);
 
@@ -90,22 +91,35 @@ export const NinetySixyWithRowAnnotations = () => {
   );
 };
 
+export const TwentyFourWithRowAnnotations = () => {
+  return (
+    <PlateStory
+      wells={24}
+      maxRandomRowAnnotations={4}
+    />
+  );
+};
+
 // Generate up to maxRowAnnotations random row annotations
-const generateRandomRowAnnotations = (maxRowAnnotations : number) : RowAnnotation[] => {
+const generateRandomRowAnnotations = (
+  maxRowAnnotations : number,
+  wells : 24 | 96 | 48 | 384,
+) : RowAnnotation[] => {
   const rowAnnotations: RowAnnotation[] = [];
+  const { rows : numRows } = wellsToRowsCols(wells);
 
   const bgColors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-gray-500'];
   const numRowAnnotations = Math.floor(Math.random() * maxRowAnnotations);
 
   for (let i = 0; i < numRowAnnotations; i++) {
-    const numRows = Math.floor(Math.random() * 8);
-    const rows = []
-    for (let j = 0; j < numRows; j++) {
-      rows.push(Math.floor(Math.random() * 8));
+    const annNumRows = Math.floor(Math.random() * numRows);
+    const selectedRows = []
+    for (let j = 0; j < annNumRows; j++) {
+      selectedRows.push(Math.floor(Math.random() * numRows));
     }
 
     rowAnnotations.push({
-      rows: rows,
+      rows: selectedRows,
       label: `Row Annotation ${i}`,
       id: `${i}`,
       className: bgColors[i % bgColors.length],
