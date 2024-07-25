@@ -2,6 +2,9 @@ import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
 import { RowAnnotation } from "@Ariadne/types";
 import { z } from "zod";
+import { wellsToRowsCols, indexToExcelCell } from "./utils";
+import { RowAnnotationGutter } from "./RowAnnotationGutter";
+
 const PlateSelectionSchema = z.object({
   wells: z.array(z.number()),
   className: z.string().optional(),
@@ -191,34 +194,7 @@ export const Plate = ({
 
 
         {rowAnnotations && (
-          <div
-            className={classNames(
-              "grid grid-cols-subgrid",
-              wells > 96 && "content-between py-1",
-              numRowAnnotationCols > 1 && `col-span-${numRowAnnotationCols}`,
-              "text-noir-600 dark:text-noir-300",
-            )}
-          >
-            {rowLabels.map((rowLabel, index) => {
-                // Minimum columns is 2
-                const numCols = Math.max(rowAnnotations?.length || 0, 8)
-
-                return (
-                  <div className='grid' style={{
-                    gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`
-                  }}>
-                    {rowAnnotations.map((rowAnn) => {
-                      if (rowAnn.rows.includes(index)) {
-                        return (<div key={index} className={rowAnn.className}></div>);
-                      } else {
-                        return (<div key={index}></div>);
-                      }
-                    })}
-                  </div>
-                );
-              }
-            )}
-          </div>
+          <RowAnnotationGutter rowAnnotations={rowAnnotations} />
         )}
 
         <div className="col-span-full grid grid-cols-subgrid gap-2" style={{
@@ -292,25 +268,3 @@ const Well = createSelectable(
     );
   },
 );
-
-const wellsToRowsCols = (wells: 24 | 96 | 48 | 384) => {
-  switch (wells) {
-    case 24:
-      return { rows: 4, cols: 6 };
-    case 48:
-      return { rows: 6, cols: 8 };
-    case 96:
-      return { rows: 8, cols: 12 };
-    case 384:
-      return { rows: 16, cols: 24 };
-    default:
-      throw new Error("Invalid number of wells");
-  }
-};
-
-const indexToExcelCell = (index: number, wells: 24 | 96 | 48 | 384) => {
-  const { cols } = wellsToRowsCols(wells);
-  const row = Math.floor(index / cols);
-  const col = index % cols;
-  return `${String.fromCharCode(65 + col)}${row + 1}`;
-};
