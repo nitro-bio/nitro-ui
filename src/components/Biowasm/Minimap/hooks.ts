@@ -20,7 +20,7 @@ export const useMinimap = ({
       if (files.length !== 2) {
         throw new Error("currently only support exactly 2 files");
       }
-      console.log(`Minimap request using endpoint: ${endpoint}`);
+
       const raw: string = await w
         .url(endpoint)
         .formData({ first_file: files[0], second_file: files[1] })
@@ -28,7 +28,6 @@ export const useMinimap = ({
         .json();
       return parseMinimap2Output(raw);
     } else {
-      console.log(`Minimap request using CLI`);
       if (!mounted || !cli.current) throw new Error("CLI not ready");
       setLocalLoading(true);
       try {
@@ -36,7 +35,7 @@ export const useMinimap = ({
           `minimap2 -a ${paths[0]} ${paths[1]}`,
         );
         setLocalLoading(false);
-        console.log("raw", raw);
+
         return parseMinimap2Output(raw);
       } catch (e) {
         console.error(e);

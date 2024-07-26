@@ -40,7 +40,7 @@ export const useMountFiles = ({
       const mount = async () => {
         const _paths = await cli.current!.mount(files);
         setPaths(_paths);
-        console.log(_paths, "mounted");
+
         setMounted(true);
       };
       mount();

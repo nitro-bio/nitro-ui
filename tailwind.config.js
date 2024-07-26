@@ -7,7 +7,7 @@ const accentColor = colors.sky;
 const noirColor = colors.zinc;
 
 module.exports = {
-  darkMode: "selector",
+  darkMode: ["selector"],
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}"],
   safelist: [
     /* For user-defined ariadne colors */

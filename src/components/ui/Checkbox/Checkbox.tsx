@@ -1,4 +1,4 @@
-import { CheckIcon } from "@heroicons/react/20/solid";
+import { CheckIcon } from "lucide-react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { classNames } from "@utils/stringUtils";
 import * as React from "react";

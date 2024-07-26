@@ -1,4 +1,4 @@
-import { StarIcon } from "@heroicons/react/20/solid";
+import { StarIcon } from "lucide-react";
 import { Card } from "@ui/Card";
 import { classNames } from "@utils/stringUtils";
 import { TextAlignmentViz } from "@Blast/TextAlignmentViz";

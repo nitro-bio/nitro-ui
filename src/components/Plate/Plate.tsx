@@ -37,9 +37,9 @@ export const Plate = ({
   );
 
   // Num cols starts with one to support the row label column
-  var numCols = 1;
+  let numCols = 1;
 
-  var numRowAnnotationCols = 0;
+  let numRowAnnotationCols = 0;
   // If there are row annotations, add a column to display them.
   if (rowAnnotations && rowAnnotations.length > 0) {
     // The number of columns that the row annotations will span
