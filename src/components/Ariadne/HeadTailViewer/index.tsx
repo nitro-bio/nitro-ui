@@ -1,2 +1,1 @@
-import { HeadTailViewer } from "./HeadTailViewer";
-export { HeadTailViewer };
+export { HeadTailViewer } from "./HeadTailViewer";

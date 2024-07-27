@@ -1,9 +1,5 @@
 import { AriadneSelection } from "@Ariadne/types";
-import {
-  ArrowsRightLeftIcon,
-  CheckIcon,
-  ClipboardDocumentListIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowRightLeftIcon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { Button } from "@ui/Button/Button";
 import { Input } from "@ui/Input/Input";
 import { classNames } from "@utils/stringUtils";
@@ -184,11 +180,11 @@ export function InvertButton({
   const buttonIcon = () => {
     switch (buttonState) {
       case "Ready":
-        return <ArrowsRightLeftIcon className="h-5 w-5" />;
+        return <ArrowRightLeftIcon className="h-5 w-5" />;
       case "Fired":
         return <CheckIcon className="h-5 w-5" />;
       case "Disabled":
-        return <ArrowsRightLeftIcon className="h-5 w-5" />;
+        return <ArrowRightLeftIcon className="h-5 w-5" />;
     }
   };
 
@@ -284,11 +280,11 @@ export function CopyButton({
   const buttonIcon = () => {
     switch (buttonState) {
       case "Ready":
-        return <ClipboardDocumentListIcon className="h-5 w-5" />;
+        return <ClipboardIcon className="h-5 w-5" />;
       case "Fired":
         return <CheckIcon className="h-5 w-5" />;
       case "Disabled":
-        return <ClipboardDocumentListIcon className="h-5 w-5" />;
+        return <ClipboardIcon className="h-5 w-5" />;
     }
   };
 

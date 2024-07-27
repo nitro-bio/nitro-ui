@@ -1,3 +1,1 @@
-import { CircularViewer } from "./CircularViewer";
-
-export { CircularViewer };
+export { CircularViewer } from "./CircularViewer";
