@@ -21,6 +21,7 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/no-empty-function": "off",
     "no-constant-condition": "warn",
+    "react/prop-types": "off",
   },
   ignorePatterns: [
     "storybook-static",
