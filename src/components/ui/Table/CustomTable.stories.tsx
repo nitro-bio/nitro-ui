@@ -1,4 +1,4 @@
-import { ArrowsUpDownIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
+import { ArrowUpDownIcon, ChevronDownIcon } from "lucide-react";
 import {
   Cell,
   ColumnDef,
@@ -119,7 +119,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Protein Name
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -135,7 +135,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Accession
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -151,7 +151,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         RNA Sequence
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -167,7 +167,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         DNA Sequence
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -183,7 +183,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Organism
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -199,7 +199,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Expression System
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -215,7 +215,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Molecular Weight
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -231,7 +231,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Secondary Structure
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -248,7 +248,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Bio Activity
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -265,7 +265,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Half Life
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -282,7 +282,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         ISO Electric Point
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -298,7 +298,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Melting Point
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -315,7 +315,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Binding Site
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -331,7 +331,7 @@ const columns: ColumnDef<BioData, ReactNode>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Modification
-        <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+        <ArrowUpDownIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
   },

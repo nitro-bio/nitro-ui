@@ -1,3 +1,2 @@
-import { LinearViewer } from "./LinearViewer";
-import { LinearAnnotationGutter } from "./LinearAnnotationGutter";
-export { LinearViewer, LinearAnnotationGutter };
+export { LinearViewer } from "./LinearViewer";
+export { LinearAnnotationGutter } from "./LinearAnnotationGutter";

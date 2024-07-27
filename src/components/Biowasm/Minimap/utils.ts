@@ -60,7 +60,6 @@ export const parseMinimap2Output = (output: string): MinimapOutput => {
       };
       const temp = SamAlignmentRecordSchema.safeParse(alignment);
       if (!temp.success) {
-        console.log(alignment);
         console.error(temp.error.errors);
         throw new Error("Failed to parse alignment record");
       }

@@ -1,8 +1,4 @@
-import {
-  ArrowsUpDownIcon,
-  ChevronDownIcon,
-  FunnelIcon,
-} from "@heroicons/react/20/solid";
+import { ArrowDownUpIcon, ChevronDownIcon, FilterIcon } from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -105,9 +101,9 @@ export const NitroTable = <TData extends Record<string, ReactNode>>({
               className=""
             >
               {key}
-              <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+              <ArrowDownUpIcon className="ml-2 h-4 w-4" />
 
-              <FunnelIcon
+              <FilterIcon
                 className={classNames(
                   "ml-2 h-4 w-4 text-brand-600/60  dark:text-brand-600/60",
                   columnFilters.map((filter) => filter.id).includes(key)
