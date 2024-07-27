@@ -1,8 +1,4 @@
-import {
-  CheckCircleIcon,
-  CheckIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/20/solid";
+import { CheckCircleIcon, CheckIcon, ChevronRightIcon } from "lucide-react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Button } from "@ui/Button/Button";
 import { classNames } from "@utils/stringUtils";

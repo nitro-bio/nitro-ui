@@ -1,10 +1,11 @@
 import {
-  BellAlertIcon,
+  BellIcon,
   CheckCircleIcon,
+  CircleEllipsisIcon,
   UserMinusIcon,
   XCircleIcon,
-} from "@heroicons/react/20/solid";
-import { EllipsisHorizontalCircleIcon } from "@heroicons/react/24/outline";
+} from "lucide-react";
+
 import { Button } from "./Button";
 
 export default {
@@ -69,7 +70,7 @@ export const Outline = () => {
       </Button>
 
       <Button size="icon" variant="outline">
-        <EllipsisHorizontalCircleIcon className="h-6 w-6" />
+        <CircleEllipsisIcon className="h-6 w-6" />
       </Button>
     </div>
   );
@@ -90,7 +91,7 @@ export const Accent = () => {
       </Button>
 
       <Button size="icon" variant="accent">
-        <BellAlertIcon className="h-6 w-6" />
+        <BellIcon className="h-6 w-6" />
       </Button>
     </div>
   );

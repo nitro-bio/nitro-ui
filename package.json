@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.1.62",
+  "version": "0.1.63",
   "scripts": {
     "build:ci": "vite build && pnpm build-css",
     "build": "pnpm lint && vite build && pnpm build-css",
@@ -21,8 +21,8 @@
   "dependencies": {
     "@biowasm/aioli": "^3.1.0",
     "@headlessui/react": "^1.7.18",
-    "@heroicons/react": "^2.1.1",
     "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-slot": "^1.0.2",
     "@rdkit/rdkit": "2023.9.2-1.0.0",
@@ -33,6 +33,7 @@
     "cmdk": "^1.0.0",
     "daisyui": "^4.7.3",
     "genbank-parser": "^1.2.4",
+    "lucide-react": "^0.416.0",
     "molstar": "^4.0.1",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",

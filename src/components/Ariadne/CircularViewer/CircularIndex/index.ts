@@ -1,2 +1,1 @@
-import { CircularIndex } from "./CircularIndex";
-export { CircularIndex };
+export { CircularIndex } from "./CircularIndex";
