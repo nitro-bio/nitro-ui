@@ -1,6 +1,5 @@
 import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
-import { RowAnnotation } from "@Ariadne/types";
 import { z } from "zod";
 import { wellsToRowsCols, indexToExcelCell } from "./utils";
 import { RowAnnotationGutter } from "./RowAnnotationGutter";
@@ -11,23 +10,58 @@ const PlateSelectionSchema = z.object({
 });
 export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
 
-export interface PlateProps {
+interface WellAnnotation<T extends Record<string, unknown>> {
+  id: string;
+  wells: number[];
+  label: string;
+  className?: string;
+  metadata?: T;
+}
+interface RowAnnotation<T extends Record<string, unknown>> {
+  id: string;
+  rows: number[];
+  label: string;
+  className?: string;
+  metadata?: T;
+}
+interface ColAnnotation<T extends Record<string, unknown>> {
+  id: string;
+  cols: number[];
+  label: string;
+  className?: string;
+  metadata?: T;
+}
+
+export interface PlateProps<
+  RowMetaT extends Record<string, unknown>,
+  ColMetaT extends Record<string, unknown>,
+  WellMetaT extends Record<string, unknown>,
+> {
   wells: 24 | 96 | 48 | 384;
-  rowAnnotations?: RowAnnotation[];
+  rowAnnotations?: RowAnnotation<RowMetaT>[];
+  colAnnotations?: ColAnnotation<ColMetaT>[];
+  wellAnnotations?: WellAnnotation<WellMetaT>[];
   selection: PlateSelection | null;
   setSelection: (selection: PlateSelection | null) => void;
   className?: string;
   selectionTolerance?: number;
 }
 
-export const Plate = ({
+export const Plate = <
+  RowMetaT extends Record<string, unknown>,
+  ColMetaT extends Record<string, unknown>,
+  WellMetaT extends Record<string, unknown>,
+>({
   wells,
   className,
   rowAnnotations,
+  colAnnotations,
+  wellAnnotations,
   selection,
   setSelection,
   selectionTolerance = 20,
-}: PlateProps) => {
+}: PlateProps<RowMetaT, ColMetaT, WellMetaT>) => {
+  console.log("Plate", wellAnnotations);
   const { rows, cols } = wellsToRowsCols(wells);
   const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
     (i + 1).toString(),
@@ -129,7 +163,7 @@ export const Plate = ({
         >
           {colLabels.map((colLabel) => (
             <button
-              key={colLabel}
+              key={`col-${colLabel}`}
               className={classNames(
                 "flex items-end justify-center",
                 wells > 96 && "break-all px-1 text-[0.6rem]",
@@ -145,13 +179,6 @@ export const Plate = ({
           ))}
         </div>
 
-        {/*
-        <div className={colLabelClass}>
-          {colLabels.map((colLabel) => (
-            <div>G</div>
-          ))}
-        </div>
-        */}
         <div
           className={classNames(
             "col-span-1 grid grid-cols-subgrid gap-2 ",
@@ -161,7 +188,7 @@ export const Plate = ({
         >
           {rowLabels.map((rowLabel) => (
             <button
-              key={rowLabel}
+              key={`row-${rowLabel}`}
               onClick={() => {
                 toggleRowInSelection(rowLabels.indexOf(rowLabel));
               }}
@@ -191,14 +218,17 @@ export const Plate = ({
         >
           {Array.from({ length: wells }).map((_, i) => {
             const isSelected = selection?.wells.includes(i) ?? false;
+            const anns: WellAnnotation<WellMetaT>[] =
+              wellAnnotations?.filter((ann) => ann.wells.includes(i)) ?? [];
             return (
               <Well
-                key={i}
+                key={`well-${i}`}
                 index={i}
                 wells={wells}
                 selectableKey={i}
                 isSelected={isSelected}
                 toggleSelection={toggleWellInSelection}
+                annotations={anns}
               />
             );
           })}
@@ -208,12 +238,13 @@ export const Plate = ({
   );
 };
 const Well = createSelectable(
-  ({
+  <WellMetaT extends Record<string, unknown>>({
     index,
     wells,
     selectableRef,
     isSelected,
     toggleSelection,
+    annotations,
   }: {
     index: number;
     wells: 24 | 96 | 48 | 384;
@@ -221,6 +252,7 @@ const Well = createSelectable(
     selectableKey: number;
     isSelected: boolean;
     toggleSelection: (well: number) => void;
+    annotations: WellAnnotation<WellMetaT>[];
   }) => {
     return (
       <button
@@ -234,6 +266,7 @@ const Well = createSelectable(
           "transition-all duration-300 ease-in-out",
           "border border-noir-800 dark:border-noir-200",
           "hover:scale-110",
+          "relative overflow-hidden",
           isSelected
             ? "bg-brand-200 text-noir-900 dark:bg-brand-600 dark:text-noir-100"
             : "text-noir-300 dark:text-noir-600",
@@ -253,6 +286,25 @@ const Well = createSelectable(
         >
           {indexToExcelCell(index, wells)}
         </span>
+        {annotations.map((ann, index) => (
+          <span
+            key={ann.id}
+            className={classNames(
+              ann.className,
+              "",
+              "absolute inset-0",
+              "flex items-center justify-center ",
+              index === 0 && "rounded-l-full",
+              index === annotations.length - 1 && "rounded-r-full",
+            )}
+            style={{
+              width: (1 / annotations.length) * 100 + "%",
+              left: (annotations.indexOf(ann) / annotations.length) * 100 + "%",
+            }}
+          >
+            {ann.label}
+          </span>
+        ))}
       </button>
     );
   },

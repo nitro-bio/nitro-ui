@@ -9,7 +9,6 @@ import {
   annotatedBaseSchema,
   annotatedSequenceSchema,
   annotationSchema,
-  rowAnnotationSchema,
   annotationTypeSchema,
   ariadneSelectionSchema,
   coorSchema,
@@ -32,4 +31,3 @@ export type Unknown = z.infer<typeof UnknownSchema>;
 export type AnnotatedBase = z.infer<typeof annotatedBaseSchema>;
 export type AnnotatedSequence = z.infer<typeof annotatedSequenceSchema>;
 export type AriadneSelection = z.infer<typeof ariadneSelectionSchema>;
-export type RowAnnotation = z.infer<typeof rowAnnotationSchema>;

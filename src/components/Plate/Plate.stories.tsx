@@ -127,3 +127,56 @@ const generateRandomRowAnnotations = (
   }
   return rowAnnotations;
 };
+
+export const TwentyFourWithWellAnns = () => {
+  const [selection, setSelection] = useState<PlateSelection | null>(null);
+  const wellAnnotations = [
+    {
+      id: "0",
+      label: "Foo",
+      wells: [0, 1, 2, 3, 4, 5, 6, 7],
+      className: "bg-blue-500/20 dark:text-blue-200/20 text-blue-800/20",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "1",
+      label: "Bar",
+      wells: [4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17],
+      className: "bg-red-500/20 dark:text-red-200/20 text-red-800/20",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "2",
+      label: "Baz",
+      wells: [14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27],
+      className: "bg-green-500/20 dark:text-green-200/20 text-green-800/20",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "3",
+      label: "Qux",
+      wells: [25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37],
+      className:
+        "bg-fuchsia-500/20 dark:text-fuchsia-200/20 text-fuchsia-800/20",
+      metadata: {
+        foo: "bar",
+      },
+    },
+  ];
+  return (
+    <Card className="max-w-3xl">
+      <Plate
+        wells={96}
+        selection={selection}
+        setSelection={setSelection}
+        wellAnnotations={wellAnnotations}
+      />
+    </Card>
+  );
+};
