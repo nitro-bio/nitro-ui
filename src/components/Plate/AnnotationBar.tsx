@@ -64,7 +64,12 @@ export const AnnotationBar = <
   };
   return (
     <span className="">
-      <Accordion type="single" collapsible className="mb-8">
+      <Accordion
+        type="single"
+        collapsible
+        className="mb-8"
+        defaultValue="item-1"
+      >
         <AccordionItem value="item-1" className="">
           <AccordionTrigger className="">Annotations</AccordionTrigger>
 
