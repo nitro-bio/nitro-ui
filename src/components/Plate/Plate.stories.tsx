@@ -8,140 +8,33 @@ import {
   ColAnnotation,
 } from "./Plate";
 import { wellsToRowsCols } from "./utils";
+import { classNames } from "@utils/stringUtils";
 
 export default {
   title: "Plate/Plate",
   component: Plate,
 };
 
-export const TwentyFour = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate
-        className="-ml-5 -ml-8"
-        wells={24}
-        selection={selection}
-        setSelection={setSelection}
-      />
-    </Card>
-  );
-};
-export const FourtyEight = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate wells={48} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
-export const NinetySix = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate wells={96} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
-export const ThreeEightyFour = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-7xl">
-      <Plate wells={384} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
 const PlateStory = ({
   wells,
-  initialSelection,
-  maxRandomRowAnnotations,
+  className,
 }: {
   wells: 24 | 96 | 48 | 384;
-  initialSelection?: PlateSelection;
-  maxRandomRowAnnotations?: number;
+  className?: string;
 }) => {
-  const { rowAnnotations } = useMemo(() => {
-    return {
-      rowAnnotations: generateRandomRowAnnotations(
-        maxRandomRowAnnotations || 0,
-        wells,
-      ),
-    };
-  }, []);
-
-  const [selection, setSelection] = useState<PlateSelection | null>(
-    initialSelection ?? null,
-  );
-
-  return (
-    <Card className="max-w-7xl">
-      <Plate
-        wells={wells}
-        selection={selection}
-        setSelection={setSelection}
-        rowAnnotations={rowAnnotations}
-      />
-    </Card>
-  );
-};
-
-export const NinetySixyWithRowAnnotations = () => {
-  return <PlateStory wells={96} maxRandomRowAnnotations={15} />;
-};
-
-export const TwentyFourWithRowAnnotations = () => {
-  return <PlateStory wells={24} maxRandomRowAnnotations={4} />;
-};
-
-// Generate up to maxRowAnnotations random row annotations
-const generateRandomRowAnnotations = (
-  maxRowAnnotations: number,
-  wells: 24 | 96 | 48 | 384,
-): RowAnnotation<{}>[] => {
-  const rowAnnotations: RowAnnotation<{}>[] = [];
-  const { rows: numRows } = wellsToRowsCols(wells);
-
-  const bgColors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-indigo-500",
-    "bg-gray-500",
-  ];
-  const numRowAnnotations = Math.floor(Math.random() * maxRowAnnotations);
-
-  for (let i = 0; i < numRowAnnotations; i++) {
-    const annNumRows = Math.floor(Math.random() * numRows);
-    const selectedRows = [];
-    for (let j = 0; j < annNumRows; j++) {
-      selectedRows.push(Math.floor(Math.random() * numRows));
-    }
-
-    rowAnnotations.push({
-      rows: selectedRows,
-      label: `Row Annotation ${i}`,
-      id: `${i}`,
-      className: bgColors[i % bgColors.length],
-    });
-  }
-  console.log(rowAnnotations);
-  return rowAnnotations;
-};
-
-export const TwentyFourWithWellAnns = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   const wellAnnotations: WellAnnotation<{ foo: string }>[] = [
     {
       id: "0",
       label: "Foo",
-      wells: [0, 1, 2, 3, 4, 5, 6, 7],
-      className: "bg-blue-500 dark:text-blue-200 text-blue-800",
+      wells: [
+        0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 30, 31, 32, 33, 34, 35,
+        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 60, 61, 62, 63, 64, 65, 66, 67,
+
+        100, 101, 102, 103, 104, 105, 106, 107, 110, 111, 112, 113, 114, 115,
+        130, 131, 132, 133, 134, 135, 136, 137,
+      ],
+      className: "bg-blue-500  dark:text-blue-200 text-blue-800",
       metadata: {
         foo: "bar",
       },
@@ -149,8 +42,11 @@ export const TwentyFourWithWellAnns = () => {
     {
       id: "1",
       label: "Bar",
-      wells: [4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17],
-      className: "bg-red-500 dark:text-red-200 text-red-800",
+      wells: [
+        203, 207, 213, 215, 217, 222, 223, 224, 225, 226, 227, 233, 236, 245,
+        247, 256, 275, 276, 283,
+      ],
+      className: "bg-red-500  dark:text-red-200 text-red-800",
       metadata: {
         foo: "bar",
       },
@@ -158,8 +54,11 @@ export const TwentyFourWithWellAnns = () => {
     {
       id: "2",
       label: "Baz",
-      wells: [14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27],
-      className: "bg-green-500 dark:text-green-200 text-green-800",
+      wells: [
+        14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 130, 131, 132, 233, 234,
+        235, 33, 34, 35, 36, 137,
+      ],
+      className: "bg-green-500  dark:text-green-200 text-green-800",
       metadata: {
         foo: "bar",
       },
@@ -167,7 +66,17 @@ export const TwentyFourWithWellAnns = () => {
     {
       id: "3",
       label: "Qux",
-      wells: [25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37],
+      wells: [
+        4, 10, 11, 15, 16, 17, 14, 20, 22, 25, 26, 27, 24, 37, 40, 44, 45, 46,
+        47, 67, 70, 77, 75, 76,
+
+        80, 81, 82, 83, 84, 85, 86, 87, 90, 91, 92, 93, 94, 95,
+
+        100, 101, 104, 105, 106, 107, 110, 111, 114, 115, 116, 137, 200, 201,
+        202, 204, 205, 206, 207, 210, 211, 212, 214, 215, 220, 221, 222, 224,
+        225, 226, 237, 300, 301, 302, 303, 304, 305, 306, 307, 310, 311, 312,
+        313, 314, 315, 330, 331, 332, 333, 334, 335, 336, 337,
+      ],
       className: "bg-fuchsia-500 dark:text-fuchsia-200 text-fuchsia-800",
       metadata: {
         foo: "bar",
@@ -177,19 +86,19 @@ export const TwentyFourWithWellAnns = () => {
 
   const rowAnnotations: RowAnnotation<{}>[] = [
     {
-      rows: [0, 1, 2, 3],
+      rows: [0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 22],
       label: "Row Annotation 0",
       id: "0",
       className: "bg-cyan-500",
     },
     {
-      rows: [0, 1, 2, 4, 5, 6, 7],
+      rows: [0, 1, 3, 6, 9, 12, 15, 18, 21],
       label: "Row Annotation 1",
       id: "1",
       className: "bg-amber-500",
     },
     {
-      rows: [0, 1, 5, 6, 7],
+      rows: [1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23],
       label: "Row Annotation 2",
       id: "2",
       className: "bg-rose-500",
@@ -197,28 +106,28 @@ export const TwentyFourWithWellAnns = () => {
   ];
   const colAnnotations: ColAnnotation<{}>[] = [
     {
-      cols: [0, 1, 2, 3, 4, 5, 6, 7],
+      cols: [0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 22],
       label: "Row Annotation 0",
       id: "0",
       className: "bg-blue-500",
     },
     {
-      cols: [0, 1, 3, 6, 9],
+      cols: [0, 1, 3, 6, 9, 12, 15, 18, 21],
       label: "Row Annotation 1",
       id: "1",
       className: "bg-lime-500",
     },
     {
-      cols: [6, 7, 8, 9, 10],
+      cols: [1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23],
       label: "Row Annotation 2",
       id: "2",
       className: "bg-fuchsia-500",
     },
   ];
   return (
-    <Card className="max-w-3xl">
+    <Card className={classNames("mx-8 my-8 max-w-4xl px-8 py-6", className)}>
       <Plate
-        wells={96}
+        wells={wells}
         selection={selection}
         setSelection={setSelection}
         wellAnnotations={wellAnnotations}
@@ -228,3 +137,8 @@ export const TwentyFourWithWellAnns = () => {
     </Card>
   );
 };
+
+export const Plate24 = () => <PlateStory wells={24} />;
+export const Plate48 = () => <PlateStory wells={48} />;
+export const Plate96 = () => <PlateStory wells={96} />;
+export const Plate384 = () => <PlateStory wells={384} className="!max-w-5xl" />;

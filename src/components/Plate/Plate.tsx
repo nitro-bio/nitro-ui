@@ -306,7 +306,7 @@ const Well = createSelectable(
             key={ann.id}
             className={classNames(
               ann.className,
-              "opacity-20 group-hover:opacity-50",
+              "opacity-20 group-hover:opacity-50 dark:opacity-40",
               "transition-all duration-300 ease-in-out",
               "absolute inset-0",
               "flex items-center justify-center ",

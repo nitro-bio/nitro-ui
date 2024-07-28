@@ -54,7 +54,6 @@ export const RowAnnotationGutter = ({
       <div
         className={classNames(
           "grid",
-          wells > 96 && "content-between py-1",
           "text-noir-600 dark:text-noir-300",
           className,
         )}
@@ -149,23 +148,26 @@ export const ColAnnotationGutter = ({
       <div
         className={classNames(
           "grid",
-          wells > 96 && "content-between py-1",
           "text-noir-600 dark:text-noir-300",
+          "h-20",
+          wells > 24 && "!h-14", // 48 wells
+          wells > 48 && "!h-[40px]", // 96 wells
+          wells > 96 && "!h-4", // 384 wells
+
           className,
-          "h-8",
         )}
         style={{
           gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
         }}
       >
         {Array.from({ length: cols }).map((_, colIndex) => {
-          const numCols = colAnnotations.length;
+          const numRows = colAnnotations.length;
           return (
             <div
-              className="grid gap-1"
+              className={classNames("grid gap-1")}
               key={colIndex}
               style={{
-                gridTemplateRows: `repeat(${numCols}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${numRows}, minmax(0, 1fr))`,
               }}
             >
               {colAnnotations.map((colAnn) => {
@@ -176,6 +178,7 @@ export const ColAnnotationGutter = ({
                       className={classNames(
                         colAnn.className,
                         activeAnn === colAnn ? "opacity-100" : "opacity-50",
+                        "min-h-px",
                       )}
                       onMouseEnter={() => {
                         setActiveAnn(colAnn);
