@@ -1,7 +1,12 @@
 import { useState, useMemo } from "react";
 import { Card } from "@ui/Card";
-import { Plate, PlateSelection } from "./Plate";
-import { RowAnnotation } from "@Ariadne/types";
+import {
+  Plate,
+  PlateSelection,
+  WellAnnotation,
+  RowAnnotation,
+  ColAnnotation,
+} from "./Plate";
 import { wellsToRowsCols } from "./utils";
 
 export default {
@@ -95,8 +100,8 @@ export const TwentyFourWithRowAnnotations = () => {
 const generateRandomRowAnnotations = (
   maxRowAnnotations: number,
   wells: 24 | 96 | 48 | 384,
-): RowAnnotation[] => {
-  const rowAnnotations: RowAnnotation[] = [];
+): RowAnnotation<{}>[] => {
+  const rowAnnotations: RowAnnotation<{}>[] = [];
   const { rows: numRows } = wellsToRowsCols(wells);
 
   const bgColors = [
@@ -125,17 +130,18 @@ const generateRandomRowAnnotations = (
       className: bgColors[i % bgColors.length],
     });
   }
+  console.log(rowAnnotations);
   return rowAnnotations;
 };
 
 export const TwentyFourWithWellAnns = () => {
   const [selection, setSelection] = useState<PlateSelection | null>(null);
-  const wellAnnotations = [
+  const wellAnnotations: WellAnnotation<{ foo: string }>[] = [
     {
       id: "0",
       label: "Foo",
       wells: [0, 1, 2, 3, 4, 5, 6, 7],
-      className: "bg-blue-500/20 dark:text-blue-200/20 text-blue-800/20",
+      className: "bg-blue-500 dark:text-blue-200 text-blue-800",
       metadata: {
         foo: "bar",
       },
@@ -144,7 +150,7 @@ export const TwentyFourWithWellAnns = () => {
       id: "1",
       label: "Bar",
       wells: [4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17],
-      className: "bg-red-500/20 dark:text-red-200/20 text-red-800/20",
+      className: "bg-red-500 dark:text-red-200 text-red-800",
       metadata: {
         foo: "bar",
       },
@@ -153,7 +159,7 @@ export const TwentyFourWithWellAnns = () => {
       id: "2",
       label: "Baz",
       wells: [14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27],
-      className: "bg-green-500/20 dark:text-green-200/20 text-green-800/20",
+      className: "bg-green-500 dark:text-green-200 text-green-800",
       metadata: {
         foo: "bar",
       },
@@ -162,11 +168,51 @@ export const TwentyFourWithWellAnns = () => {
       id: "3",
       label: "Qux",
       wells: [25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37],
-      className:
-        "bg-fuchsia-500/20 dark:text-fuchsia-200/20 text-fuchsia-800/20",
+      className: "bg-fuchsia-500 dark:text-fuchsia-200 text-fuchsia-800",
       metadata: {
         foo: "bar",
       },
+    },
+  ];
+
+  const rowAnnotations: RowAnnotation<{}>[] = [
+    {
+      rows: [0, 1, 2, 3],
+      label: "Row Annotation 0",
+      id: "0",
+      className: "bg-cyan-500",
+    },
+    {
+      rows: [0, 1, 2, 4, 5, 6, 7],
+      label: "Row Annotation 1",
+      id: "1",
+      className: "bg-amber-500",
+    },
+    {
+      rows: [0, 1, 5, 6, 7],
+      label: "Row Annotation 2",
+      id: "2",
+      className: "bg-rose-500",
+    },
+  ];
+  const colAnnotations: ColAnnotation<{}>[] = [
+    {
+      cols: [0, 1, 2, 3, 4, 5, 6, 7],
+      label: "Row Annotation 0",
+      id: "0",
+      className: "bg-blue-500",
+    },
+    {
+      cols: [0, 1, 3, 6, 9],
+      label: "Row Annotation 1",
+      id: "1",
+      className: "bg-lime-500",
+    },
+    {
+      cols: [6, 7, 8, 9, 10],
+      label: "Row Annotation 2",
+      id: "2",
+      className: "bg-fuchsia-500",
     },
   ];
   return (
@@ -176,6 +222,8 @@ export const TwentyFourWithWellAnns = () => {
         selection={selection}
         setSelection={setSelection}
         wellAnnotations={wellAnnotations}
+        rowAnnotations={rowAnnotations}
+        colAnnotations={colAnnotations}
       />
     </Card>
   );

@@ -2,7 +2,16 @@ import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
 import { z } from "zod";
 import { wellsToRowsCols, indexToExcelCell } from "./utils";
-import { RowAnnotationGutter } from "./RowAnnotationGutter";
+import {
+  RowAnnotationGutter,
+  ColAnnotationGutter,
+} from "./RowAnnotationGutter";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@ui/Accordion/Accordion";
 
 const PlateSelectionSchema = z.object({
   wells: z.array(z.number()),
@@ -10,21 +19,21 @@ const PlateSelectionSchema = z.object({
 });
 export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
 
-interface WellAnnotation<T extends Record<string, unknown>> {
+export interface WellAnnotation<T extends Record<string, unknown>> {
   id: string;
   wells: number[];
   label: string;
   className?: string;
   metadata?: T;
 }
-interface RowAnnotation<T extends Record<string, unknown>> {
+export interface RowAnnotation<T extends Record<string, unknown>> {
   id: string;
   rows: number[];
   label: string;
   className?: string;
   metadata?: T;
 }
-interface ColAnnotation<T extends Record<string, unknown>> {
+export interface ColAnnotation<T extends Record<string, unknown>> {
   id: string;
   cols: number[];
   label: string;
@@ -70,32 +79,20 @@ export const Plate = <
     String.fromCharCode(65 + i),
   );
 
-  // Num cols starts with one to support the row label column
-  var numCols = 1;
-
-  var numRowAnnotationCols = 0;
-  // If there are row annotations, add a column to display them.
-  if (rowAnnotations && rowAnnotations.length > 0) {
-    // The number of columns that the row annotations will span
-    numRowAnnotationCols = Math.ceil(rowAnnotations.length / 8);
-
-    // Each column can support up to 8 row annotations
-    numCols += numRowAnnotationCols;
-  }
-
   // Add the number of columns for the wells
+  let gridClass: string;
   switch (wells) {
     case 24:
-      numCols += 6;
+      gridClass = "grid-cols-8 gap-2 ";
       break;
     case 48:
-      numCols += 8;
+      gridClass = "grid-cols-10 gap-2";
       break;
     case 96:
-      numCols += 12;
+      gridClass = "grid-cols-14 gap-2 ";
       break;
     case 384:
-      numCols += 24;
+      gridClass = "grid-cols-26 gap-2 ";
       break;
     default:
       throw new Error("Invalid number of wells");
@@ -136,105 +133,123 @@ export const Plate = <
   };
 
   return (
-    <SelectableGroup
-      onEndSelection={handleSelection}
-      tolerance={selectionTolerance}
-      className={classNames("", className)}
-      selectingClassName="transition-all duration-100 ease-in-out animate-pulse "
-    >
-      <div
-        className={classNames(
-          "grid gap-2  ",
-          "text-xs md:text-sm lg:text-base",
-          wells > 96 && "px-4",
-          `grid-cols-${numCols} gap-2`,
-        )}
-        style={{
-          gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))`,
-        }}
+    <>
+      <span className="">
+        <Accordion type="single" collapsible className="mb-8">
+          <AccordionItem value="item-1" className="">
+            <AccordionTrigger className="">Annotations</AccordionTrigger>
+
+            <AccordionContent className="">
+              <span className="flex items-center gap-4">
+                {wellAnnotations?.map((ann) => (
+                  <span
+                    key={ann.id}
+                    className={classNames(
+                      ann.className,
+                      "flex items-center gap-2",
+                      "rounded-md px-2 py-1",
+                      "text-xs",
+                    )}
+                  >
+                    {ann.label}
+                  </span>
+                ))}
+              </span>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </span>
+      <SelectableGroup
+        onEndSelection={handleSelection}
+        tolerance={selectionTolerance}
+        className={classNames("", className)}
+        selectingClassName="transition-all duration-100 ease-in-out animate-pulse "
       >
         <div
-          className="col-span-full grid grid-cols-subgrid"
-          style={{
-            // The column labels typically start at column 2, but if there
-            // are row annotations, they start at column 3 or more
-            gridColumnStart: numRowAnnotationCols + 2,
-          }}
-        >
-          {colLabels.map((colLabel) => (
-            <button
-              key={`col-${colLabel}`}
-              className={classNames(
-                "flex items-end justify-center",
-                wells > 96 && "break-all px-1 text-[0.6rem]",
-                "border-b border-l border-r border-noir-300 pb-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
-                "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
-              )}
-              onClick={() => {
-                toggleColumnInSelection(colLabels.indexOf(colLabel));
-              }}
-            >
-              {colLabel}
-            </button>
-          ))}
-        </div>
-
-        <div
           className={classNames(
-            "col-span-1 grid grid-cols-subgrid gap-2 ",
-            wells > 96 && "content-between py-1",
-            "text-noir-600 dark:text-noir-300",
+            "grid gap-2  ",
+            "text-xs md:text-sm lg:text-base",
+            wells > 96 && "px-4",
+            gridClass,
           )}
         >
-          {rowLabels.map((rowLabel) => (
-            <button
-              key={`row-${rowLabel}`}
-              onClick={() => {
-                toggleRowInSelection(rowLabels.indexOf(rowLabel));
-              }}
-              className={classNames(
-                "mx-auto h-full px-1",
-                wells > 96 && "text-[0.6rem]",
-                "border-b border-r border-t border-noir-300 pb-1 pr-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
-                "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
-              )}
-            >
-              {rowLabel}
-            </button>
-          ))}
+          <ColAnnotationGutter
+            colAnnotations={colAnnotations}
+            wells={wells}
+            className="col-span-full col-start-3"
+          />
+
+          <div className="col-span-full col-start-3 grid grid-cols-subgrid ">
+            {colLabels.map((colLabel) => (
+              <button
+                key={`col-${colLabel}`}
+                className={classNames(
+                  "flex items-end justify-center",
+                  wells > 96 && "break-all px-1 text-[0.6rem]",
+                  "border-b border-l border-r border-noir-300 pb-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
+                  "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
+                )}
+                onClick={() => {
+                  toggleColumnInSelection(colLabels.indexOf(colLabel));
+                }}
+              >
+                {colLabel}
+              </button>
+            ))}
+          </div>
+
+          <RowAnnotationGutter
+            rowAnnotations={rowAnnotations}
+            wells={wells}
+            className=""
+          />
+
+          <div
+            className={classNames(
+              "col-span-1 grid grid-cols-subgrid gap-2 ",
+              wells > 96 && "content-between py-1",
+              "text-noir-600 dark:text-noir-300",
+            )}
+          >
+            {rowLabels.map((rowLabel) => (
+              <button
+                key={`row-${rowLabel}`}
+                onClick={() => {
+                  toggleRowInSelection(rowLabels.indexOf(rowLabel));
+                }}
+                className={classNames(
+                  "mx-auto h-full px-1",
+                  wells > 96 && "text-[0.6rem]",
+                  "border-b border-r border-t border-noir-300 pb-1 pr-1 text-noir-600 dark:border-noir-500 dark:text-noir-300",
+                  "hover:bg-noir-200 hover:text-brand-500 dark:text-noir-600 hover:dark:bg-noir-600 hover:dark:text-brand-200",
+                )}
+              >
+                {rowLabel}
+              </button>
+            ))}
+          </div>
+
+          <div className="col-span-full col-start-3 grid grid-cols-subgrid gap-2 ">
+            {Array.from({ length: wells }).map((_, i) => {
+              const isSelected = selection?.wells.includes(i) ?? false;
+              const anns: WellAnnotation<WellMetaT>[] =
+                wellAnnotations?.filter((ann) => ann.wells.includes(i)) ?? [];
+              return (
+                <Well
+                  key={`well-${i}`}
+                  index={i}
+                  wells={wells}
+                  selectableKey={i}
+                  isSelected={isSelected}
+                  toggleSelection={toggleWellInSelection}
+                  annotations={anns}
+                />
+              );
+            })}
+          </div>
         </div>
-
-        {/* Display Row Annotations */}
-
-        {rowAnnotations && (
-          <RowAnnotationGutter rowAnnotations={rowAnnotations} wells={wells} />
-        )}
-
-        <div
-          className="col-span-full grid grid-cols-subgrid gap-2"
-          style={{
-            gridColumnStart: numRowAnnotationCols + 2,
-          }}
-        >
-          {Array.from({ length: wells }).map((_, i) => {
-            const isSelected = selection?.wells.includes(i) ?? false;
-            const anns: WellAnnotation<WellMetaT>[] =
-              wellAnnotations?.filter((ann) => ann.wells.includes(i)) ?? [];
-            return (
-              <Well
-                key={`well-${i}`}
-                index={i}
-                wells={wells}
-                selectableKey={i}
-                isSelected={isSelected}
-                toggleSelection={toggleWellInSelection}
-                annotations={anns}
-              />
-            );
-          })}
-        </div>
-      </div>{" "}
-    </SelectableGroup>
+      </SelectableGroup>
+    </>
   );
 };
 const Well = createSelectable(
@@ -291,7 +306,8 @@ const Well = createSelectable(
             key={ann.id}
             className={classNames(
               ann.className,
-              "",
+              "opacity-20 group-hover:opacity-50",
+              "transition-all duration-300 ease-in-out",
               "absolute inset-0",
               "flex items-center justify-center ",
               index === 0 && "rounded-l-full",
@@ -301,9 +317,7 @@ const Well = createSelectable(
               width: (1 / annotations.length) * 100 + "%",
               left: (annotations.indexOf(ann) / annotations.length) * 100 + "%",
             }}
-          >
-            {ann.label}
-          </span>
+          />
         ))}
       </button>
     );
