@@ -2,16 +2,9 @@ import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
 import { z } from "zod";
 import { wellsToRowsCols, indexToExcelCell } from "./utils";
-import {
-  RowAnnotationGutter,
-  ColAnnotationGutter,
-} from "./RowAnnotationGutter";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@ui/Accordion/Accordion";
+import { RowAnnotationGutter, ColAnnotationGutter } from "./AnnotationGutters";
+import { AnnotationBar } from "./AnnotationBar";
+import { useState } from "react";
 
 const PlateSelectionSchema = z.object({
   wells: z.array(z.number()),
@@ -70,8 +63,18 @@ export const Plate = <
   setSelection,
   selectionTolerance = 20,
 }: PlateProps<RowMetaT, ColMetaT, WellMetaT>) => {
-  console.log("Plate", wellAnnotations);
   const { rows, cols } = wellsToRowsCols(wells);
+  const [activeRowAnnotation, setActiveRowAnnotation] =
+    useState<RowAnnotation<RowMetaT> | null>(null);
+  const [activeColAnnotation, setActiveColAnnotation] =
+    useState<ColAnnotation<ColMetaT> | null>(null);
+  const [activeWellAnnotation, setActiveWellAnnotation] =
+    useState<WellAnnotation<WellMetaT> | null>(null);
+  console.log(
+    activeRowAnnotation?.id,
+    activeColAnnotation?.id,
+    activeWellAnnotation?.id,
+  );
   const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
     (i + 1).toString(),
   );
@@ -134,31 +137,17 @@ export const Plate = <
 
   return (
     <>
-      <span className="">
-        <Accordion type="single" collapsible className="mb-8">
-          <AccordionItem value="item-1" className="">
-            <AccordionTrigger className="">Annotations</AccordionTrigger>
-
-            <AccordionContent className="">
-              <span className="flex items-center gap-4">
-                {wellAnnotations?.map((ann) => (
-                  <span
-                    key={ann.id}
-                    className={classNames(
-                      ann.className,
-                      "flex items-center gap-2",
-                      "rounded-md px-2 py-1",
-                      "text-xs",
-                    )}
-                  >
-                    {ann.label}
-                  </span>
-                ))}
-              </span>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </span>
+      <AnnotationBar
+        wellAnnotations={wellAnnotations}
+        colAnnotations={colAnnotations}
+        rowAnnotations={rowAnnotations}
+        activeRowAnnotation={activeRowAnnotation}
+        setActiveRowAnnotation={setActiveRowAnnotation}
+        activeColAnnotation={activeColAnnotation}
+        setActiveColAnnotation={setActiveColAnnotation}
+        activeWellAnnotation={activeWellAnnotation}
+        setActiveWellAnnotation={setActiveWellAnnotation}
+      />
       <SelectableGroup
         onEndSelection={handleSelection}
         tolerance={selectionTolerance}
@@ -175,6 +164,8 @@ export const Plate = <
         >
           <ColAnnotationGutter
             colAnnotations={colAnnotations}
+            activeColAnnotation={activeColAnnotation}
+            setActiveColAnnotation={setActiveColAnnotation}
             wells={wells}
             className="col-span-full col-start-3"
           />
@@ -200,6 +191,8 @@ export const Plate = <
 
           <RowAnnotationGutter
             rowAnnotations={rowAnnotations}
+            activeRowAnnotation={activeRowAnnotation}
+            setActiveRowAnnotation={setActiveRowAnnotation}
             wells={wells}
             className=""
           />
@@ -306,7 +299,7 @@ const Well = createSelectable(
             key={ann.id}
             className={classNames(
               ann.className,
-              "opacity-20 group-hover:opacity-50 dark:opacity-40",
+              "opacity-40 group-hover:opacity-50 dark:opacity-40",
               "transition-all duration-300 ease-in-out",
               "absolute inset-0",
               "flex items-center justify-center ",
