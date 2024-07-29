@@ -8,7 +8,7 @@ import {
 import { Card } from "@ui/Card";
 export default {
   component: Accordion,
-  title: "Components/Accordion",
+  title: "UIElements/Accordion",
 } as Meta;
 
 export const Default = () => {
