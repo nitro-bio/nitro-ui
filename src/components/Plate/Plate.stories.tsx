@@ -137,7 +137,6 @@ const PlateStory = ({
                 label: ann.label,
                 onClick: () => {
                   if (selection) {
-                    console.log("Create Annotation", ann.label, selection);
                     setWellAnnotations((prev) => {
                       const newAnn = {
                         ...ann,
@@ -147,7 +146,6 @@ const PlateStory = ({
                     });
                     setSelection(null);
                   } else {
-                    console.log("Select wells to annotate");
                   }
                 },
               })),
@@ -155,7 +153,6 @@ const PlateStory = ({
                 id: "Clear Annotations",
                 label: "Clear Annotations",
                 onClick: () => {
-                  console.log("Clear Annotations");
                   if (selection) {
                     const selectedWells = selection.wells;
                     const next = wellAnnotations.map((ann) => {

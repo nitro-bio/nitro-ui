@@ -47,7 +47,7 @@ export const Plate = <
     useState<ColAnnotation<ColMetaT> | null>(null);
   const [activeWellAnnotation, setActiveWellAnnotation] =
     useState<WellAnnotation<WellMetaT> | null>(null);
-  console.log(
+  
     activeRowAnnotation?.id,
     activeColAnnotation?.id,
     activeWellAnnotation?.id,
