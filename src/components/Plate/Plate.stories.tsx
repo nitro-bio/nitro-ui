@@ -2,13 +2,13 @@ import { Card } from "@ui/Card";
 import { NitroContextMenu } from "@ui/ContextMenu/NitroContextMenu";
 import { classNames } from "@utils/stringUtils";
 import { useState } from "react";
+import { Plate } from "./Plate";
 import {
   ColAnnotation,
-  Plate,
   PlateSelection,
   RowAnnotation,
   WellAnnotation,
-} from "./Plate";
+} from "./schemas";
 
 export default {
   title: "Plate/Plate",

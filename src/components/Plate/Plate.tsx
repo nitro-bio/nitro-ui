@@ -1,38 +1,15 @@
 import { classNames } from "@utils/stringUtils";
 import { SelectableGroup, createSelectable } from "react-selectable";
-import { z } from "zod";
 import { wellsToRowsCols, indexToExcelCell } from "./utils";
 import { RowAnnotationGutter, ColAnnotationGutter } from "./AnnotationGutters";
 import { AnnotationBar } from "./AnnotationBar";
 import { useState } from "react";
-
-const PlateSelectionSchema = z.object({
-  wells: z.array(z.number()),
-  className: z.string().optional(),
-});
-export type PlateSelection = z.infer<typeof PlateSelectionSchema>;
-
-export interface WellAnnotation<T extends Record<string, unknown>> {
-  id: string;
-  wells: number[];
-  label: string;
-  className?: string;
-  metadata?: T;
-}
-export interface RowAnnotation<T extends Record<string, unknown>> {
-  id: string;
-  rows: number[];
-  label: string;
-  className?: string;
-  metadata?: T;
-}
-export interface ColAnnotation<T extends Record<string, unknown>> {
-  id: string;
-  cols: number[];
-  label: string;
-  className?: string;
-  metadata?: T;
-}
+import {
+  WellAnnotation,
+  RowAnnotation,
+  ColAnnotation,
+  PlateSelection,
+} from "./schemas";
 
 export interface PlateProps<
   RowMetaT extends Record<string, unknown>,

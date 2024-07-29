@@ -1,5 +1,5 @@
 import { classNames } from "@utils/stringUtils";
-import { ColAnnotation, RowAnnotation } from "./Plate";
+import { ColAnnotation, RowAnnotation } from "./schemas";
 import { wellsToRowsCols } from "./utils";
 
 export const RowAnnotationGutter = <RowMetaT extends Record<string, unknown>>({

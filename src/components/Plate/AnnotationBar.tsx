@@ -5,8 +5,8 @@ import {
   AccordionTrigger,
 } from "@ui/Accordion/Accordion";
 
-import { ColAnnotation, RowAnnotation, WellAnnotation } from "./Plate";
 import { classNames } from "@utils/stringUtils";
+import { ColAnnotation, RowAnnotation, WellAnnotation } from "./schemas";
 
 export const AnnotationBar = <
   RowMetaT extends Record<string, unknown>,
