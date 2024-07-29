@@ -47,11 +47,6 @@ export const Plate = <
     useState<ColAnnotation<ColMetaT> | null>(null);
   const [activeWellAnnotation, setActiveWellAnnotation] =
     useState<WellAnnotation<WellMetaT> | null>(null);
-  
-    activeRowAnnotation?.id,
-    activeColAnnotation?.id,
-    activeWellAnnotation?.id,
-  );
   const rowLabels: string[] = Array.from({ length: rows }, (_, i) =>
     (i + 1).toString(),
   );

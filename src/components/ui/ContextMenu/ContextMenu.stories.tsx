@@ -53,7 +53,9 @@ export const Default = () => {
             label: "View",
             type: "radio",
             value: "list",
-            onValueChange: (value) => {},
+            onValueChange: (value) => {
+              console.debug(value);
+            },
             items: [
               { id: "list", label: "List View" },
               { id: "grid", label: "Grid View" },

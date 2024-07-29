@@ -146,6 +146,7 @@ const PlateStory = ({
                     });
                     setSelection(null);
                   } else {
+                    alert("Select wells first");
                   }
                 },
               })),
