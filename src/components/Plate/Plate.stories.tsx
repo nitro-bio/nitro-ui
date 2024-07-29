@@ -1,15 +1,14 @@
-import { useState, useMemo } from "react";
 import { Card } from "@ui/Card";
+import { NitroContextMenu } from "@ui/ContextMenu/NitroContextMenu";
+import { classNames } from "@utils/stringUtils";
+import { useState } from "react";
 import {
+  ColAnnotation,
   Plate,
   PlateSelection,
-  WellAnnotation,
   RowAnnotation,
-  ColAnnotation,
+  WellAnnotation,
 } from "./Plate";
-import { wellsToRowsCols } from "./utils";
-import { classNames } from "@utils/stringUtils";
-import { NitroContextMenu } from "@ui/ContextMenu/NitroContextMenu";
 
 export default {
   title: "Plate/Plate",
@@ -73,7 +72,7 @@ const PlateStory = ({
     },
   ]);
 
-  const [rowAnnotations, setRowAnnotations] = useState<RowAnnotation<{}>[]>([
+  const [rowAnnotations] = useState<RowAnnotation<Record<string, never>>[]>([
     {
       rows: [0, 1],
       label: "Antibody 1 μmol/L",
@@ -94,7 +93,7 @@ const PlateStory = ({
     },
   ]);
 
-  const [colAnnotations, setColAnnotations] = useState<ColAnnotation<{}>[]>([
+  const [colAnnotations] = useState<ColAnnotation<Record<string, never>>[]>([
     {
       cols: [0, 1, 2, 3],
       label: "Patient 1",

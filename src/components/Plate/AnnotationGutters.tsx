@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { classNames } from "@utils/stringUtils";
-import { wellsToRowsCols } from "./utils";
 import { ColAnnotation, RowAnnotation } from "./Plate";
+import { wellsToRowsCols } from "./utils";
 
 export const RowAnnotationGutter = <RowMetaT extends Record<string, unknown>>({
   rowAnnotations,
