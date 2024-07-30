@@ -5,6 +5,7 @@ import { SequenceViewer } from ".";
 import type { AriadneSelection } from "../types";
 import { SeqMetadataBar } from "./SeqMetadataBar";
 import { Card } from "@ui/Card";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default {
   title: "Ariadne/SequenceViewer/SeqMetadataBar",
@@ -64,20 +65,26 @@ export const Minimap = () => {
     }
   };
   return (
-    <Card>
-      <SeqMetadataBar
-        selection={selection}
-        setSelection={setSelection}
-        sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
-        sequences={_sequences}
-        setSequences={_setSequences}
-      />
-      <SequenceViewer
-        sequences={sequences}
-        annotations={[]}
-        selection={selection}
-        charClassName={defaultCharClassName}
-      />
-    </Card>
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
+      <Card>
+        <SeqMetadataBar
+          selection={selection}
+          setSelection={setSelection}
+          sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
+          sequences={_sequences}
+          setSequences={_setSequences}
+        />
+        <SequenceViewer
+          sequences={_sequences}
+          annotations={[]}
+          selection={selection}
+          charClassName={defaultCharClassName}
+        />
+      </Card>
+    </QueryClientProvider>
   );
 };

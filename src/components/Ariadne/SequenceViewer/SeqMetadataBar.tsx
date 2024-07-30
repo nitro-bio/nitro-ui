@@ -3,7 +3,7 @@ import { ArrowRightLeftIcon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { Button } from "@ui/Button/Button";
 import { Input } from "@ui/Input/Input";
 import { classNames } from "@utils/stringUtils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMinimap } from "../../Biowasm/Minimap/hooks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -53,28 +53,29 @@ const AlignmentButton = ({
   sequences: string[];
   setSequences: (sequences: string[]) => void;
 }) => {
-  const { runMinimap, mounted, loaded } = useMinimap({ sequences });
-  const ready = loaded && mounted;
+  const files: File[] = useMemo(
+    () =>
+      sequences.map((seq, idx) => new File([`>seq${idx}\n${seq}`], `${idx}`)),
+    [],
+  );
+  const { minimapOutput, mounted, loaded } = useMinimap({ files });
   return (
     <Button
       size="sm"
       variant="outline"
-      disabled={!ready}
+      disabled={!minimapOutput}
       onClick={() => {
-        runMinimap().then((output) => {
-          if (!output) {
-            console.error("No output from minimap");
-            return;
+        const alignments = minimapOutput?.alignments ?? [];
+        console.log("alignments", alignments);
+        const update = alignments.map((align, i) => {
+          if (align.rname === "*") {
+            return sequences[i]; // no alignment, don't do anything
+          } else {
+            return align.aligned_sequences.query.slice(1); // why offset by 1??
           }
-          const update = output?.alignments.map((align, i) => {
-            if (align.rname === "*") {
-              return sequences[i]; // no alignment, don't do anything
-            } else {
-              return align.aligned_sequences.query;
-            }
-          });
-          setSequences(update);
         });
+        console.log("update", update);
+        setSequences([sequences[0], ...update]);
       }}
     >
       Align
