@@ -26,12 +26,6 @@ module.exports = {
         brand: brandColor,
         accent: accentColor,
       },
-      gridTemplateColumns: {
-        13: "repeat(13, minmax(0, 1fr))",
-        25: "repeat(25, minmax(0, 1fr))",
-        49: "repeat(49, minmax(0, 1fr))",
-      },
-
       borderRadius: {
         "4xl": "2rem",
         "5xl": "2.5rem",
