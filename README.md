@@ -62,7 +62,6 @@ This will start the Storybook development server.
 
 - @tanstack/react-query (Data fetching and state management)
 - Zod (Schema validation)
-- Wretch (Fetch API wrapper)
 - @tanstack/react-table (Table component library)
 - React Hook Form (Form handling)
 

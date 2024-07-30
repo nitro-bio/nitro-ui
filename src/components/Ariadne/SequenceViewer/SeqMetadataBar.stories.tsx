@@ -1,45 +1,16 @@
-import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Card } from "@ui/Card";
 import { SequenceViewer } from ".";
 import type { AriadneSelection } from "../types";
 import { SeqMetadataBar } from "./SeqMetadataBar";
-import { Card } from "@ui/Card";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default {
-  title: "Ariadne/SequenceViewer/SeqMetadataBar",
+  title: "Premium Components/SeqMetadataBar",
   component: SequenceViewer,
 };
-
 export const Default = () => {
-  const [selection, setSelection] = useState<AriadneSelection | null>({
-    start: 0,
-    end: 2,
-    direction: "forward",
-  });
-  const { sequences } = useMemo(
-    () =>
-      generateRandomAlignedSequences({
-        maxSequences: 5,
-        maxLength: 100,
-      }),
-    [],
-  );
-
-  return (
-    <Card>
-      <SeqMetadataBar
-        sequences={sequences}
-        selection={selection}
-        setSelection={setSelection}
-        sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
-      />
-    </Card>
-  );
-};
-
-export const Minimap = () => {
   const [selection, setSelection] = useState<AriadneSelection | null>({
     start: 0,
     end: 2,
