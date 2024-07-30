@@ -24,12 +24,6 @@ export const SamAlignmentRecordSchema = z.object({
     ref: z.string(),
     query: z.string(),
   }),
-  // rnext: z.string(),
-  // pnext: z.number(),
-  // tlen: z.number(),
-  // seq: z.string(),
-  // qual: z.string(),
-  // tags: z.record(z.string()).optional(),
 });
 export type SamAlignmentRecord = z.infer<typeof SamAlignmentRecordSchema>;
 

@@ -44,7 +44,6 @@
     "storybook-addon-performance": "^0.17.3",
     "uuid": "^9.0.1",
     "vite-raw-plugin": "^1.0.2",
-    "wretch": "^2.9.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

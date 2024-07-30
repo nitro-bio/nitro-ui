@@ -83,9 +83,6 @@ importers:
       vite-raw-plugin:
         specifier: ^1.0.2
         version: 1.0.2
-      wretch:
-        specifier: ^2.9.0
-        version: 2.9.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -6525,10 +6522,6 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
-
-  wretch@2.9.0:
-    resolution: {integrity: sha512-kKp1xWQO+Vh9I6RJq7Yers2KKrmF7LXB00c9knMDn3IdB7etcQOarrsHArpj1sZ1Dlav8ss6R1DuUpDSTqmQew==}
-    engines: {node: '>=14'}
 
   write-file-atomic@2.4.3:
     resolution: {integrity: sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ==}
@@ -14168,8 +14161,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  wretch@2.9.0: {}
 
   write-file-atomic@2.4.3:
     dependencies:
