@@ -3,7 +3,9 @@ declare module "@biowasm/aioli" {
     constructor(packages: string[]);
     init(): Promise<Aioli>;
     exec(cmd: string, args?: string[]): Promise<string>;
-    mount(files: File[]): Promise<string[]>;
+    mount(
+      files: File[] | Blob[] | { name: string; data: string }[] | string[],
+    ): Promise<string[]>;
   }
 }
 declare module "*.sam" {

@@ -3,10 +3,12 @@ import { ArrowRightLeftIcon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { Button } from "@ui/Button/Button";
 import { Input } from "@ui/Input/Input";
 import { classNames } from "@utils/stringUtils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMinimap } from "../../Biowasm/Minimap/hooks";
 
 export const SeqMetadataBar = ({
   sequences,
+  setSequences,
   sequenceLabels,
   selection,
   setSelection,
@@ -14,6 +16,7 @@ export const SeqMetadataBar = ({
 }: {
   className?: string;
   sequences: string[];
+  setSequences: (sequences: string[]) => void;
   sequenceLabels: string[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
@@ -41,6 +44,8 @@ export const SeqMetadataBar = ({
         selection={selection}
         setSelection={setSelection}
         currentSequence={currentSequence}
+        sequences={sequences}
+        setSequences={setSequences}
       />
     </nav>
   );
@@ -74,6 +79,43 @@ function SequenceSelectorTitle({
     </h4>
   );
 }
+
+const AlignmentButton = ({
+  sequences,
+  setSequences,
+}: {
+  sequences: string[];
+  setSequences: (sequences: string[]) => void;
+}) => {
+  const files: File[] = useMemo(
+    () =>
+      sequences.map((seq, idx) => new File([`>seq${idx}\n${seq}`], `${idx}`)),
+    [],
+  );
+  const { minimapOutput } = useMinimap({ files });
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      disabled={!minimapOutput}
+      onClick={() => {
+        const alignments = minimapOutput?.alignments ?? [];
+        console.log("alignments", alignments);
+        const update = alignments.map((align, i) => {
+          if (align.rname === "*") {
+            return sequences[i]; // no alignment, don't do anything
+          } else {
+            return align.aligned_sequences.query.slice(1); // why offset by 1??
+          }
+        });
+        console.log("update", update);
+        setSequences([sequences[0], ...update]);
+      }}
+    >
+      Align
+    </Button>
+  );
+};
 
 function SelectionSubtitle({
   selection,
@@ -140,16 +182,21 @@ function SelectionSubtitle({
 }
 
 export function ButtonBar({
+  sequences,
+  setSequences,
   selection,
   setSelection,
   currentSequence,
 }: {
+  sequences: string[];
+  setSequences: (sequences: string[]) => void;
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
   currentSequence: string;
 }) {
   return (
     <div className="my-auto flex gap-2">
+      <AlignmentButton sequences={sequences} setSequences={setSequences} />
       <InvertButton selection={selection} setSelection={setSelection} />
       <CopyButton selection={selection} sequence={currentSequence} />
     </div>

@@ -22,12 +22,16 @@ export const Default = () => {
               {
                 id: "copy",
                 label: "Copy",
-                onClick: () => {},
+                onClick: () => {
+                  console.log("Copy");
+                },
               },
               {
                 id: "paste",
                 label: "Paste",
-                onClick: () => {},
+                onClick: () => {
+                  console.log("Paste");
+                },
               },
             ],
           },
@@ -39,13 +43,17 @@ export const Default = () => {
                 id: "option1",
                 label: "Option 1",
                 checked: true,
-                onCheckedChange: () => {},
+                onCheckedChange: () => {
+                  console.log("Option 1");
+                },
               },
               {
                 id: "option2",
                 label: "Option 2",
                 checked: false,
-                onCheckedChange: () => {},
+                onCheckedChange: () => {
+                  console.log("Option 2");
+                },
               },
             ],
           },
@@ -54,7 +62,7 @@ export const Default = () => {
             type: "radio",
             value: "list",
             onValueChange: (value) => {
-              console.debug(value);
+              console.log(value);
             },
             items: [
               { id: "list", label: "List View" },

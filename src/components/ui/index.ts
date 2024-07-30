@@ -21,3 +21,5 @@ export {
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
 } from "./ContextMenu/ContextMenu";
+
+export { NitroContextMenu } from "./ContextMenu/NitroContextMenu";

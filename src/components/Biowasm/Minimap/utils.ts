@@ -63,6 +63,7 @@ export const parseMinimap2Output = (output: string): MinimapOutput => {
         console.error(temp.error.errors);
         throw new Error("Failed to parse alignment record");
       }
+
       alignments.push(temp.data);
     } else if (line.startsWith("[M::main]")) {
       // Footer / summary
