@@ -4,9 +4,12 @@ import { Button } from "@ui/Button/Button";
 import { Input } from "@ui/Input/Input";
 import { classNames } from "@utils/stringUtils";
 import { useCallback, useEffect, useState } from "react";
+import { useMinimap } from "../../Biowasm/Minimap/hooks";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const SeqMetadataBar = ({
   sequences,
+  setSequences,
   sequenceLabels,
   selection,
   setSelection,
@@ -14,6 +17,7 @@ export const SeqMetadataBar = ({
 }: {
   className?: string;
   sequences: string[];
+  setSequences: (sequences: string[]) => void;
   sequenceLabels: string[];
   selection: AriadneSelection | null;
   setSelection: (selection: AriadneSelection | null) => void;
@@ -21,28 +25,60 @@ export const SeqMetadataBar = ({
   const [currentSeqIdx, setCurrentSeqIdx] = useState(0);
   const currentSequence = sequences[currentSeqIdx];
   return (
-    <nav
-      className={classNames(
-        "mb-4 flex flex-row items-start justify-between text-noir-800 dark:text-noir-100",
-        className,
-      )}
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
     >
-      <SequenceSelectorTitle
-        sequenceLabels={sequenceLabels}
-        currentSeqIdx={currentSeqIdx}
-        setCurrentSeqIdx={setCurrentSeqIdx}
-      />
-      <SelectionSubtitle
-        selection={selection}
-        setSelection={setSelection}
-        sequenceLength={100}
-      />
-      <ButtonBar
-        selection={selection}
-        setSelection={setSelection}
-        currentSequence={currentSequence}
-      />
-    </nav>
+      <nav
+        className={classNames(
+          "mb-4 flex flex-row items-start justify-between text-noir-800 dark:text-noir-100",
+          className,
+        )}
+      >
+        <AlignmentButton sequences={sequences} setSequences={setSequences} />
+        <ButtonBar
+          selection={selection}
+          setSelection={setSelection}
+          currentSequence={currentSequence}
+        />
+      </nav>
+    </QueryClientProvider>
+  );
+};
+const AlignmentButton = ({
+  sequences,
+  setSequences,
+}: {
+  sequences: string[];
+  setSequences: (sequences: string[]) => void;
+}) => {
+  const { runMinimap, mounted, loaded } = useMinimap({ sequences });
+  const ready = loaded && mounted;
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      disabled={!ready}
+      onClick={() => {
+        runMinimap().then((output) => {
+          if (!output) {
+            console.error("No output from minimap");
+            return;
+          }
+          const update = output?.alignments.map((align, i) => {
+            if (align.rname === "*") {
+              return sequences[i]; // no alignment, don't do anything
+            } else {
+              return align.aligned_sequences.query;
+            }
+          });
+          setSequences(update);
+        });
+      }}
+    >
+      Align
+    </Button>
   );
 };
 
