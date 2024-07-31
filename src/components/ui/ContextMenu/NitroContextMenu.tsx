@@ -68,12 +68,17 @@ export type NitroContextMenuGroup =
 interface NitroContextMenuProps {
   trigger: React.ReactNode;
   groups: NitroContextMenuGroup[];
+  asChild?: boolean;
 }
 
-export function NitroContextMenu({ trigger, groups }: NitroContextMenuProps) {
+export function NitroContextMenu({
+  trigger,
+  groups,
+  asChild,
+}: NitroContextMenuProps) {
   return (
     <ContextMenu>
-      <ContextMenuTrigger asChild>{trigger}</ContextMenuTrigger>
+      <ContextMenuTrigger asChild={asChild}>{trigger}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         {groups.map((group: NitroContextMenuGroup, groupIndex: number) => (
           <Fragment key={`group-${groupIndex}`}>
