@@ -1,7 +1,7 @@
 {
   "name": "@ninjha01/nitro-ui",
   "private": false,
-  "version": "0.1.63",
+  "version": "0.1.64",
   "scripts": {
     "build:ci": "vite build && pnpm build-css",
     "build": "pnpm lint && vite build && pnpm build-css",
@@ -21,6 +21,7 @@
   "dependencies": {
     "@biowasm/aioli": "^3.1.0",
     "@headlessui/react": "^1.7.18",
+    "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -44,7 +45,6 @@
     "storybook-addon-performance": "^0.17.3",
     "uuid": "^9.0.1",
     "vite-raw-plugin": "^1.0.2",
-    "wretch": "^2.9.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

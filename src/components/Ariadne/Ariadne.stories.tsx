@@ -10,7 +10,6 @@ import {
   generateRandomAlignedSequences,
 } from "./storyUtils";
 import { AriadneSelection } from "./types";
-import { SeqMetadataBar } from "./SequenceViewer/SeqMetadataBar";
 
 export default {
   title: "Ariadne/Ariadne",
@@ -37,13 +36,6 @@ const AriadneStory = ({
   return (
     <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
       <div className="h-full overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
-        <SeqMetadataBar
-          className="sticky top-0 z-[1] hidden bg-white px-1 dark:bg-noir-800"
-          sequences={sequences}
-          selection={selection}
-          setSelection={setSelection}
-          sequenceLabels={sequences.map((_, idx) => `Sequence ${idx + 1}`)}
-        />
         <SequenceViewer
           sequences={sequences}
           selection={selection}

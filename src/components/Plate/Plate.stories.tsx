@@ -1,129 +1,181 @@
-import { useState, useMemo } from "react";
 import { Card } from "@ui/Card";
-import { Plate, PlateSelection } from "./Plate";
-import { RowAnnotation } from "@Ariadne/types";
-import { wellsToRowsCols } from "./utils";
+import { NitroContextMenu } from "@ui/ContextMenu/NitroContextMenu";
+import { classNames } from "@utils/stringUtils";
+import { useState } from "react";
+import { Plate } from "./Plate";
+import {
+  ColAnnotation,
+  PlateSelection,
+  RowAnnotation,
+  WellAnnotation,
+} from "./schemas";
 
 export default {
   title: "Plate/Plate",
   component: Plate,
 };
 
-export const TwentyFour = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate
-        className="-ml-5 -ml-8"
-        wells={24}
-        selection={selection}
-        setSelection={setSelection}
-      />
-    </Card>
-  );
-};
-export const FourtyEight = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate wells={48} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
-export const NinetySix = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-3xl">
-      <Plate wells={96} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
-export const ThreeEightyFour = () => {
-  const [selection, setSelection] = useState<PlateSelection | null>(null);
-  return (
-    <Card className="max-w-7xl">
-      <Plate wells={384} selection={selection} setSelection={setSelection} />
-    </Card>
-  );
-};
-
 const PlateStory = ({
   wells,
-  initialSelection,
-  maxRandomRowAnnotations,
+  className,
 }: {
   wells: 24 | 96 | 48 | 384;
-  initialSelection?: PlateSelection;
-  maxRandomRowAnnotations?: number;
+  className?: string;
 }) => {
-  const { rowAnnotations } = useMemo(() => {
-    return {
-      rowAnnotations: generateRandomRowAnnotations(
-        maxRandomRowAnnotations || 0,
-        wells,
-      ),
-    };
-  }, []);
+  const [selection, setSelection] = useState<PlateSelection | null>(null);
+  const [wellAnnotations, setWellAnnotations] = useState<
+    WellAnnotation<{ foo: string }>[]
+  >([
+    {
+      id: "Treatment 1",
+      label: "Treatment 1",
+      wells: [
+        0, 12, 36, 48, 72, 84, 4, 16, 40, 52, 76, 88, 8, 20, 44, 56, 80, 92,
+      ],
+      className: "bg-blue-500 text-blue-50 ",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "Treatment 2",
+      label: "Treatment 2",
+      wells: [
+        1, 13, 37, 49, 73, 85, 5, 17, 41, 53, 77, 89, 9, 21, 45, 57, 81, 93,
+      ],
+      className: "bg-red-500 text-red-50 ",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "Postive Control",
+      label: "Postive Control",
+      wells: [
+        2, 14, 38, 50, 74, 86, 6, 18, 42, 54, 78, 90, 10, 22, 46, 58, 82, 94,
+      ],
+      className: "bg-green-500 text-green-50 ",
+      metadata: {
+        foo: "bar",
+      },
+    },
+    {
+      id: "Negative Control",
+      label: "Negative Control",
+      wells: [
+        3, 15, 39, 51, 75, 87, 7, 19, 43, 55, 79, 91, 11, 23, 47, 59, 83, 95,
+      ],
+      className: "bg-fuchsia-500 text-fuchsia-50 ",
+      metadata: {
+        foo: "bar",
+      },
+    },
+  ]);
 
-  const [selection, setSelection] = useState<PlateSelection | null>(
-    initialSelection ?? null,
-  );
+  const [rowAnnotations] = useState<RowAnnotation<Record<string, never>>[]>([
+    {
+      rows: [0, 1],
+      label: "Antibody 1 μmol/L",
+      id: "Antibody 1 μmol/L",
+      className: "bg-cyan-500 text-cyan-50 ",
+    },
+    {
+      rows: [3, 4],
+      label: "Antibody 2 μmol/L",
+      id: "Row Annotation 1",
+      className: "bg-amber-500 text-amber-50 ",
+    },
+    {
+      rows: [6, 7],
+      label: "Antibody 3 μmol/L",
+      id: "Row Annotation 2",
+      className: "bg-rose-500 text-rose-50 ",
+    },
+  ]);
 
+  const [colAnnotations] = useState<ColAnnotation<Record<string, never>>[]>([
+    {
+      cols: [0, 1, 2, 3],
+      label: "Patient 1",
+      id: "Patient 1",
+      className: "bg-blue-500 text-blue-50 ",
+    },
+    {
+      cols: [4, 5, 6, 7],
+      label: "Patient 2",
+      id: "Patient 2",
+      className: "bg-lime-500 text-lime-50 ",
+    },
+    {
+      cols: [8, 9, 10, 11],
+      label: "Patient 3",
+      id: "Patient 3",
+      className: "bg-fuchsia-500 text-fuchsia-50 ",
+    },
+  ]);
   return (
-    <Card className="max-w-7xl">
-      <Plate
-        wells={wells}
-        selection={selection}
-        setSelection={setSelection}
-        rowAnnotations={rowAnnotations}
+    <Card className={classNames("max-w-4xl", className)}>
+      <NitroContextMenu
+        trigger={
+          <Plate
+            className="mr-2 pb-8"
+            wells={wells}
+            selection={selection}
+            setSelection={setSelection}
+            wellAnnotations={wellAnnotations}
+            rowAnnotations={rowAnnotations}
+            colAnnotations={colAnnotations}
+          />
+        }
+        groups={[
+          {
+            label: "Create Annotations",
+            type: "base",
+            items: [
+              ...wellAnnotations.map((ann) => ({
+                id: ann.id,
+                label: ann.label,
+                onClick: () => {
+                  if (selection) {
+                    setWellAnnotations((prev) => {
+                      const newAnn = {
+                        ...ann,
+                        wells: [...ann.wells, ...selection.wells],
+                      };
+                      return [...prev.filter((a) => a.id !== ann.id), newAnn];
+                    });
+                    setSelection(null);
+                  } else {
+                    alert("Select wells first");
+                  }
+                },
+              })),
+              {
+                id: "Clear Annotations",
+                label: "Clear Annotations",
+                onClick: () => {
+                  if (selection) {
+                    const selectedWells = selection.wells;
+                    const next = wellAnnotations.map((ann) => {
+                      const wells = ann.wells.filter(
+                        (w) => !selectedWells.includes(w),
+                      );
+                      return { ...ann, wells };
+                    });
+                    setWellAnnotations(next);
+                    setSelection(null);
+                  }
+                },
+              },
+            ],
+          },
+        ]}
       />
     </Card>
   );
 };
 
-export const NinetySixyWithRowAnnotations = () => {
-  return <PlateStory wells={96} maxRandomRowAnnotations={15} />;
-};
-
-export const TwentyFourWithRowAnnotations = () => {
-  return <PlateStory wells={24} maxRandomRowAnnotations={4} />;
-};
-
-// Generate up to maxRowAnnotations random row annotations
-const generateRandomRowAnnotations = (
-  maxRowAnnotations: number,
-  wells: 24 | 96 | 48 | 384,
-): RowAnnotation[] => {
-  const rowAnnotations: RowAnnotation[] = [];
-  const { rows: numRows } = wellsToRowsCols(wells);
-
-  const bgColors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-indigo-500",
-    "bg-gray-500",
-  ];
-  const numRowAnnotations = Math.floor(Math.random() * maxRowAnnotations);
-
-  for (let i = 0; i < numRowAnnotations; i++) {
-    const annNumRows = Math.floor(Math.random() * numRows);
-    const selectedRows = [];
-    for (let j = 0; j < annNumRows; j++) {
-      selectedRows.push(Math.floor(Math.random() * numRows));
-    }
-
-    rowAnnotations.push({
-      rows: selectedRows,
-      label: `Row Annotation ${i}`,
-      id: `${i}`,
-      className: bgColors[i % bgColors.length],
-    });
-  }
-  return rowAnnotations;
-};
+export const Plate24 = () => <PlateStory wells={24} />;
+export const Plate48 = () => <PlateStory wells={48} />;
+export const Plate96 = () => <PlateStory wells={96} />;
+export const Plate384 = () => <PlateStory wells={384} className="!max-w-5xl" />;

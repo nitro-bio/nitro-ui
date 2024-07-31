@@ -23,7 +23,7 @@ export const useMountFiles = ({
   files,
   cli,
 }: {
-  files: File[] | null;
+  files: File[] | Blob[] | { name: string; data: string }[] | null;
   cli: React.MutableRefObject<Aioli | null>;
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -40,7 +40,6 @@ export const useMountFiles = ({
       const mount = async () => {
         const _paths = await cli.current!.mount(files);
         setPaths(_paths);
-
         setMounted(true);
       };
       mount();

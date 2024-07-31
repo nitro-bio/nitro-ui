@@ -1,3 +1,7 @@
-import { Plate, PlateSelection } from "./Plate";
-export { Plate };
-export type { PlateSelection };
+export { Plate } from "./Plate";
+export type {
+  ColAnnotation,
+  PlateSelection,
+  RowAnnotation,
+  WellAnnotation,
+} from "./schemas";
