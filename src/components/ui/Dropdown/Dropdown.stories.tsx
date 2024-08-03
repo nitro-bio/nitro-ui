@@ -94,3 +94,33 @@ export function DropdownMenuDemo() {
     </Card>
   );
 }
+
+export function DropdownMenuDemoHideMenuAndGroupLabelTitle() {
+
+  const group2NoLabel = {
+    type: "base" as const,
+    items: [
+      {
+        label: "Profile",
+        id: "Profile",
+        icon: <UserIcon className="mr-2 h-4 w-4" />,
+        aside: "⇧⌘P",
+      },
+      {
+        label: "Billing",
+        id: "Billing",
+        icon: <CreditCardIcon className="mr-2 h-4 w-4" />,
+        aside: "⌘B",
+      },
+    ],
+  };
+
+  return (
+    <Card className="h-[800px] p-4">
+      <Dropdown
+        groups={[group2NoLabel]}
+        buttonLabel="Open"
+      />
+    </Card>
+  );
+}
