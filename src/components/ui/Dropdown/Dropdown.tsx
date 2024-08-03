@@ -61,14 +61,16 @@ function Dropdown<T extends string>({
   buttonLabel,
   menuLabel,
   groups,
+  disabled,
 }: {
   buttonLabel: ReactNode;
   menuLabel?: string;
   groups: DropdownGroup<T>[];
+  disabled?: boolean;
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <Button variant="outline">{buttonLabel}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

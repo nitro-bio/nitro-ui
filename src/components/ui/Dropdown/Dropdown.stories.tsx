@@ -120,3 +120,23 @@ export function DropdownMenuDemoHideMenuAndGroupLabelTitle() {
     </Card>
   );
 }
+
+export function DropdownMenuDisabled() {
+  const group = {
+    type: "base" as const,
+    items: [
+      {
+        label: "Profile",
+        id: "Profile",
+        icon: <UserIcon className="mr-2 h-4 w-4" />,
+        aside: "⇧⌘P",
+      },
+    ],
+  };
+
+  return (
+    <Card className="h-[800px] p-4">
+      <Dropdown groups={[group]} disabled buttonLabel="Open" />
+    </Card>
+  );
+}
