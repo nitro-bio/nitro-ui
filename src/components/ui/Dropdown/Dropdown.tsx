@@ -36,17 +36,17 @@ export interface DropdownCheckboxItem {
 }
 
 export interface DropdownBaseGroup {
-  label: string;
+  label?: string;
   items: DropdownBaseItem[];
   type: "base";
 }
 export interface DropdownCheckboxGroup {
-  label: string;
+  label?: string;
   items: DropdownCheckboxItem[];
   type: "checkbox";
 }
 export interface DropdownRadioGroup<T extends string> {
-  label: string;
+  label?: string;
   items: DropdownRadioItem[];
   value: T;
   onValueChange: (value: T) => void;
@@ -63,7 +63,7 @@ function Dropdown<T extends string>({
   groups,
 }: {
   buttonLabel: ReactNode;
-  menuLabel: string;
+  menuLabel?: string;
   groups: DropdownGroup<T>[];
 }) {
   return (
@@ -72,13 +72,19 @@ function Dropdown<T extends string>({
         <Button variant="outline">{buttonLabel}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{menuLabel}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {menuLabel && (
+          <>
+            <DropdownMenuLabel>{menuLabel}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+        )}
         {groups.map((group, i) => {
           if (group.type === "checkbox") {
             return (
               <DropdownMenuGroup key={`${group.label}-checkbox-${i}`}>
-                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuCheckboxItem
                     key={item.id}
@@ -102,7 +108,9 @@ function Dropdown<T extends string>({
                 value={group.value}
                 onValueChange={(value) => group.onValueChange(value as T)}
               >
-                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuRadioItem key={item.id} value={item.id}>
                     {item.icon}
@@ -118,7 +126,9 @@ function Dropdown<T extends string>({
           if (group.type === "base") {
             return (
               <DropdownMenuGroup key={`${group.label}-${i}`}>
-                <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuItem onClick={item.onClick} key={item.id}>
                     {item.icon}
