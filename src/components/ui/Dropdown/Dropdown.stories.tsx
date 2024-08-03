@@ -96,7 +96,6 @@ export function DropdownMenuDemo() {
 }
 
 export function DropdownMenuDemoHideMenuAndGroupLabelTitle() {
-
   const group2NoLabel = {
     type: "base" as const,
     items: [
@@ -117,10 +116,7 @@ export function DropdownMenuDemoHideMenuAndGroupLabelTitle() {
 
   return (
     <Card className="h-[800px] p-4">
-      <Dropdown
-        groups={[group2NoLabel]}
-        buttonLabel="Open"
-      />
+      <Dropdown groups={[group2NoLabel]} buttonLabel="Open" />
     </Card>
   );
 }

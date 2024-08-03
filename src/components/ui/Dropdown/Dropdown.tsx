@@ -82,7 +82,9 @@ function Dropdown<T extends string>({
           if (group.type === "checkbox") {
             return (
               <DropdownMenuGroup key={`${group.label}-checkbox-${i}`}>
-                {group.label && (<DropdownMenuLabel>{group.label}</DropdownMenuLabel>)}
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuCheckboxItem
                     key={item.id}
@@ -106,7 +108,9 @@ function Dropdown<T extends string>({
                 value={group.value}
                 onValueChange={(value) => group.onValueChange(value as T)}
               >
-                {group.label && (<DropdownMenuLabel>{group.label}</DropdownMenuLabel>)}
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuRadioItem key={item.id} value={item.id}>
                     {item.icon}
@@ -122,7 +126,9 @@ function Dropdown<T extends string>({
           if (group.type === "base") {
             return (
               <DropdownMenuGroup key={`${group.label}-${i}`}>
-                {group.label && (<DropdownMenuLabel>{group.label}</DropdownMenuLabel>)}
+                {group.label && (
+                  <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                )}
                 {group.items.map((item) => (
                   <DropdownMenuItem onClick={item.onClick} key={item.id}>
                     {item.icon}
