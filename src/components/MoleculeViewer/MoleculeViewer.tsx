@@ -9,10 +9,14 @@ import { Color } from "molstar/lib/mol-util/color";
 import { useEffect, useRef } from "react";
 
 interface Highlight {
-  label: string;
+  label: {
+    text: string;
+    hexColor: string;
+    scale?: number;
+  };
   start: number;
   end: number;
-  hexColor: string;
+  hidden?: true;
 }
 
 export const MoleculeViewer = ({
@@ -20,11 +24,15 @@ export const MoleculeViewer = ({
   pdbUrl,
   className,
   highlights,
+  backgroundHexColor,
+  structureHexColor,
 }: {
   pdbStr?: string;
   pdbUrl?: string;
   className?: string;
   highlights?: Highlight[];
+  backgroundHexColor?: string;
+  structureHexColor?: string;
 }) => {
   if (!pdbStr && !pdbUrl) {
     throw new Error("pdbStr or pdbUrl is required");
@@ -32,6 +40,10 @@ export const MoleculeViewer = ({
   if (pdbStr && pdbUrl) {
     throw new Error("pdbStr and pdbUrl are mutually exclusive");
   }
+  if (backgroundHexColor && !backgroundHexColor.includes("#")) {
+    throw new Error("hexCode must be of format '#123456'");
+  }
+
   const parentRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const plugin = useRef<PluginContext | null>(null);
@@ -44,6 +56,13 @@ export const MoleculeViewer = ({
 
         /* remove axes and set background transparent */
         plugin.current.canvas3d?.setProps({
+          renderer: {
+            backgroundColor: Color.fromHexString(
+              backgroundHexColor
+                ? backgroundHexColor.replace("#", "0x")
+                : "0xFCFBFA",
+            ),
+          },
           camera: {
             helper: {
               axes: {
@@ -74,7 +93,10 @@ export const MoleculeViewer = ({
     [pdbStr, highlights, pdbUrl],
   );
 
-  const colorResidues = ({ start, end, hexColor, label }: Highlight) => {
+  const colorResidues = ({ start, end, label, hidden }: Highlight) => {
+    if (hidden) {
+      return;
+    }
     const range = Array.from(
       //creates an array of all numbers in [start, end]
       { length: end - start },
@@ -110,14 +132,15 @@ export const MoleculeViewer = ({
     setStructureOverpaint(
       plugin.current!,
       components,
-      Color(Number(`0x${hexColor.substring(1)}`)),
+      Color(Number(`0x${label.hexColor.substring(1)}`)),
       lociGetter,
     );
     const loci = StructureSelection.toLociWithSourceUnits(selection);
     plugin.current!.managers.structure.measurement.addLabel(loci, {
       labelParams: {
-        customText: `${label}: ${start}-${end}`,
-        textColor: Color(Number(`0x${hexColor.substring(1)}`)),
+        customText: `${label.text}: ${start}-${end}`,
+        textColor: Color(Number(`0x${label.hexColor.substring(1)}`)),
+        sizeFactor: label.scale ?? 1.0,
       },
     });
   };
@@ -131,29 +154,43 @@ export const MoleculeViewer = ({
     plugin: PluginContext | null;
   }) => {
     if (plugin) {
+      let trajectory;
       if (pdbUrl) {
         const data = await plugin.builders.data.download({ url: pdbUrl });
-        const trajectory = await plugin.builders.structure.parseTrajectory(
+        trajectory = await plugin.builders.structure.parseTrajectory(
           data,
           "pdb",
         );
-        await plugin.builders.structure.hierarchy.applyPreset(
-          trajectory,
-          "default",
-        );
-      }
-      if (pdbStr) {
+      } else if (pdbStr) {
         const data = await plugin.builders.data.rawData({
           data: pdbStr,
-          label: void 0 /* optional label */,
+          label: void 0, // optional label
         });
-        const trajectory = await plugin.builders.structure.parseTrajectory(
+        trajectory = await plugin.builders.structure.parseTrajectory(
           data,
           "pdb",
         );
+      }
+
+      if (trajectory) {
+        const params = structureHexColor
+          ? {
+              // Corrected parameter name
+              representationPresetParams: {
+                theme: {
+                  globalName: "uniform",
+                  globalColorParams: {
+                    value: Color(Number(`0x${structureHexColor.substring(1)}`)),
+                  },
+                },
+              },
+            }
+          : undefined;
+
         await plugin.builders.structure.hierarchy.applyPreset(
           trajectory,
           "default",
+          params,
         );
       }
     }
@@ -171,7 +208,7 @@ export const MoleculeViewer = ({
       <canvas
         ref={canvasRef}
         className="absolute bottom-0 left-0 right-0 top-0 "
-        style={{ backgroundColor: "transparent" }}
+        style={{ backgroundColor: backgroundHexColor ?? "transparent" }}
       />
     </div>
   );

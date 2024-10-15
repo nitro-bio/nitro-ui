@@ -10,15 +10,13 @@ export const WithHiglights = () => {
   const highlights = [
     {
       // red
-      label: "Red Annotation",
-      hexColor: "#ff0000",
+      label: { text: "Red Annotation", hexColor: "#ff0000", scale: 1 },
       start: 14,
       end: 30,
     },
     {
       // blue
-      label: "Blue Annotation",
-      hexColor: "#0000ff",
+      label: { text: "Blue Annotation", hexColor: "#0000ff", scale: 0.5 },
       start: 0,
       end: 10,
     },
@@ -43,6 +41,8 @@ export const WithHiglights = () => {
       </button>
       <MoleculeViewer
         className="min-h-80"
+        backgroundHexColor="#fcfbfa"
+        structureHexColor="#ff00ff"
         pdbUrl="https://files.rcsb.org/download/1CRN.pdb"
         highlights={[currentHighlight]}
       />
