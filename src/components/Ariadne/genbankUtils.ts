@@ -55,11 +55,7 @@ export const genbankFeaturesToAnnotations = ({
   annotationOnClick?: (annotation: Annotation) => void;
 }): Annotation[] => {
   return features.map((feature) => {
-    const direction = feature.strand === 1 ? "forward" : "reverse";
-    let [start, end] = [feature.start, feature.end];
-    if (direction === "reverse") {
-      [start, end] = [feature.end, feature.start];
-    }
+    const [start, end] = [feature.start, feature.end];
     return {
       type: feature.type,
       start,

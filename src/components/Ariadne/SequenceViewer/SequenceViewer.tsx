@@ -42,11 +42,13 @@ export const SequenceViewer = ({
   );
   const stackedAnnotations = useMemo(
     function memoize() {
-      return stackAnnotationsNoOverlap(annotations);
+      return stackAnnotationsNoOverlap(
+        annotations,
+        Math.max(...sequences.map((seq) => seq.length)),
+      );
     },
     [annotations],
   );
-
   const annotatedSequences = useMemo(
     function memoize() {
       return sequences.map((sequence) =>
@@ -127,7 +129,11 @@ export const SeqContent = ({
       "text-xs z-1",
       // don't allow selection of indices
       "dark:group-hover:text-zinc-300 group-hover:text-zinc-800",
-      baseInSelection(base.index, selection)
+      baseInSelection({
+        baseIndex: base.index,
+        selection,
+        sequenceLength: annotatedSequences[sequenceIdx].length,
+      })
         ? "text-brand-700 dark:text-brand-300"
         : "text-zinc-400 dark:text-zinc-600",
     );
@@ -178,7 +184,12 @@ export const SeqContent = ({
                           base,
                           sequenceIdx,
                         }),
-                        baseInSelection(baseIdx, selection) &&
+                        baseInSelection({
+                          baseIndex: baseIdx,
+                          selection,
+                          sequenceLength:
+                            annotatedSequences[sequenceIdx].length,
+                        }) &&
                           base.base !== " " &&
                           selectionClassName,
                       )}
@@ -193,6 +204,9 @@ export const SeqContent = ({
               maxAnnotationStack={stackedAnnotations.length}
               setHoveredPosition={setHoveredPosition}
               setActiveAnnotation={setActiveAnnotation}
+              maxSequenceLength={Math.max(
+                ...annotatedSequences.map((seq) => seq.length),
+              )}
             />
           </div>
         );
@@ -249,11 +263,13 @@ export const SequenceAnnotation = ({
   index,
   setHoveredPosition,
   setActiveAnnotation,
+  maxSequenceLength,
 }: {
   annotations: StackedAnnotation[];
   maxAnnotationStack: number;
   setHoveredPosition: (position: number | null) => void;
   setActiveAnnotation: (annotation: Annotation | null) => void;
+  maxSequenceLength: number;
   index: number;
 }) => {
   const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
@@ -267,7 +283,13 @@ export const SequenceAnnotation = ({
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
-          if (!baseInSelection(index, annotation)) {
+          if (
+            !baseInSelection({
+              baseIndex: index,
+              selection: annotation,
+              sequenceLength: maxSequenceLength,
+            })
+          ) {
             return (
               <div
                 key={`annotation-${index}-${i}`}

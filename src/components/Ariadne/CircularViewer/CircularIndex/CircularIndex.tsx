@@ -19,7 +19,7 @@ export const CircularIndex = ({
 
   if (annotatedSequence.length > 80) {
     return (
-      <svg className={`bg-brand-800 fill-current`}>
+      <svg className={`fill-current`}>
         <g>
           <circle
             cx={cx}
@@ -123,7 +123,7 @@ const Ticks = ({
               fontSize=".8rem"
               transform={`rotate(${rotateDegrees} ${cx} ${cy})`}
               fill="currentColor"
-              opacity={0.5}
+              opacity={0.75}
             >
               {i * basesPerTick}
             </text>

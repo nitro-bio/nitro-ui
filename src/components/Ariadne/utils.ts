@@ -135,31 +135,29 @@ export const getStackedAnnotations = (
     .map((row, idx) => row.map((annotation) => ({ ...annotation, stack: idx })))
     .flat();
 };
-export const baseInSelection = (
-  baseIndex: number,
-  selection: AriadneSelection | null,
-) => {
+export const baseInSelection = ({
+  baseIndex,
+  selection,
+  sequenceLength,
+}: {
+  baseIndex: number;
+  sequenceLength: number;
+  selection: AriadneSelection | null;
+}) => {
   if (!selection) {
     return false;
   }
-  let { start, end, direction } = selection;
+  const { start, end } = selection;
   if (start === end) {
-    if (direction === "forward") {
-      // we're selecting a single base
-      return baseIndex === start;
-    } else {
-      // we're selecting everything but a single base
-      return baseIndex !== start;
-    }
-  }
-  if (direction === "reverse") {
-    [start, end] = [end, start];
-    direction = "forward";
+    return baseIndex === start;
   }
   if (start < end) {
     return inRange(baseIndex, start, end);
   } else {
-    return inRange(baseIndex, start, end) || inRange(baseIndex, 0, end);
+    // spans seam
+    return (
+      inRange(baseIndex, start, sequenceLength) || inRange(baseIndex, 0, end)
+    );
   }
 };
 
@@ -168,12 +166,9 @@ export const inRange = (value: number, min: number, max: number) => {
 };
 
 export const getSubsequenceLength = (
-  { start, end, direction }: AriadneSelection,
+  { start, end }: AriadneSelection,
   sequenceLength: number,
 ) => {
-  if (direction === "reverse") {
-    [start, end] = [end, start];
-  }
   if (start < end) {
     return end - start;
   } else {
@@ -376,51 +371,43 @@ export const stringToAnnotatedSequence = ({
 export const annotationsHaveOverlap = (
   a1: Annotation,
   a2: Annotation,
+  maxLen: number,
 ): boolean => {
-  let a1Start = a1.start;
-  let a1End = a1.end;
-  let a2Start = a2.start;
-  let a2End = a2.end;
-
-  // Convert annotations to be forward
-  if (a1.direction === "reverse") {
-    a1Start = a1.end;
-    a1End = a1.start;
+  if (
+    baseInSelection({
+      baseIndex: a1.start,
+      selection: a2,
+      sequenceLength: maxLen,
+    })
+  ) {
+    return true;
   }
-
-  if (a2.direction === "reverse") {
-    a2Start = a2.end;
-    a2End = a2.start;
+  if (
+    baseInSelection({
+      baseIndex: a1.end,
+      selection: a2,
+      sequenceLength: maxLen,
+    })
+  ) {
+    return true;
   }
-
-  if (a1End < a1Start) {
-    // If the first annotation wraps around the end
-
-    // if the second annotation also wraps then there must be overlap
-    if (a2End < a2Start) {
-      return true;
-    }
-
-    // As long as a2 doesn't fall in the gap then there is overlap.
-    return a2Start <= a1End || a1Start < a2End;
+  if (
+    baseInSelection({
+      baseIndex: a2.start,
+      selection: a1,
+      sequenceLength: maxLen,
+    })
+  ) {
+    return true;
   }
-
-  if (a1End > a1Start) {
-    // If the the first annotation does not wrap.
-    if (a1Start < a2Start && a2Start < a1End) {
-      // a2 starts in the middle of a1 and ends after a1
-      return true;
-    }
-
-    if (a2Start < a1Start && a2End > a1Start) {
-      // a2 starts before a1 and ends after a1
-      return true;
-    }
-  }
-
-  if (a2End < a2Start) {
-    // if second sequence wraps around then..
-    return a1End >= a2End || a2End > a1Start;
+  if (
+    baseInSelection({
+      baseIndex: a2.end,
+      selection: a1,
+      sequenceLength: maxLen,
+    })
+  ) {
+    return true;
   }
   return false;
 };
@@ -429,6 +416,7 @@ export const annotationsHaveOverlap = (
 // any overlapping annotations.
 export const stackAnnotationsNoOverlap = (
   annotations: Annotation[],
+  maxLen: number,
 ): StackedAnnotation[] => {
   const annotationsByStack = [] as Annotation[][];
 
@@ -443,7 +431,7 @@ export const stackAnnotationsNoOverlap = (
 
       let overlap = false;
       for (const stackedAnn of stackAnns) {
-        if (annotationsHaveOverlap(annotation, stackedAnn)) {
+        if (annotationsHaveOverlap(annotation, stackedAnn, maxLen)) {
           overlap = true;
           break;
         }

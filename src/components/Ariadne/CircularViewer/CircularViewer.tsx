@@ -197,7 +197,7 @@ const CircularSelection = ({
   }
 
   /* Display selection data that has trickled down */
-  const { start, end, direction } = selection;
+  const { start, end } = selection;
   if (start === null || end === null) {
     return null;
   }
@@ -214,7 +214,7 @@ const CircularSelection = ({
     console.error("CircularViewer: sequence has no indices");
     return null;
   }
-  const offset = direction === "forward" ? start - startIdx : end - startIdx;
+  const offset = start - startIdx;
   const seqLength = annotatedSequence.length;
 
   const arc = genArc({

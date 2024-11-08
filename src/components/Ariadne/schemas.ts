@@ -32,6 +32,7 @@ export const annotationSchema = z.object({
   text: z.string(),
   onClick: z.function().args(z.any()).optional(), // circular reference
 });
+
 export const stackedAnnotationSchema = annotationSchema.extend({
   stack: z.number(),
 });

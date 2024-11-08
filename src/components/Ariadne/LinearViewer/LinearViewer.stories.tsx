@@ -8,9 +8,6 @@ import { stackAnnsByType } from "@Ariadne/utils";
 export default {
   title: "Ariadne/LinearViewer",
   component: LinearViewer,
-  argTypes: {
-    sequences: { type: "string" },
-  },
 };
 
 const classNameBySequenceIdx = ({ sequenceIdx }: { sequenceIdx: number }) => {

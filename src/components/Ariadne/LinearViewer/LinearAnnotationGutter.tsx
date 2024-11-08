@@ -52,66 +52,34 @@ const LinearAnnotation = ({
 }) => {
   /* if the annotation spans the seam, we draw two lines from the beginning to end, and from start to end */
 
-  const annotationSpansSeam =
-    annotation.direction === "forward"
-      ? annotation.start > annotation.end
-      : annotation.end > annotation.start;
+  const annotationSpansSeam = annotation.start > annotation.end;
   if (annotationSpansSeam) {
-    if (annotation.direction === "forward") {
-      return (
-        <Fragment>
-          <LinearAnnotation
-            annotation={{
-              ...annotation,
-              end: sequence.length,
-              onClick: () => {
-                annotation.onClick?.({ ...annotation });
-              },
-            }}
-            sequence={sequence}
-            stackIdx={stackIdx}
-          />
-          <LinearAnnotation
-            annotation={{
-              ...annotation,
-              start: 0,
-              onClick: () => {
-                annotation.onClick?.({ ...annotation });
-              },
-            }}
-            sequence={sequence}
-            stackIdx={stackIdx}
-          />
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <LinearAnnotation
-            annotation={{
-              ...annotation,
-              start: sequence.length,
-              onClick: () => {
-                annotation.onClick?.({ ...annotation });
-              },
-            }}
-            sequence={sequence}
-            stackIdx={stackIdx}
-          />
-          <LinearAnnotation
-            annotation={{
-              ...annotation,
-              end: 0,
-              onClick: () => {
-                annotation.onClick?.({ ...annotation });
-              },
-            }}
-            sequence={sequence}
-            stackIdx={stackIdx}
-          />
-        </Fragment>
-      );
-    }
+    return (
+      <Fragment>
+        <LinearAnnotation
+          annotation={{
+            ...annotation,
+            end: sequence.length,
+            onClick: () => {
+              annotation.onClick?.({ ...annotation });
+            },
+          }}
+          sequence={sequence}
+          stackIdx={stackIdx}
+        />
+        <LinearAnnotation
+          annotation={{
+            ...annotation,
+            start: 0,
+            onClick: () => {
+              annotation.onClick?.({ ...annotation });
+            },
+          }}
+          sequence={sequence}
+          stackIdx={stackIdx}
+        />
+      </Fragment>
+    );
   }
 
   const annotationRectangleWidthPerc =

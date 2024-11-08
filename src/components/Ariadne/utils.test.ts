@@ -102,8 +102,10 @@ test("annotationsHaveOverlap test forward and forward", async () => {
       direction: "forward",
     },
   ]);
-
-  expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
+  const maxLen = 8;
+  expect(annotationsHaveOverlap(annotations[0], annotations[1], maxLen)).toBe(
+    true,
+  );
 });
 
 test("annotationsHaveOverlap test forward and reverse", async () => {
@@ -126,6 +128,8 @@ test("annotationsHaveOverlap test forward and reverse", async () => {
       direction: "reverse",
     },
   ]);
-
-  expect(annotationsHaveOverlap(annotations[0], annotations[1])).toBe(true);
+  const maxLen = 8;
+  expect(annotationsHaveOverlap(annotations[0], annotations[1], maxLen)).toBe(
+    true,
+  );
 });

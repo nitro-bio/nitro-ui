@@ -47,7 +47,10 @@ export const LinearViewer = (props: Props) => {
       // stacks annotations to prevent overlap.
       return stackingFn
         ? stackingFn(annotations)
-        : stackAnnotationsNoOverlap(annotations);
+        : stackAnnotationsNoOverlap(
+            annotations,
+            Math.max(...sequences.map((seq) => seq.length)),
+          );
     },
     [annotations],
   );
@@ -247,7 +250,7 @@ const LinearSelection = ({
         if (selection == null || start === end) {
           setSelection({
             start,
-            end: internalDirection === "forward" ? start + 1 : start - 1,
+            end: start + 1,
             direction: internalDirection,
           });
           return;
@@ -264,7 +267,7 @@ const LinearSelection = ({
   }
 
   /* Display selection data that has trickled down */
-  const { start, end, direction } = selection;
+  const { start, end } = selection;
 
   // basic case
   let firstRectStart = (Math.min(start, end) / sequence.length) * 100;
@@ -274,25 +277,14 @@ const LinearSelection = ({
   let secondRectWidth = null;
 
   // TODO: abstract this and logic in LinearAnnotation into helper functions
-  const selectionSpansSeam =
-    selection.direction === "forward"
-      ? selection.start > selection.end
-      : selection.end > selection.start;
+  const selectionSpansSeam = selection.start > selection.end;
 
   /* if direction is backward and end > start we need to render two rectangles */
   if (selectionSpansSeam) {
     firstRectStart = 0;
-
-    if (direction === "forward") {
-      firstRectWidth = (end / sequence.length) * 100;
-      secondRectStart = (start / sequence.length) * 100;
-      secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
-    }
-    if (direction === "reverse") {
-      firstRectWidth = (start / sequence.length) * 100;
-      secondRectStart = (end / sequence.length) * 100;
-      secondRectWidth = ((sequence.length - end) / sequence.length) * 100;
-    }
+    firstRectWidth = (end / sequence.length) * 100;
+    secondRectStart = (start / sequence.length) * 100;
+    secondRectWidth = ((sequence.length - start) / sequence.length) * 100;
   }
 
   return (

@@ -5,9 +5,6 @@ import { Paginator } from ".";
 export default {
   title: "UIElements/Paginator",
   component: Paginator,
-  argTypes: {
-    fullWidth: { type: "boolean" },
-  },
 };
 
 type BioData = {
