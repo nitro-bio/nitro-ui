@@ -34,7 +34,7 @@ const SequenceStory = ({
     () =>
       generateRandomAlignedSequences({
         maxSequences: numSequences,
-        maxLength: 100,
+        maxLength: 1000,
       }),
     [],
   );
@@ -52,7 +52,7 @@ const SequenceStory = ({
   };
 
   return (
-    <div className="grid h-screen content-center py-8">
+    <div className="grid min-h-screen content-center py-8">
       <Card className="max-w-4xl">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"

@@ -1,8 +1,11 @@
-import { baseInSelection, getAnnotatedSequence } from "@Ariadne/utils";
+import {
+  baseInSelection,
+  getAnnotatedSequence,
+  stackAnnotationsNoOverlap,
+} from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 
-import { stackAnnsByType } from "@Ariadne/utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type {
   AnnotatedBase,
   Annotation,
@@ -33,9 +36,13 @@ export const SequenceViewer = ({
   selectionClassName?: string;
   noValidate?: boolean;
 }) => {
+  const [hoveredPosition, setHoveredPosition] = useState<number | null>(null);
+  const [activeAnnotation, setActiveAnnotation] = useState<Annotation | null>(
+    null,
+  );
   const stackedAnnotations = useMemo(
     function memoize() {
-      return stackAnnsByType(annotations);
+      return stackAnnotationsNoOverlap(annotations);
     },
     [annotations],
   );
@@ -48,6 +55,61 @@ export const SequenceViewer = ({
     },
     [sequences, stackedAnnotations],
   );
+
+  const memoizedSeqContent = useMemo(() => {
+    return (
+      <SeqContent
+        annotatedSequences={annotatedSequences}
+        selection={selection}
+        setHoveredPosition={setHoveredPosition}
+        setActiveAnnotation={setActiveAnnotation}
+        stackedAnnotations={stackedAnnotations}
+        charClassName={charClassName}
+        selectionClassName={selectionClassName}
+      />
+    );
+  }, [annotatedSequences, selection, stackedAnnotations]);
+  return (
+    <>
+      <div
+        className={classNames(
+          "relative isolate flex flex-wrap gap-y-8",
+          containerClassName,
+        )}
+      >
+        <SeqMetadataBar
+          hoveredPosition={hoveredPosition}
+          activeAnnotation={activeAnnotation}
+          className="sticky inset-x-0 top-0 z-[3] w-full bg-inherit px-2 py-1 backdrop-blur-md"
+        />
+        {memoizedSeqContent}
+      </div>
+    </>
+  );
+};
+export const SeqContent = ({
+  annotatedSequences,
+  selection,
+  setHoveredPosition,
+  setActiveAnnotation,
+  stackedAnnotations,
+  charClassName,
+  selectionClassName,
+}: {
+  annotatedSequences: AnnotatedBase[][];
+  selection: AriadneSelection | null;
+  setHoveredPosition: (position: number | null) => void;
+  setActiveAnnotation: (annotation: Annotation | null) => void;
+  stackedAnnotations: StackedAnnotation[];
+  charClassName: ({
+    base,
+    sequenceIdx,
+  }: {
+    base: AnnotatedBase;
+    sequenceIdx: number;
+  }) => string;
+  selectionClassName?: string;
+}) => {
   const indicesClassName = ({
     base,
     sequenceIdx,
@@ -62,7 +124,7 @@ export const SequenceViewer = ({
       return "opacity-0";
     }
     return classNames(
-      "text-xs",
+      "text-xs z-1",
       // don't allow selection of indices
       "dark:group-hover:text-zinc-300 group-hover:text-zinc-800",
       baseInSelection(base.index, selection)
@@ -72,85 +134,136 @@ export const SequenceViewer = ({
   };
   return (
     <>
-      <div
-        className={classNames("flex flex-wrap gap-y-8 ", containerClassName)}
-      >
-        {annotatedSequences[0].map(({ index: baseIdx }) => {
-          return (
-            <div
-              className={classNames(
-                "mt-4 flex flex-col justify-between",
-                "group hover:bg-zinc-200 dark:hover:bg-zinc-600",
-              )}
-              key={`base-${baseIdx}`}
-            >
-              {annotatedSequences.map(
-                (sequence: AnnotatedBase[], sequenceIdx) => {
-                  const base = sequence.find(
-                    (base: AnnotatedBase) => base.index === baseIdx,
-                  ) || { base: " ", annotations: [], index: baseIdx };
+      {annotatedSequences[0].map(({ index: baseIdx }) => {
+        return (
+          <div
+            className={classNames(
+              "relative mt-4 flex flex-col justify-between",
+              "group hover:bg-zinc-200 dark:hover:bg-zinc-600",
+            )}
+            key={`base-${baseIdx}`}
+          >
+            {annotatedSequences.map(
+              (sequence: AnnotatedBase[], sequenceIdx) => {
+                const base = sequence.find(
+                  (base: AnnotatedBase) => base.index === baseIdx,
+                ) || { base: " ", annotations: [], index: baseIdx };
 
-                  return (
-                    <div
-                      key={`sequence-${sequenceIdx}-base-${baseIdx}`}
-                      className={classNames(
-                        "relative whitespace-pre text-center",
+                return (
+                  <div
+                    key={`sequence-${sequenceIdx}-base-${baseIdx}`}
+                    className={classNames("whitespace-pre text-center")}
+                    onMouseEnter={() => {
+                      setHoveredPosition(base.index);
+                    }}
+                    onMouseLeave={() => setHoveredPosition(null)}
+                  >
+                    <CharComponent
+                      char={`| ${base.index}`}
+                      index={baseIdx}
+                      charClassName={classNames(
+                        "absolute -top-4 left-0",
+                        "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
+                        indicesClassName({
+                          base,
+                          sequenceIdx,
+                        }),
                       )}
-                    >
-                      <CharComponent
-                        char={`| ${base.index}`}
-                        index={baseIdx}
-                        charClassName={classNames(
-                          "absolute -top-4 left-0",
-                          "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
-                          indicesClassName({
-                            base,
-                            sequenceIdx,
-                          }),
-                        )}
-                      />
-                      <CharComponent
-                        char={base.base}
-                        index={baseIdx}
-                        charClassName={classNames(
-                          charClassName({
-                            base,
-                            sequenceIdx,
-                          }),
-                          baseInSelection(baseIdx, selection) &&
-                            base.base !== " " &&
-                            selectionClassName,
-                        )}
-                      />
-                    </div>
-                  );
-                },
-              )}
-              <SequenceAnnotation
-                annotations={stackedAnnotations}
-                index={baseIdx}
-                maxAnnotationStack={stackedAnnotations.length}
-              />
-            </div>
-          );
-        })}
-      </div>
+                    />
+                    <CharComponent
+                      char={base.base}
+                      index={baseIdx}
+                      charClassName={classNames(
+                        charClassName({
+                          base,
+                          sequenceIdx,
+                        }),
+                        baseInSelection(baseIdx, selection) &&
+                          base.base !== " " &&
+                          selectionClassName,
+                      )}
+                    />
+                  </div>
+                );
+              },
+            )}
+            <SequenceAnnotation
+              annotations={stackedAnnotations}
+              index={baseIdx}
+              maxAnnotationStack={stackedAnnotations.length}
+              setHoveredPosition={setHoveredPosition}
+              setActiveAnnotation={setActiveAnnotation}
+            />
+          </div>
+        );
+      })}
     </>
   );
 };
 
-const SequenceAnnotation = ({
+export const SeqMetadataBar = ({
+  hoveredPosition,
+  activeAnnotation,
+  className,
+}: {
+  hoveredPosition: number | null;
+  activeAnnotation: Annotation | null;
+  className?: string;
+}) => {
+  const annotationDisplay = activeAnnotation ? (
+    <span
+      className={classNames(
+        "flex gap-2 rounded-full px-2 py-px !opacity-100",
+        activeAnnotation.className,
+      )}
+    >
+      <span>Label: {activeAnnotation.text}</span>
+      <span>Type: {activeAnnotation.type}</span>
+      <span>Direction: {activeAnnotation.direction}</span>
+      <span>
+        from {activeAnnotation.start} - {activeAnnotation.end}
+      </span>
+    </span>
+  ) : null;
+  const positionDisplay = (
+    <span className="text-xs text-black dark:text-white">
+      Pos: {hoveredPosition ?? 0}
+    </span>
+  );
+  return (
+    <div
+      className={classNames(
+        "flex h-8 items-center justify-between gap-4 px-2 py-1 text-xs",
+        className,
+      )}
+    >
+      {positionDisplay}
+      {annotationDisplay}
+    </div>
+  );
+};
+
+export const SequenceAnnotation = ({
   annotations,
   maxAnnotationStack,
   index,
+  setHoveredPosition,
+  setActiveAnnotation,
 }: {
   annotations: StackedAnnotation[];
   maxAnnotationStack: number;
+  setHoveredPosition: (position: number | null) => void;
+  setActiveAnnotation: (annotation: Annotation | null) => void;
   index: number;
 }) => {
   const orderedAnnotations = annotations.sort((a, b) => a.stack - b.stack);
   return (
-    <div className="relative " key={`annotation-${index}`}>
+    <div
+      className=" "
+      key={`annotation-${index}`}
+      onMouseEnter={() => setHoveredPosition(index)}
+      onMouseLeave={() => setHoveredPosition(null)}
+    >
       {[...Array(maxAnnotationStack).keys()].map((i) => {
         const annotation = orderedAnnotations.find((a) => a.stack === i);
         if (annotation) {
@@ -177,18 +290,9 @@ const SequenceAnnotation = ({
                   diection: annotation.direction,
                 })
               }
-            >
-              <div
-                className={classNames(
-                  "absolute -top-28 hidden flex-col items-start rounded-md px-2 py-1 text-xs group-hover/annotation:flex ",
-                  annotation.className,
-                )}
-              >
-                <span>Pos: {index}</span>
-                <span>{annotation.text}</span>
-                <span>{annotation.type}</span>
-              </div>
-            </div>
+              onMouseEnter={() => setActiveAnnotation(annotation)}
+              onMouseLeave={() => setActiveAnnotation(null)}
+            ></div>
           );
         } else {
           return <div key={`placeholder-${index}-${i}`} className={"h-3"} />;
@@ -204,7 +308,7 @@ interface CharProps {
   charClassName: string;
 }
 
-const CharComponent = ({ char, charClassName }: CharProps) => {
+export const CharComponent = ({ char, charClassName }: CharProps) => {
   // don't allow selection of chars
   const sharedClassName = "select-none font-mono";
   if (char === " ") {
