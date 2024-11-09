@@ -1,5 +1,5 @@
 import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
-import { Card } from "@ui/Card";
+
 import { useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
@@ -53,7 +53,7 @@ const SequenceStory = ({
 
   return (
     <div className="grid min-h-screen content-center py-8">
-      <Card className="max-w-4xl">
+      <div className="max-w-4xl">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
           sequences={sequences}
@@ -62,7 +62,7 @@ const SequenceStory = ({
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
         />
-      </Card>
+      </div>
     </div>
   );
 };
@@ -136,7 +136,7 @@ export const SequenceViewerInvalid = () => {
 
   return (
     <div className="grid h-screen content-center py-8">
-      <Card className="max-w-4xl">
+      <div className="max-w-4xl">
         <SequenceViewer
           selectionClassName="bg-brand-400/20"
           sequences={["FAIL SEQUENCE"]}
@@ -145,7 +145,7 @@ export const SequenceViewerInvalid = () => {
           charClassName={charClassName}
           noValidate
         />
-      </Card>
+      </div>
     </div>
   );
 };

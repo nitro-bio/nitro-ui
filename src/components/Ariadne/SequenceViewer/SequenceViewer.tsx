@@ -75,7 +75,7 @@ export const SequenceViewer = ({
     <>
       <div
         className={classNames(
-          "relative isolate flex flex-wrap gap-y-8",
+          "relative isolate flex flex-wrap",
           containerClassName,
         )}
       >
@@ -84,7 +84,7 @@ export const SequenceViewer = ({
           activeAnnotation={activeAnnotation}
           className="sticky inset-x-0 top-0 z-[3] w-full bg-inherit px-2 py-1 backdrop-blur-md"
         />
-        {memoizedSeqContent}
+        <div className="flex flex-wrap px-2">{memoizedSeqContent}</div>
       </div>
     </>
   );
@@ -227,7 +227,7 @@ export const SeqMetadataBar = ({
   const annotationDisplay = activeAnnotation ? (
     <span
       className={classNames(
-        "flex gap-2 rounded-full px-2 py-px !opacity-100",
+        "flex gap-2 rounded-full px-2 py-px text-xs !opacity-100",
         activeAnnotation.className,
       )}
     >
@@ -247,7 +247,7 @@ export const SeqMetadataBar = ({
   return (
     <div
       className={classNames(
-        "flex h-8 items-center justify-between gap-4 px-2 py-1 text-xs",
+        "flex h-8 items-center justify-between gap-4 py-1 text-xs",
         className,
       )}
     >

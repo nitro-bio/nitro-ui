@@ -1,6 +1,6 @@
 import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { AriadneSelection } from "@Ariadne/types";
-import { Card } from "@ui/Card";
+
 import { useMemo, useState } from "react";
 import { LinearViewer } from ".";
 import { stackAnnsByType } from "@Ariadne/utils";
@@ -47,7 +47,7 @@ const LinearStory = ({
   );
 
   return (
-    <Card className="w-full max-w-3xl px-8">
+    <div className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={sequences}
@@ -57,7 +57,7 @@ const LinearStory = ({
         selectionClassName={selectionClassName}
         sequenceClassName={classNameBySequenceIdx}
       />
-    </Card>
+    </div>
   );
 };
 
@@ -129,7 +129,7 @@ export const LinearViewerStoryManyAnnotations = () => {
   const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
-    <Card className="w-full max-w-3xl px-8">
+    <div className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={sequences}
@@ -138,7 +138,7 @@ export const LinearViewerStoryManyAnnotations = () => {
         setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
       />
-    </Card>
+    </div>
   );
 };
 
@@ -154,7 +154,7 @@ export const LinearViewerStoryLongSequence = () => {
   const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
-    <Card className="w-full max-w-3xl px-8">
+    <div className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={sequences}
@@ -163,7 +163,7 @@ export const LinearViewerStoryLongSequence = () => {
         setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
       />
-    </Card>
+    </div>
   );
 };
 export const LinearViewerStoryLongSequenceManyMismatches = () => {
@@ -178,7 +178,7 @@ export const LinearViewerStoryLongSequenceManyMismatches = () => {
   const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
-    <Card className="w-full max-w-3xl px-8">
+    <div className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={sequences}
@@ -187,7 +187,7 @@ export const LinearViewerStoryLongSequenceManyMismatches = () => {
         setSelection={setSelection}
         sequenceClassName={classNameBySequenceIdx}
       />
-    </Card>
+    </div>
   );
 };
 
@@ -204,7 +204,7 @@ export const LinearViewerStoryStackAnnotationsByType = () => {
   const [selection, setSelection] = useState<AriadneSelection | null>(null);
 
   return (
-    <Card className="w-full max-w-3xl px-8">
+    <div className="w-full max-w-3xl px-8">
       <LinearViewer
         containerClassName="text-brand-400 "
         sequences={sequences}
@@ -214,6 +214,6 @@ export const LinearViewerStoryStackAnnotationsByType = () => {
         sequenceClassName={classNameBySequenceIdx}
         stackingFn={stackAnnsByType}
       />
-    </Card>
+    </div>
   );
 };

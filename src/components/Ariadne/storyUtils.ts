@@ -1,4 +1,4 @@
-import { getRndInteger } from "../..";
+import { getRndInteger } from "../../utils/mathUtils";
 import { Annotation } from "./types";
 
 const annotationTypes = [

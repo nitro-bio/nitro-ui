@@ -85,7 +85,7 @@ export const CircularViewer = ({
           cy={cy}
           radius={radius}
           annotatedSequence={annotatedSequence}
-          ticks={8}
+          ticks={4}
         />
         <CircularAnnotationGutter
           annotatedSequence={annotatedSequence}

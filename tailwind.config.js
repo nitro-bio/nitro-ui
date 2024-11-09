@@ -42,13 +42,5 @@ module.exports = {
       serif: ["Merriweather", ...defaultTheme.fontFamily.serif],
     },
   },
-  plugins: [
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/typography"),
-    require("daisyui"),
-  ],
-  daisyui: {
-    logs: false,
-    theme: false,
-  },
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

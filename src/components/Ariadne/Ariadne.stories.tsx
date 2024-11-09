@@ -1,4 +1,3 @@
-import { Card } from "@ui/Card";
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from "./CircularViewer";
@@ -34,7 +33,7 @@ const AriadneStory = ({
   );
 
   return (
-    <Card className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
+    <div className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
       <div className="h-full overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
         <SequenceViewer
           sequences={sequences}
@@ -74,7 +73,7 @@ const AriadneStory = ({
           }}
         />
       </div>
-    </Card>
+    </div>
   );
 };
 

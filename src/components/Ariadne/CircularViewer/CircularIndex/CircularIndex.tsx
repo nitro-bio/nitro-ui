@@ -17,7 +17,7 @@ export const CircularIndex = ({
 }) => {
   const basesPerTick = Math.floor(annotatedSequence.length / ticks);
 
-  if (annotatedSequence.length > 80) {
+  if (annotatedSequence.length > 50) {
     return (
       <svg className={`fill-current`}>
         <g>

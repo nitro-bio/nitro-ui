@@ -1,6 +1,6 @@
 import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 import { AriadneSelection } from "@Ariadne/types";
-import { Card } from "@ui/Card";
+
 import { useMemo, useState } from "react";
 
 import { CircularViewer } from ".";
@@ -34,7 +34,7 @@ const CircularStory = ({
 
   return (
     <div className="grid h-screen content-center">
-      <Card className="items-between flex max-w-5xl justify-around">
+      <div className="items-between flex max-w-5xl justify-around">
         {sequences.map((seq, idx) => (
           <CircularViewer
             key={idx}
@@ -45,7 +45,7 @@ const CircularStory = ({
             setSelection={setSelection}
           />
         ))}
-      </Card>
+      </div>
     </div>
   );
 };
