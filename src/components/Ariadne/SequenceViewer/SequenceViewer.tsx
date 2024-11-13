@@ -281,7 +281,15 @@ export const SequenceAnnotation = ({
       onMouseLeave={() => setHoveredPosition(null)}
     >
       {[...Array(maxAnnotationStack).keys()].map((i) => {
-        const annotation = orderedAnnotations.find((a) => a.stack === i);
+        const annotation = orderedAnnotations
+          .filter((ann) =>
+            baseInSelection({
+              baseIndex: index,
+              selection: ann,
+              sequenceLength: maxSequenceLength,
+            }),
+          )
+          .find((ann) => ann.stack === i);
         if (annotation) {
           if (
             !baseInSelection({
