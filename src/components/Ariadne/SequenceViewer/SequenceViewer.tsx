@@ -201,7 +201,10 @@ export const SeqContent = ({
             <SequenceAnnotation
               annotations={stackedAnnotations}
               index={baseIdx}
-              maxAnnotationStack={stackedAnnotations.length}
+              maxAnnotationStack={Math.max(
+                1,
+                Math.max(...stackedAnnotations.map((ann) => ann.stack)),
+              )}
               setHoveredPosition={setHoveredPosition}
               setActiveAnnotation={setActiveAnnotation}
               maxSequenceLength={Math.max(
