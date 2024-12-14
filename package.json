@@ -1,7 +1,7 @@
 {
   "name": "@nitro-bio/sequence-viewers",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.0.4",
   "scripts": {
     "build:ci": "vite build && pnpm build-css",
     "build": "pnpm lint && vite build && pnpm build-css",
@@ -77,6 +77,7 @@
   "files": [
     "dist"
   ],
+  "styles": "./dist/nitro.css",
   "main": "./dist/nitro-ui.umd.js",
   "module": "./dist/nitro-ui.es.js",
   "types": "./dist/index.d.ts",
@@ -85,6 +86,10 @@
       "import": "./dist/nitro-ui.es.js",
       "require": "./dist/nitro-ui.umd.js",
       "types": "./dist/index.d.ts"
+    },
+    "./dist/nitro.css": {
+      "import": "./dist/nitro.css",
+      "require": "./dist/nitro.css"
     }
   },
   "description": "collection of ui components",
