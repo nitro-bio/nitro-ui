@@ -82,7 +82,7 @@ export const SequenceViewer = ({
         <SeqMetadataBar
           hoveredPosition={hoveredPosition}
           activeAnnotation={activeAnnotation}
-          className="sticky inset-x-0 top-0 z-[3] w-full bg-inherit px-2 py-1 backdrop-blur-md"
+          className="sticky inset-x-0 top-0 z-[3] w-full px-2 py-1 backdrop-blur-md"
         />
         <div className="flex flex-wrap px-2">{memoizedSeqContent}</div>
       </div>
