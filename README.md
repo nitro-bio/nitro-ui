@@ -9,7 +9,7 @@
 
 ### Sequence Viewer
 <img width="911" alt="image" src="https://github.com/user-attachments/assets/8771fcc4-e89b-4f55-87e8-3712d82343b6" />
-![CleanShot 2024-12-19 at 08 08 26@2x](https://github.com/user-attachments/assets/66bee183-4a1b-4d9f-aec6-0f4244709e2e)
+<img width="896" alt="image" src="https://github.com/user-attachments/assets/571675b7-570f-473d-b2a9-b579091b6911" />
 
 ### Circular Viewer
 ![CleanShot 2024-12-19 at 08 09 16@2x](https://github.com/user-attachments/assets/38611339-cab9-4094-91b9-b614b370d8df)
