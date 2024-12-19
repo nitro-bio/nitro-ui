@@ -14,6 +14,7 @@ const SequenceStory = ({
   numSequences,
   initialSelection,
   containerClassName,
+  hideMetadataBar,
   charClassName,
 }: {
   numSequences: number;
@@ -26,6 +27,7 @@ const SequenceStory = ({
     base: AnnotatedBase;
     sequenceIdx: number;
   }) => string;
+  hideMetadataBar?: boolean;
 }) => {
   const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
@@ -62,6 +64,7 @@ const SequenceStory = ({
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
           setSelection={setSelection}
+          hideMetadataBar={hideMetadataBar}
         />
       </div>
     </div>
@@ -164,4 +167,8 @@ export const SequenceViewerDarkMode = () => {
       <SequenceStory numSequences={3} />;
     </div>
   );
+};
+
+export const HideMetadataBar = () => {
+  return <SequenceStory numSequences={1} hideMetadataBar />;
 };

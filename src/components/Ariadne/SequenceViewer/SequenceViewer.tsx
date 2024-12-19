@@ -30,6 +30,7 @@ export const SequenceViewer = ({
   containerClassName,
   charClassName,
   selectionClassName,
+  hideMetadataBar,
   noValidate,
 }: {
   sequences: string[];
@@ -45,6 +46,7 @@ export const SequenceViewer = ({
     sequenceIdx: number;
   }) => string;
   selectionClassName?: string;
+  hideMetadataBar?: boolean;
   noValidate?: boolean;
 }) => {
   const [hoveredPosition, setHoveredPosition] = useState<number | null>(null);
@@ -92,16 +94,18 @@ export const SequenceViewer = ({
           containerClassName,
         )}
       >
-        <SeqMetadataBar
-          hoveredPosition={hoveredPosition}
-          activeAnnotation={activeAnnotation}
-          className="sticky inset-x-0 top-0 z-[3] w-full px-2 py-1 backdrop-blur-md"
-          annotatedSequences={annotatedSequences}
-          charClassName={charClassName}
-          seqIdxToCopy={seqIdxToCopy}
-          setSeqIdxToCopy={setSeqIdxToCopy}
-          selection={selection}
-        />
+        {!hideMetadataBar && (
+          <SeqMetadataBar
+            hoveredPosition={hoveredPosition}
+            activeAnnotation={activeAnnotation}
+            className="sticky inset-x-0 top-0 z-[3] w-full px-2 py-1 backdrop-blur-md"
+            annotatedSequences={annotatedSequences}
+            charClassName={charClassName}
+            seqIdxToCopy={seqIdxToCopy}
+            setSeqIdxToCopy={setSeqIdxToCopy}
+            selection={selection}
+          />
+        )}
         <div className="flex flex-wrap px-2">{memoizedSeqContent}</div>
       </div>
     </>

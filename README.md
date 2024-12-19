@@ -8,16 +8,10 @@
 [Quickstart](https://docs.nitro.bio/quickstart)
 
 ### Sequence Viewer
-<img width="911" alt="image" src="https://github.com/user-attachments/assets/8771fcc4-e89b-4f55-87e8-3712d82343b6" />
-<img width="896" alt="image" src="https://github.com/user-attachments/assets/571675b7-570f-473d-b2a9-b579091b6911" />
 
 ### Circular Viewer
-![CleanShot 2024-12-19 at 08 09 16@2x](https://github.com/user-attachments/assets/38611339-cab9-4094-91b9-b614b370d8df)
-![CleanShot 2024-12-19 at 08 09 08@2x](https://github.com/user-attachments/assets/84d3be46-cb46-4214-a15a-cdbc7c1f918c)
 
 ### Linear Viewer
-![CleanShot 2024-12-19 at 08 09 40@2x](https://github.com/user-attachments/assets/6b7a6cf0-479b-4e34-a984-58b64ec90c92)
-![CleanShot 2024-12-19 at 08 09 50@2x](https://github.com/user-attachments/assets/71d7f846-ac3d-40f2-bdae-479cc088953c)
 
 ## Development
 
@@ -70,6 +64,13 @@ This will start the Storybook development server.
 
 - React
 
+### Runtime Utilities
+
+- @tanstack/react-query (Data fetching and state management)
+- Zod (Schema validation)
+- @tanstack/react-table (Table component library)
+- React Hook Form (Form handling)
+
 ### Buildtime Utilities
 
 - Vite (Build tool and development server)
@@ -81,5 +82,12 @@ This will start the Storybook development server.
 ### Styling
 
 - Tailwind CSS (Utility-first CSS framework)
+- DaisyUI (Tailwind CSS component library)
 - Radix UI (Accessible UI components)
-- Lucide Icons
+- Headless UI (Unstyled, accessible UI components)
+- Hero Icons (SVG icon set)
+
+### Data Viz
+
+- MolStar (Molecular visualization)
+- RDKit (Cheminformatics and machine learning toolkit)
