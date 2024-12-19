@@ -1,7 +1,7 @@
 {
   "name": "@nitro-bio/sequence-viewers",
   "private": false,
-  "version": "1.0.7",
+  "version": "1.1.7",
   "scripts": {
     "build:ci": "vite build && pnpm build-css",
     "build": "pnpm lint && vite build && pnpm build-css",
@@ -19,9 +19,11 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "genbank-parser": "^1.2.4",
+    "lucide-react": "^0.468.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

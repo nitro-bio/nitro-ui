@@ -21,6 +21,10 @@ export default defineConfig({
           find: "@Ariadne",
           replacement: path.resolve(__dirname, "./src/components/Ariadne"),
         },
+        {
+          find: "@ui",
+          replacement: path.resolve(__dirname, "./src/components/ui"),
+        },
       ],
     }),
   ],

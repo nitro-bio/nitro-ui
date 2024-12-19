@@ -3,3 +3,4 @@ export function classNames(
 ) {
   return classes.filter(Boolean).join(" ");
 }
+export const cn = classNames;

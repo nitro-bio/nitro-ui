@@ -1,6 +1,6 @@
 import { generateRandomAlignedSequences } from "@Ariadne/storyUtils";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { SequenceViewer } from ".";
 import type { AnnotatedBase, AriadneSelection } from "../types";
@@ -27,7 +27,7 @@ const SequenceStory = ({
     sequenceIdx: number;
   }) => string;
 }) => {
-  const [selection] = useState<AriadneSelection | null>(
+  const [selection, setSelection] = useState<AriadneSelection | null>(
     initialSelection ?? null,
   );
   const { sequences, annotations } = useMemo(
@@ -61,6 +61,7 @@ const SequenceStory = ({
           selection={selection}
           charClassName={charClassName ?? defaultCharClassName}
           containerClassName={containerClassName}
+          setSelection={setSelection}
         />
       </div>
     </div>
@@ -144,8 +145,23 @@ export const SequenceViewerInvalid = () => {
           selection={null}
           charClassName={charClassName}
           noValidate
+          setSelection={() => {}}
         />
       </div>
+    </div>
+  );
+};
+export const SequenceViewerDarkMode = () => {
+  // add "dark" className to body
+  useEffect(function addDarkModeClass() {
+    document.body.classList.add("dark");
+    return function removeDarkModeClass() {
+      document.body.classList.remove("dark");
+    };
+  }, []);
+  return (
+    <div className="bg-noir-800 ">
+      <SequenceStory numSequences={3} />;
     </div>
   );
 };

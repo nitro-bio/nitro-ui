@@ -34,7 +34,7 @@ const AriadneStory = ({
 
   return (
     <div className="grid grid-cols-1 gap-4 bg-white lg:h-screen lg:grid-cols-2 dark:bg-noir-800 ">
-      <div className="h-full overflow-y-scroll border-b border-zinc-600 lg:border-r lg:pr-8">
+      <div className="h-full overflow-y-scroll border-b border-noir-600 lg:border-r lg:pr-8">
         <SequenceViewer
           sequences={sequences}
           selection={selection}
@@ -45,6 +45,7 @@ const AriadneStory = ({
             classNamesBySequenceIdx({ sequenceIdx: 0 }).selectionClassName
           }
           annotations={annotations}
+          setSelection={setSelection}
         />
       </div>
       <div className="grid w-full grid-cols-2 content-start gap-2 overflow-y-scroll">

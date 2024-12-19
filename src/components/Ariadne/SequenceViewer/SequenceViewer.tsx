@@ -5,7 +5,7 @@ import {
 } from "@Ariadne/utils";
 import { classNames } from "@utils/stringUtils";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   AnnotatedBase,
   Annotation,
@@ -13,10 +13,20 @@ import type {
   StackedAnnotation,
 } from "../types";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectTrigger,
+} from "@ui/select";
+import { CopyButton } from "@ui/copy-button";
+
 export const SequenceViewer = ({
   sequences,
   annotations,
   selection,
+  setSelection,
   containerClassName,
   charClassName,
   selectionClassName,
@@ -25,6 +35,7 @@ export const SequenceViewer = ({
   sequences: string[];
   annotations: Annotation[];
   selection: AriadneSelection | null;
+  setSelection: (selection: AriadneSelection | null) => void;
   containerClassName?: string;
   charClassName: ({
     base,
@@ -37,6 +48,7 @@ export const SequenceViewer = ({
   noValidate?: boolean;
 }) => {
   const [hoveredPosition, setHoveredPosition] = useState<number | null>(null);
+  const [seqIdxToCopy, setSeqIdxToCopy] = useState<number>(0);
   const [activeAnnotation, setActiveAnnotation] = useState<Annotation | null>(
     null,
   );
@@ -63,6 +75,7 @@ export const SequenceViewer = ({
       <SeqContent
         annotatedSequences={annotatedSequences}
         selection={selection}
+        setSelection={setSelection}
         setHoveredPosition={setHoveredPosition}
         setActiveAnnotation={setActiveAnnotation}
         stackedAnnotations={stackedAnnotations}
@@ -83,6 +96,11 @@ export const SequenceViewer = ({
           hoveredPosition={hoveredPosition}
           activeAnnotation={activeAnnotation}
           className="sticky inset-x-0 top-0 z-[3] w-full px-2 py-1 backdrop-blur-md"
+          annotatedSequences={annotatedSequences}
+          charClassName={charClassName}
+          seqIdxToCopy={seqIdxToCopy}
+          setSeqIdxToCopy={setSeqIdxToCopy}
+          selection={selection}
         />
         <div className="flex flex-wrap px-2">{memoizedSeqContent}</div>
       </div>
@@ -92,6 +110,7 @@ export const SequenceViewer = ({
 export const SeqContent = ({
   annotatedSequences,
   selection,
+  setSelection,
   setHoveredPosition,
   setActiveAnnotation,
   stackedAnnotations,
@@ -100,6 +119,7 @@ export const SeqContent = ({
 }: {
   annotatedSequences: AnnotatedBase[][];
   selection: AriadneSelection | null;
+  setSelection: (selection: AriadneSelection | null) => void;
   setHoveredPosition: (position: number | null) => void;
   setActiveAnnotation: (annotation: Annotation | null) => void;
   stackedAnnotations: StackedAnnotation[];
@@ -112,6 +132,7 @@ export const SeqContent = ({
   }) => string;
   selectionClassName?: string;
 }) => {
+  const mouseDown = useRef(false);
   const indicesClassName = ({
     base,
     sequenceIdx,
@@ -128,16 +149,31 @@ export const SeqContent = ({
     return classNames(
       "text-xs z-1",
       // don't allow selection of indices
-      "dark:group-hover:text-zinc-300 group-hover:text-zinc-800",
+      "dark:group-hover:text-noir-300 group-hover:text-noir-800",
       baseInSelection({
         baseIndex: base.index,
         selection,
         sequenceLength: annotatedSequences[sequenceIdx].length,
       })
         ? "text-brand-700 dark:text-brand-300"
-        : "text-zinc-400 dark:text-zinc-600",
+        : "text-noir-400 dark:text-noir-600",
     );
   };
+  const handleMouseUp = () => {
+    mouseDown.current = false;
+  };
+
+  useEffect(function addMouseUpListener() {
+    document.addEventListener("mouseup", () => {
+      handleMouseUp();
+    });
+    return function removeMouseUpListener() {
+      document.removeEventListener("mouseup", () => {
+        handleMouseUp();
+      });
+    };
+  }, []);
+
   return (
     <>
       {annotatedSequences[0].map(({ index: baseIdx }) => {
@@ -145,7 +181,7 @@ export const SeqContent = ({
           <div
             className={classNames(
               "relative mt-4 flex flex-col justify-between",
-              "group hover:bg-zinc-200 dark:hover:bg-zinc-600",
+              "group hover:bg-noir-200 dark:hover:bg-noir-600",
             )}
             key={`base-${baseIdx}`}
           >
@@ -161,15 +197,31 @@ export const SeqContent = ({
                     className={classNames("whitespace-pre text-center")}
                     onMouseEnter={() => {
                       setHoveredPosition(base.index);
+                      // if mouse is down, update selection
+                      if (mouseDown.current && selection) {
+                        setSelection({
+                          ...selection,
+                          end: base.index,
+                        });
+                      }
                     }}
                     onMouseLeave={() => setHoveredPosition(null)}
+                    onMouseDown={() => {
+                      mouseDown.current = true;
+                      setSelection({
+                        start: base.index,
+                        end: base.index,
+                        direction: "forward",
+                      });
+                    }}
+                    onMouseUp={handleMouseUp}
                   >
                     <CharComponent
                       char={`| ${base.index}`}
                       index={baseIdx}
                       charClassName={classNames(
                         "absolute -top-4 left-0",
-                        "group-hover:text-brand-200 border-b border-zinc-600 group-hover:border-zinc-300",
+                        "group-hover:text-brand-200 border-b border-noir-600 group-hover:border-noir-300",
                         indicesClassName({
                           base,
                           sequenceIdx,
@@ -221,16 +273,33 @@ export const SeqContent = ({
 export const SeqMetadataBar = ({
   hoveredPosition,
   activeAnnotation,
+  annotatedSequences,
+  charClassName,
+  seqIdxToCopy,
+  setSeqIdxToCopy,
+  selection,
   className,
 }: {
   hoveredPosition: number | null;
   activeAnnotation: Annotation | null;
+  selection: AriadneSelection | null;
+  annotatedSequences: AnnotatedBase[][];
+  seqIdxToCopy: number;
+  setSeqIdxToCopy: (idx: number) => void;
+  charClassName: ({
+    base,
+    sequenceIdx,
+  }: {
+    base: AnnotatedBase;
+    sequenceIdx: number;
+  }) => string;
   className?: string;
 }) => {
   const annotationDisplay = activeAnnotation ? (
     <span
       className={classNames(
         "flex gap-2 rounded-full px-2 py-px text-xs !opacity-100",
+        "ml-auto",
         activeAnnotation.className,
       )}
     >
@@ -243,18 +312,25 @@ export const SeqMetadataBar = ({
     </span>
   ) : null;
   const positionDisplay = (
-    <span className="text-xs text-black dark:text-white">
+    <span className="min-w-16 text-xs text-black dark:text-white">
       Pos: {hoveredPosition ?? 0}
     </span>
   );
   return (
     <div
       className={classNames(
-        "flex h-8 items-center justify-between gap-4 py-1 text-xs",
+        "flex h-8 items-center gap-1 py-1 text-xs",
         className,
       )}
     >
       {positionDisplay}
+      <CopyDisplay
+        annotatedSequences={annotatedSequences}
+        charClassName={charClassName}
+        seqIdxToCopy={seqIdxToCopy}
+        setSeqIdxToCopy={setSeqIdxToCopy}
+        selection={selection}
+      />
       {annotationDisplay}
     </div>
   );
@@ -304,7 +380,7 @@ export const SequenceAnnotation = ({
             return (
               <div
                 key={`annotation-${index}-${i}`}
-                className={"h-3 border-b-2 border-zinc-100 opacity-10 "}
+                className={"h-3 border-b-2 border-noir-100 opacity-10 "}
               />
             );
           }
@@ -343,7 +419,7 @@ interface CharProps {
 
 export const CharComponent = ({ char, charClassName }: CharProps) => {
   // don't allow selection of chars
-  const sharedClassName = "select-none font-mono";
+  const sharedClassName = "font-mono select-none";
   if (char === " ") {
     return (
       <div className={classNames(sharedClassName, charClassName, "opacity-20")}>
@@ -355,5 +431,98 @@ export const CharComponent = ({ char, charClassName }: CharProps) => {
     <div className={classNames(sharedClassName, charClassName, "mr-px")}>
       {char}
     </div>
+  );
+};
+
+export const CopyDisplay = ({
+  seqIdxToCopy,
+  setSeqIdxToCopy,
+  annotatedSequences,
+  charClassName,
+  selection,
+}: {
+  seqIdxToCopy: number;
+  setSeqIdxToCopy: (idx: number) => void;
+  selection: AriadneSelection | null;
+  annotatedSequences: AnnotatedBase[][];
+  charClassName: ({
+    base,
+    sequenceIdx,
+  }: {
+    base: AnnotatedBase;
+    sequenceIdx: number;
+  }) => string;
+  className?: string;
+}) => {
+  const getStringToCopy = () => {
+    if (!selection) {
+      return;
+    }
+    const seq = annotatedSequences[seqIdxToCopy];
+    const stringToCopy = seq
+      .filter((base) =>
+        baseInSelection({
+          baseIndex: base.index,
+          selection: selection,
+          sequenceLength: annotatedSequences[seqIdxToCopy].length,
+        }),
+      )
+      .map((base) => base.base)
+      .join("");
+    return stringToCopy;
+  };
+  useEffect(function mountCopyHandler() {
+    const copyHandler = (e: ClipboardEvent) => {
+      const stringToCopy = getStringToCopy();
+      if (!stringToCopy) {
+        return;
+      }
+      e.clipboardData?.setData("text/plain", stringToCopy);
+      alert("Copied to clipboard!");
+      e.preventDefault();
+    };
+    document.addEventListener("copy", copyHandler);
+    return function unmountCopyHandler() {
+      document.removeEventListener("copy", copyHandler);
+    };
+  }, []);
+
+  return (
+    <span className="flex">
+      <Select
+        value={seqIdxToCopy.toString()}
+        onValueChange={(value) => setSeqIdxToCopy(parseInt(value))}
+      >
+        <SelectTrigger className="w-fit">
+          <SelectValue
+            className={charClassName({
+              base: { base: "A", annotations: [], index: 0 },
+              sequenceIdx: seqIdxToCopy,
+            })}
+          >
+            Sequence {seqIdxToCopy + 1}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent className="bg-white dark:bg-black">
+          {annotatedSequences.map((_, idx) => (
+            <SelectItem
+              key={`sequence-${idx}`}
+              value={idx.toString()}
+              className={charClassName({
+                base: { base: "A", annotations: [], index: 0 },
+                sequenceIdx: idx,
+              })}
+            >
+              Sequence {idx + 1}{" "}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <CopyButton
+        textToCopy={() => getStringToCopy() ?? ""}
+        label={""}
+        disabled={!selection}
+      />
+    </span>
   );
 };
